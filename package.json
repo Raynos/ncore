@@ -1,0 +1,19 @@
+{
+	"name": "ncore",
+	"version": "0.1.0",
+	"description": "Core library for your application",
+	"keywords": ["core", "architecture", "infrastructure"],
+	"author": "Raynos <raynos2@gmail.com>",
+	"main": "src/core",
+	"dependencies": {
+		"pd": "0.3.9",
+		"eventemitter2": "0.4.1",
+		"after": "0.2.0"
+	},
+	"scripts": {
+		"test": "mocha --ui tdd --reporter spec"	
+	},
+	"devDependencies": {
+		"mocha": "0.7.0"
+	}
+}

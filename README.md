@@ -14,12 +14,13 @@ A Core library for your node application infrastructure.
 			});
 		}
 	});
+
 	Core.use({
-		init: function (mediator) {
+		init: function (done, mediator) {
 			var server = http.createServer(function (req, res) {
 				mediator.emit("helloworld", res);
 			});
-			server.listen(4000);
+			server.listen(4000, done);
 		}
 	});
 
