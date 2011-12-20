@@ -24,8 +24,8 @@
 
     	@param String name - name of module
     	@param Object module - module to attach
-		@param Object data - data passed to module
-		@param Function callback - callback invoked 
+		@param [optional] Object data - data passed to module
+		@param [optional] Function callback - callback invoked 
 			if this module needs to be initialized
     */
 	function use(name, module, data, callback) {
@@ -106,8 +106,9 @@
 		Invokes the modules detach method
 
 		@param String name - name of module to be removed
-		@param Function callback - callback to be invoked if the module
-			to be removed also needs to be destroyed
+		@param [optional] Function callback - callback to be 
+			invoked if the module to be removed 
+			also needs to be destroyed
 	*/
 	function remove(name, callback) {
 		if (typeof name !== "string") {
@@ -135,6 +136,9 @@
 
 	/*
 		destroys and detaches all attached modules
+
+		@param [optional] Function callback - callback to be
+			invoked when all modules are destroyed
 	*/
 	function destroy(callback) {
 		var keys = Object.keys(this._modules);
