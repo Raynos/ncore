@@ -8,16 +8,15 @@
 	"dependencies": {
 		"pd": "0.3.9",
 		"eventemitter2": "0.4.1",
-		"after": "0.2.0",
-		"mocha": "0.7.0"
+		"after": "0.2.0"
 	},
 	"engines": {
 		"node": "0.6.x"
 	},
 	"scripts": {
-		"test": "mocha --ui tdd --reporter spec"	
+		"test": "node_modules/mocha/bin/mocha --ui tdd --reporter spec"	
 	},
 	"devDependencies": {
-		
+		"mocha": "0.7.0"
 	}
 }
