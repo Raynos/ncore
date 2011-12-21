@@ -34,7 +34,8 @@ Core.init(onCoreReady);
 
 function onCoreReady() {
 	console.log("server ready");
-}```
+}
+```
 
 ## Motivation
 
@@ -51,7 +52,8 @@ Core should be backwards compatible with broadway
 ### Core.nCore <a name="core.ncore" href="#core.ncore"><small><sup>link</sup></small></a>
 
 ```javascript
-var Core = require("ncore").nCore;```
+var Core = require("ncore").nCore;
+```
 
 ### Core.use(...) <a name="core.use" href="#core.use"><small><sup>link</sup></small></a>
 
@@ -62,7 +64,8 @@ Core.use("name", {
 	attach: function (mediator) {
 		...
 	}
-});```
+});
+```
 
 Core.use is overloaded to support multiple invocations
 
@@ -74,7 +77,8 @@ Core.use("name", {
 	attach: function (data, mediator) {
 		
 	}
-}, data);```
+}, data);
+```
 
 Also note that if the core is already running then the init method on the module will be invoked directly
 
@@ -92,7 +96,8 @@ Core.use("name", {
 	}
 }/*, data */, function callback() {
 	/* invoked after done is invoked by init */
-});```
+});
+```
 
 ### Core.init(...) <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
 
@@ -109,20 +114,23 @@ Core.use("name", {
 Core.init(function onReady() {
 	/* all modules are ready */
 	/* party time */
-});```
+});
+```
 
 ### Core.remove(...) <a name="core.remove" href="#core.remove"><small><sup>link</sup></small></a>
 
 Core.remove removes a module from the core. This will invoke the detach method on the module.
 
 ```javascript	
-Core.remove("name");```
+Core.remove("name");
+```
 
 Core.remove is also overloaded
 
 ```javascript
 Core.remove({ name: "realName"});
-Core.remove({ firstName: anything, secondName: anythingOther });```
+Core.remove({ firstName: anything, secondName: anythingOther });
+```
 
 Core.remove will also invoke destroy if the module has been initialized but has not been destroyed
 
@@ -137,7 +145,8 @@ Core.use("name", {
 Core.init();
 Core.remove("name", function onDestroyFinished() {
 	/* module was destroyed */
-});```
+});
+```
 
 ### Core.destroy(...) <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
 
@@ -146,7 +155,8 @@ Core.destroy destroys all modules in the core. It also removes them.
 ```javascript
 Core.destroy(function onDestroyCompleted() {
 	/* all modules destroyed and detached */
-});```
+});
+```
 
 ### Core.constructor() <a name="core.constructor" href="#core.constructor"><small><sup>link</sup></small></a>
 
@@ -160,7 +170,7 @@ npm install ncore
 
 npm test
 
-## Contributors
+## constructortributors
 
  - Raynos
 
