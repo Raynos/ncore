@@ -5,36 +5,36 @@ A Core library for your node application infrastructure.
 ## Status: Beta
 
 ## Example
+```javascript
+var Core = require("ncore").nCore,
+	http = require("http");
 
-	var Core = require("ncore").nCore,
-		http = require("http");
+Core.use("helloworld controller", {
+	attach: function _attach(mediator) {
+		mediator.on("helloworld", handleHelloWorld);
 
-	Core.use("helloworld controller", {
-		attach: function _attach(mediator) {
-			mediator.on("helloworld", handleHelloWorld);
-
-			function handleHelloWorld(res) {
-				res.end("hello world");
-			}
+		function handleHelloWorld(res) {
+			res.end("hello world");
 		}
-	});
-
-	Core.use("helloworld server", {
-		init: function _init(done, mediator) {
-			var server = http.createServer(handleRequest);
-			server.listen(4000, done);
-
-			function handleRequest() {
-				mediator.emit("helloworld", res);
-			}
-		}
-	});
-
-	Core.init(onCoreReady);
-
-	function onCoreReady() {
-		console.log("server ready");
 	}
+});
+
+Core.use("helloworld server", {
+	init: function _init(done, mediator) {
+		var server = http.createServer(handleRequest);
+		server.listen(4000, done);
+
+		function handleRequest() {
+			mediator.emit("helloworld", res);
+		}
+	}
+});
+
+Core.init(onCoreReady);
+
+function onCoreReady() {
+	console.log("server ready");
+}```
 
 ## Motivation
 
@@ -50,94 +50,103 @@ Core should be backwards compatible with broadway
 
 ### Core.nCore <a name="core.ncore" href="#core.ncore"><small><sup>link</sup></small></a>
 
-	var Core = require("ncore").nCore;
+```javascript
+var Core = require("ncore").nCore;```
 
 ### Core.use(...) <a name="core.use" href="#core.use"><small><sup>link</sup></small></a>
 
 Core.use allows you to attach a module to the core. The core will invoke the attach method on your module. Note that the mediator is the core, which is an event emitter.
 
-	Core.use("name", {
-		attach: function (mediator) {
-			...
-		}
-	});
+```javascript
+Core.use("name", {
+	attach: function (mediator) {
+		...
+	}
+});```
 
 Core.use is overloaded to support multiple invocations
 
-	Core.use("name", module)
-	Core.use({ name: "name", ... })
-	Core.use({ moduleName: moduleOne, otherModuleName: moduleTwo });
-	Core.use("name", {
-		attach: function (data, mediator) {
-			
-		}
-	}, data);
+```javascript
+Core.use("name", module)
+Core.use({ name: "name", ... })
+Core.use({ moduleName: moduleOne, otherModuleName: moduleTwo });
+Core.use("name", {
+	attach: function (data, mediator) {
+		
+	}
+}, data);```
 
 Also note that if the core is already running then the init method on the module will be invoked directly
 
-	Core.init();
-	Core.use("name", {
-		init: function (done, mediator) {
-			/*
-				If this particular core is already running.
-				i.e. init has already been invoked
-				then any module attached will also be initialized,
-				i.e. it's init routine gets called
-			*/
-			done();
-		}
-	}/*, data */, function callback() {
-		/* invoked after done is invoked by init */
-	})
+```javascript
+Core.init();
+Core.use("name", {
+	init: function (done, mediator) {
+		/*
+			If this particular core is already running.
+			i.e. init has already been invoked
+			then any module attached will also be initialized,
+			i.e. it's init routine gets called
+		*/
+		done();
+	}
+}/*, data */, function callback() {
+	/* invoked after done is invoked by init */
+});```
 
 ### Core.init(...) <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
 
 Core.init starts your core. When the core is started all your modules are started. Every module should have an init method that takes a done callback as a first parameter. This done callback must be invoked for every module before onReady fires
 
-	Core.use("name", {
-		init: function (done, mediator) {
-			/* do stuff */
-			done();
-		}
-	});
+```javascript
+Core.use("name", {
+	init: function (done, mediator) {
+		/* do stuff */
+		done();
+	}
+});
 
-	Core.init(function onReady() {
-		/* all modules are ready */
-		/* party time */
-	});
+Core.init(function onReady() {
+	/* all modules are ready */
+	/* party time */
+});```
 
 ### Core.remove(...) <a name="core.remove" href="#core.remove"><small><sup>link</sup></small></a>
 
 Core.remove removes a module from the core. This will invoke the detach method on the module.
 
-	Core.remove("name");
+```javascript	
+Core.remove("name");```
 
 Core.remove is also overloaded
 
-	Core.remove({ name: "realName"});
-	Core.remove({ firstName: anything, secondName: anythingOther });
+```javascript
+Core.remove({ name: "realName"});
+Core.remove({ firstName: anything, secondName: anythingOther });```
 
 Core.remove will also invoke destroy if the module has been initialized but has not been destroyed
 
-	Core.use("name", {
-		init: function (done) { done(); },
-		destroy: function (done, mediator) {
-			/* destroy it */
-			done();
-		}
-	});
-	Core.init();
-	Core.remove("name", function onDestroyFinished() {
-		/* module was destroyed */
-	});
+```javascript
+Core.use("name", {
+	init: function (done) { done(); },
+	destroy: function (done, mediator) {
+		/* destroy it */
+		done();
+	}
+});
+Core.init();
+Core.remove("name", function onDestroyFinished() {
+	/* module was destroyed */
+});```
 
 ### Core.destroy(...) <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
 
 Core.destroy destroys all modules in the core. It also removes them.
 
-	Core.destroy(function onDestroyCompleted() {
-		/* all modules destroyed and detached */
-	});
+```javascript
+Core.destroy(function onDestroyCompleted() {
+	/* all modules destroyed and detached */
+});```
 
 ### Core.constructor() <a name="core.constructor" href="#core.constructor"><small><sup>link</sup></small></a>
 

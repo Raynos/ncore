@@ -14,7 +14,7 @@
 		"node": "0.6.x"
 	},
 	"scripts": {
-		"test": "node_modules/mocha/bin/mocha --ui tdd --reporter spec"	
+		"test": "node_modules/.bin/mocha --ui tdd --reporter spec"	
 	},
 	"devDependencies": {
 		"mocha": "0.7.0"
