@@ -1,4 +1,4 @@
-# nCore <!-- [![Build Status][1]][2] -->
+# nCore
 
 A Core library for your node application infrastructure.
 
