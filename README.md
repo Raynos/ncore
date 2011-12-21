@@ -86,6 +86,9 @@ A module is just an object.
 	}
 }
 ```
+
+Generally a modules live cycle is attach -> init -> destroy -> detach
+
 ### Core.use(...) <a name="core.use" href="#core.use"><small><sup>link</sup></small></a>
 
 Core.use allows you to attach a module to the core. The core will invoke the attach method on your module. Note that the mediator is the core, which is an event emitter.
@@ -163,7 +166,7 @@ Core.remove({ name: "realName"});
 Core.remove({ firstName: anything, secondName: anythingOther });
 ```
 
-Core.remove will also invoke destroy if the module has been initialized but has not been destroyed
+Core.remove will also invoke destroy if the module has been initialized but has not been destroyed. Destroy is invoked before detach
 
 ```javascript
 Core.use("name", {
@@ -188,6 +191,8 @@ Core.destroy(function onDestroyCompleted() {
 	/* all modules destroyed and detached */
 });
 ```
+
+Note that core first destroys all the modules and _only_ then detaches all the modules. This means other modules can react to the asynchronous destroy actions of modules before all the modules are detached.
 
 ### Core.constructor() <a name="core.constructor" href="#core.constructor"><small><sup>link</sup></small></a>
 

@@ -131,15 +131,14 @@
 		
 		var module = this._modules[name];
 
-		module.detach && module.detach.call(this, this);
 		if (this._meta(module).initialized) {
 			if (module.destroy) {
 				module.destroy.call(this, callback || noop, this);
 			} else {
 				callback && callback();
 			}
-				
 		}
+		module.detach && module.detach.call(this, this);
 
 		delete this._modules[name];
 
@@ -157,12 +156,30 @@
 	function destroy(callback) {
 		var keys = Object.keys(this._modules);
 
-		var next = after(keys.length, callback || noop);
+		var next = after(keys.length, afterDestroy.bind(this));
 
-		keys.forEach(invokeRemoveOnModules, this);
+		keys.forEach(invokeDestroyOnModules, this);
 
-		function invokeRemoveOnModules(name) {
-			this.remove(name, next);
+		function invokeDestroyOnModules(name) {
+			var module = this._modules[name];
+
+			if (module.destroy) {
+				module.destroy.call(this, next, this);
+			} else {
+				next();
+			}
+		}
+
+		function afterDestroy() {
+			keys.forEach(invokeDetachOnModules, this);
+
+			callback();
+		}
+
+		function invokeDetachOnModules(name) {
+			var module = this._modules[name];
+
+			module.detach && module.detach.call(this, this);
 		}
 	}
 
