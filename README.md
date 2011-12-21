@@ -1,4 +1,4 @@
-# nCore
+# nCore[![Build Status][1]][2]
 
 A Core library for your node application infrastructure.
 
@@ -38,7 +38,7 @@ A Core library for your node application infrastructure.
 
 ## Motivation
 
-nCore is very similar to [broadway][1] except it has a different set of emphasis.
+nCore is very similar to [broadway][3] except it has a different set of emphasis.
 
 nCore is used to as a very minimal core to your entire application. Your entire application is made of nCore compliant modules. At bootstrap you load up all your modules into the core and then start the core.
 
@@ -60,4 +60,6 @@ npm test
 
 ## MIT Licenced
 
-  [1]: https://github.com/flatiron/broadway
+  [1]: https://secure.travis-ci.org/Raynos/ncore.png
+  [2]: http://travis-ci.org/Raynos/ncore
+  [3]: https://github.com/flatiron/broadway
