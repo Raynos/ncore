@@ -55,6 +55,37 @@ Core should be backwards compatible with broadway
 var Core = require("ncore").nCore;
 ```
 
+### Modules
+
+A module is just an object.
+
+```javascript
+{
+	attach: function (mediator) { 
+		/* Called when someone uses this module on the core */
+	},
+	detach: function (mediator) {
+		/* Called when someone removes the module from the core */
+	},
+	init: function (done, mediator) {
+		/*
+			Called when the core starts.
+
+			Note that done must be called to indicate that you
+			have finished your module initialization
+		*/
+	},
+	destroy: function (done, mediator) {
+		/*
+			Called when the core is destroyed or the module
+			is detached
+
+			Note that done must be called to indicate that you
+			have finished your module destruction
+		*/
+	}
+}
+```
 ### Core.use(...) <a name="core.use" href="#core.use"><small><sup>link</sup></small></a>
 
 Core.use allows you to attach a module to the core. The core will invoke the attach method on your module. Note that the mediator is the core, which is an event emitter.
