@@ -48,16 +48,21 @@
 			data = null;
 		}
 
+		if (data === undefined || data === null) {
+			data = this;
+		}
+
 		if (!this._modules) {
 			this._modules = {};
 		} 
 
 		this._modules[name] = module;
 
-		module.attach.call(this, data, this);
+		module.attach && module.attach.call(this, data, this);
 
 		if (this._initialized) {
-			module.init.call(this, callback || noop, this);
+			module.init && 
+				module.init.call(this, callback || noop, this);
 		}
 
 		function invokeUseOnModules(key) {
@@ -95,7 +100,11 @@
 
 		function invokeInit(name) {
 			var module = this._modules[name];
-			module.init.call(this, next, this);
+			if (module.init) {
+				module.init.call(this, next, this);
+			} else {
+				next();
+			}
 			this._meta(module).initialized = true;
 		}
 	}
@@ -122,9 +131,14 @@
 		
 		var module = this._modules[name];
 
-		module.detach.call(this, this);
+		module.detach && module.detach.call(this, this);
 		if (this._meta(module).initialized) {
-			module.destroy.call(this, callback || noop, this);
+			if (module.destroy) {
+				module.destroy.call(this, callback || noop, this);
+			} else {
+				callback && callback();
+			}
+				
 		}
 
 		delete this._modules[name];
