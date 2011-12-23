@@ -198,7 +198,7 @@
 
 }(
 	function _require(name) {
-		return require ? require(name) : window[name];
+		return typeof require !== 'undefined' ? require(name) : window[name];
 	},
 	typeof window !== "undefined" ? window : exports
 );
