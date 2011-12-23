@@ -11,6 +11,7 @@
 		remove: remove,
 		destroy: destroy,
 		init: init,
+		module: module,
 		constructor: constructor,
 		_meta: pd.Name()
 	});
@@ -69,6 +70,21 @@
 			var module = name[key];
 			this.use(key, module, data, callback);
 		}
+	}
+	
+	/*
+	    Create a module and attach it the core.
+	
+	    A module will have bindAll called on it and will have the mediator set as
+	    a property of the module
+	
+	    @param String name - name of module
+	    @param Object module - module to attach
+	*/
+	function module(name, module) {
+		module = pd.bindAll(module);
+		module.mediator = this;
+		this.use(name, module);
 	}
 
 	/*
