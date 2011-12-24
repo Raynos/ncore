@@ -118,6 +118,7 @@
 			var module = this._modules[name];
 			if (module.init) {
 				module.init.call(this, next, this);
+				module.init.length === 0 && next();
 			} else {
 				next();
 			}
