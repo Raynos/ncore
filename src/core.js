@@ -82,9 +82,17 @@
 	    @param Object module - module to attach
 	*/
 	function module(name, module) {
+		if (module === undefined) {
+			return Object.keys(name).forEach(invokeModuleOnModule, this);
+		}
+		
 		module = pd.bindAll(module);
 		module.mediator = this;
 		this.use(name, module);
+		
+		function invokeModuleOnModule(key) {
+			this.use(key, name[key]);
+		}
 	}
 
 	/*
