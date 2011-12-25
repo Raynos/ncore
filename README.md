@@ -2,6 +2,8 @@
 
 A Core library for your node application infrastructure.
 
+## Dev branch, breaking code >_>
+
 ## Status: Beta
 
 ## Example
