@@ -1,4 +1,4 @@
-!function _anonymousWrapper(require, exports) {
+!function _anonymousWrapper(require, exports, undefined) {
 	"use strict";
 
 	var pd = require("pd"),
@@ -18,39 +18,17 @@
 
 	exports.nCore = nCore;
 
-    /*
-    	Attach a module to the core.
-
-    	Calls the attach method of the module
-
-    	@param String name - name of module
-    	@param Object module - module to attach
-		@param [optional] Object data - data passed to module
-		@param [optional] Function callback - callback invoked 
-			if this module needs to be initialized
-    */
-	function use(name, module, data, callback) {
-		if (typeof name !== "string") {
-			if (name.name) {
-				callback = data;
-				data = module;
-				module = name;
-				name = module.name;
-			} else {
-				callback = data;
-				data = module;
-				return Object.keys(name).forEach(
-					invokeUseOnModules, this);
-			}
-		}
-
-		if (typeof data === "function" && callback === undefined) {
-			callback = data;
-			data = null;
-		}
-
-		if (data === undefined || data === null) {
-			data = this;
+	/*
+		Attach a module to the core.
+		
+		Calls the attach method of the module
+		
+		@param String name - name of module
+		@param Object module - module to attach
+	*/
+	function use(name, module) {
+		if (module === undefined) {
+			return Object.keys(name).forEach(invokeUseOnModules, this);
 		}
 
 		if (!this._modules) {
@@ -59,16 +37,14 @@
 
 		this._modules[name] = module;
 
-		module.attach && module.attach.call(this, data, this);
+		module.attach && module.attach(this);
 
 		if (this._initialized) {
-			module.init && 
-				module.init.call(this, callback || noop, this);
+			module.init && module.init(this);
 		}
 
 		function invokeUseOnModules(key) {
-			var module = name[key];
-			this.use(key, module, data, callback);
+			this.use(key, name[key]);
 		}
 	}
 	
@@ -98,38 +74,18 @@
 	/*
 		Initializes all modules attached to the core
 
-		Calls the init method of all modules
-
-		@param [optional] Any options - ignored, 
-			there for backwards support with broadway
-		@param Function callback - callback function
-			to be invoked when all modules have initialized.
-		
+		Calls the init method of all modules		
 	*/
-	function init(options, callback) {
-		if (typeof options === "function" && callback === undefined) {
-			callback = options;
-			options = null;
-		}
-
+	function init() {
 		this._initialized = true;
 
 		if (!this._modules) return;
 
-		var keys = Object.keys(this._modules);
-
-		var next = after(keys.length, callback);
-
-		keys.forEach(invokeInit, this);
+		Object.keys(this._modules).forEach(invokeInit, this);
 
 		function invokeInit(name) {
 			var module = this._modules[name];
-			if (module.init) {
-				module.init.call(this, next, this);
-				module.init.length === 0 && next();
-			} else {
-				next();
-			}
+			module.init && module.init(this);
 			this._meta(module).initialized = true;
 		}
 	}
@@ -140,30 +96,19 @@
 		Invokes the modules detach method
 
 		@param String name - name of module to be removed
-		@param [optional] Function callback - callback to be 
-			invoked if the module to be removed 
-			also needs to be destroyed
 	*/
-	function remove(name, callback) {
-		if (typeof name !== "string") {
-			if (name.name) {
-				name = name.name;
-			} else {
-				return Object.keys(name).forEach(
-					invokeRemoveOnModules, this);
-			}
+	function remove(name) {
+		if (name !== "string") {
+			return Object.keys(name).forEach(invokeRemoveOnModules, this);
 		}
 		
 		var module = this._modules[name];
 
 		if (this._meta(module).initialized) {
-			if (module.destroy) {
-				module.destroy.call(this, callback || noop, this);
-			} else {
-				callback && callback();
-			}
+			module.destroy && module.destroy(this);
 		}
-		module.detach && module.detach.call(this, this);
+		
+		module.detach && module.detach(this);
 
 		delete this._modules[name];
 
@@ -174,37 +119,23 @@
 
 	/*
 		destroys and detaches all attached modules
-
-		@param [optional] Function callback - callback to be
-			invoked when all modules are destroyed
 	*/
-	function destroy(callback) {
-		var keys = Object.keys(this._modules);
-
-		var next = after(keys.length, afterDestroy.bind(this));
-
+	function destroy() {
+		var keys = Object.keys(this._modules)
+		
 		keys.forEach(invokeDestroyOnModules, this);
+		keys.forEach(invokeDetachOnModules, this);
 
 		function invokeDestroyOnModules(name) {
 			var module = this._modules[name];
 
-			if (module.destroy) {
-				module.destroy.call(this, next, this);
-			} else {
-				next();
-			}
-		}
-
-		function afterDestroy() {
-			keys.forEach(invokeDetachOnModules, this);
-
-			callback();
+			module.destroy && module.destroy(this);
 		}
 
 		function invokeDetachOnModules(name) {
 			var module = this._modules[name];
 
-			module.detach && module.detach.call(this, this);
+			module.detach && module.detach(this);
 		}
 	}
 
@@ -216,11 +147,6 @@
 
 		return this;
 	}
-
-	function noop() {
-		
-	}
-
 }(
 	function _require(name) {
 		return typeof require !== 'undefined' ? require(name) : window[name];
