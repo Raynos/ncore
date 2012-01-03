@@ -24,20 +24,20 @@ suite("Core", function () {
 			}
 		};
 
-		Core.use("module", module, obj);
+		Core.use("module", module);
 	});
 
 	test("Core use on initialized core", function (done) {
 		var Core = instance();
 		var module = {
-			init: function (done) {
+			init: function () {
 				assert(true, "init does not get called");
 				done();
 			}
 		}
 
 		Core.init();
-		Core.use("module");
+		Core.use("module", module);
 	});
 
 	test("Core use names", function (done) {
@@ -112,12 +112,12 @@ suite("Core", function () {
 		var Core = instance();
 		var module = {
 			detach: function () {
-				counter++;
+				assert.equal(counter, 1, "counter is not correct");
+				done();
 			},
 			destroy: function () {
 				assert(true, "destroy is not called");
-				assert.equal(counter, 1, "counter is not correct");
-				done();
+				counter++;
 			}
 		}
 
