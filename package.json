@@ -7,7 +7,7 @@
 	"main": "src/core",
 	"dependencies": {
 		"pd": "0.4.1",
-		"eventemitter-light": "0.1.1"
+		"eventemitter-light": "0.1.2"
 	},
 	"engines": {
 		"node": "0.6.x"

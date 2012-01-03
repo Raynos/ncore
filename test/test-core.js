@@ -1,9 +1,9 @@
 var assert = require("assert"),
-	nCore = require("../src/core.js").nCore;
+	nCore = require("../lib/core.js");
 
 suite("Core", function () {
 	test("Core exists", function () {
-		var Core = Object.create(nCore).constructor();
+		var Core = instance();
 		assert(Core, "core does not exist");
 		assert(Core.use, "core does not have use method");
 		assert(Core.init, "core does not have init method");
@@ -124,6 +124,26 @@ suite("Core", function () {
 		Core.use("module", module);
 		Core.init();
 		Core.destroy();
+	});
+
+	test("Core module", function (done) {
+		var Core = instance();
+
+		var module = {
+			attach: function () {
+				assert.equal(this.mediator, Core,
+					"mediator is not Core");
+				this.foo();
+				done();
+			},
+			foo: function () {
+				assert.equal(this, module, 
+					"this is not module");
+			}
+		};
+
+		Core.module("module", module);
+		Core.init();
 	});
 });
 

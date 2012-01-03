@@ -1,29 +1,26 @@
-var Core = require("../../src/core").nCore,
+var Core = require("../../lib/core"),
 	http = require("http");
 
-Core.use("helloworld controller", {
-	attach: function _attach(mediator) {
-		mediator.on("helloworld", handleHelloWorld);
-
-		function handleHelloWorld(res) {
-			res.end("hello world");
-		}
+Core.module("helloworld controller", {
+	attach: function _attach() {
+		this.mediator.on("helloworld", this.handleHelloWorld);
+	},
+	handleHelloWorld: function _handleHelloWorld(res) {
+		res.end("hello world");
 	}
 });
 
-Core.use("helloworld server", {
-	init: function _init(done, mediator) {
-		var server = http.createServer(handleRequest);
-		server.listen(4000, done);
+Core.module("helloworld server", {
+	init: function _init() {
+		var server = http.createServer(this.handleRequest);
+		server.listen(4000);
 
-		function handleRequest(req, res) {
-			mediator.emit("helloworld", res);
-		}
+	},
+	handleRequest: function _handleRequest(req, res) {
+		this.mediator.emit("helloworld", res);
 	}
 });
 
-Core.init(onCoreReady);
+Core.init();
 
-function onCoreReady() {
-	console.log("server ready");
-}
+console.log("server ready");
