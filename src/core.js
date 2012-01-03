@@ -2,7 +2,7 @@
 	"use strict";
 
 	var pd = require("pd"),
-		events = require("EventEmitter2"),
+		events = require("eventemitter2"),
 		EventEmitter2 = events.EventEmitter2 || events,
 		after = require("after");
 
