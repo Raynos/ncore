@@ -161,6 +161,24 @@ Note that core first destroys all the modules and _only_ then detaches all the m
 
 Core.constructor initializes the core. This should only be used if you want multiple seperate cores. You will have to initialize each core unless you want them to share data.
 
+### Core.module(...) <a name="core.module" href="#core.module"><small><sup>link</sup></small></a>
+
+Core.module attaches a module to the core. This is virtually the same as use except a module has `this.mediator` set to be the mediator and all the methods of the module are bound to the module using `.bindAll`.
+
+```javascript
+Core.module({
+	attach: function () {
+		doSomethingAsync(this.doThings);
+	},
+	doThings: function () {
+		this.mediator.on('foo', this.handleFoo);
+	},
+	handleFoo: function () {
+		/* ... */
+	}
+});
+```
+
 ## Installation
 
 `npm install ncore`
