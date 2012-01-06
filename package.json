@@ -1,12 +1,12 @@
 {
 	"name": "ncore",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "Core library for your application",
 	"keywords": ["core", "architecture", "infrastructure"],
 	"author": "Raynos <raynos2@gmail.com>",
 	"main": "lib/core",
 	"dependencies": {
-		"pd": "0.4.1",
+		"pd": "0.4.2",
 		"eventemitter-light": "0.1.2"
 	},
 	"engines": {
