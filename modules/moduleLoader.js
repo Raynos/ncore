@@ -63,7 +63,6 @@ var Loader = {
         }
 
         if (stat.isDirectory()) {
-            this.counter++;
             fs.readdir(this.uri, this.loadModuleFiles);
         } else if (stat.isFile()) {
             this.counter++;
@@ -79,6 +78,7 @@ var Loader = {
         files.forEach(loadModuleFile, this);
 
         function loadModuleFile(filename) {
+            this.counter++;
             createLoader(
                 path.join(this.uri, filename),
                 this.mediator
