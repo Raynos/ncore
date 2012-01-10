@@ -31,10 +31,14 @@ suite("module loader", function () {
 
     test("module loader auto load", function (done) {
         Core.on("moduleLoader.attached", handleAttached);
-        Core.emit("moduleLoader.autoload", dummyPath);
+        Core.emit("moduleLoader.autoload", dummyPath, callback);
 
         function handleAttached(module) {
             assert(module.attach, "module is not a module");
+            assert(Core.attached, "module was not attached");
+        }
+
+        function callback() {
             assert(Core.attached, "module was not attached");
             done();
         }

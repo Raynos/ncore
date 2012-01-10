@@ -1,4 +1,5 @@
 var fs = require("fs"),
+    pd = require("pd"),
     path = require("path");
 
 /*
@@ -12,7 +13,7 @@ var fs = require("fs"),
     @emit 'moduleLoader.error' error - every time an error occurs an
         error event fires
 */
-var loader = { 
+module.exports = { 
     attach: function attach() {
         this.mediator.on('moduleLoader.load', this.loadModules);
         this.mediator.on('moduleLoader.autoload', this.autoLoadModules);
@@ -27,32 +28,50 @@ var loader = {
             delete this._autoload;
         }
     },
-    autoLoadModules: function autoLoadModules(uri) {
+    autoLoadModules: function autoLoadModules(uri, cb) {
         if (!this._autoload) {
             this._autoload = true;
             this.mediator.on('moduleLoader.loaded', this.attachModuleToCore);    
         }
-        this.loadModules(uri);
+        this.loadModules(uri, cb);
     },
     attachModuleToCore: function attachModuleToCore(module, uri) {
         this.mediator.module(uri, module);
         this.mediator.emit('moduleLoader.attached', module);
     },
-    loadModules: function loadModules(uri) {
-        fs.stat(uri, this.checkIfFolderOrFile.bind(this, uri));
+    loadModules: function loadModules(uri, cb) {
+        createLoader(uri, this.mediator).loadModules(cb);
+    }
+};
+
+function createLoader(uri, mediator) {
+    var loader = pd.extend({}, Loader);
+    loader.uri = uri;
+    loader.mediator = mediator;
+    return pd.bindAll(loader);
+}
+
+var Loader = {
+    loadModules: function loadModules(cb) {
+        this.cb = cb;
+        this.counter = 0;
+        fs.stat(this.uri, this.checkIfFolderOrFile);
     },
-    checkIfFolderOrFile: function checkIfFolderOrFile(uri, err, stat) {
+    checkIfFolderOrFile: function checkIfFolderOrFile(err, stat) {
         if (err) {
             return this.mediator.emit('moduleLoader.error', err);
         }
 
         if (stat.isDirectory()) {
-            fs.readdir(uri, this.loadModuleFiles.bind(this, uri));
+            this.counter++;
+            fs.readdir(this.uri, this.loadModuleFiles);
         } else if (stat.isFile()) {
-            this.loadModuleFile(uri)
+            this.counter++;
+            this.loadModuleFile()
+            this.decrementCounter();
         }
     },
-    loadModuleFiles: function loadModuleFiles(uri, err, files) {
+    loadModuleFiles: function loadModuleFiles(err, files) {
         if (err) {
             return this.mediator.emit('moduleLoader.error', err);
         }
@@ -60,14 +79,21 @@ var loader = {
         files.forEach(loadModuleFile, this);
 
         function loadModuleFile(filename) {
-            this.loadModules(path.join(uri, filename));
+            createLoader(
+                path.join(this.uri, filename),
+                this.mediator
+            ).loadModules(this.decrementCounter);
         }
     },
-    loadModuleFile: function loadModuleFile(uri) {
-        var module = require(uri);
+    loadModuleFile: function loadModuleFile() {
+        var uri = this.uri,
+            module = require(uri);
 
         this.mediator.emit('moduleLoader.loaded', module, uri);
+    },
+    decrementCounter: function decrementCounter() {
+        if (--this.counter === 0) {
+            this.cb && this.cb();
+        }
     }
 };
-
-module.exports = loader;
