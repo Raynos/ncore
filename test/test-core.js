@@ -6,8 +6,6 @@ suite("Core", function () {
 		var Core = instance();
 		assert(Core, "core does not exist");
 		assert(Core.use, "core does not have use method");
-		assert(Core.init, "core does not have init method");
-		assert(Core.destroy, "core does not have destroy method");
 		assert(Core.remove, "core does not have remove method");
 	});
 
@@ -24,19 +22,6 @@ suite("Core", function () {
 			}
 		};
 
-		Core.use("module", module);
-	});
-
-	test("Core use on initialized core", function (done) {
-		var Core = instance();
-		var module = {
-			init: function () {
-				assert(true, "init does not get called");
-				done();
-			}
-		}
-
-		Core.init();
 		Core.use("module", module);
 	});
 
@@ -64,34 +49,6 @@ suite("Core", function () {
 		done();
 	});
 
-	test("Core init", function (done) {
-		var Core = instance();
-		var module = {
-			attach: function () {},
-			init: function (mediator) {
-				assert(true, "init did not get called");
-				done();
-			}
-		}
-
-		Core.use("module", module);
-		Core.init();
-	});
-
-	test("Core remove on initialized modules", function (done) {
-		var Core = instance();
-		var module = {
-			destroy: function () {
-				assert(true, "destroy is not called");
-				done();
-			}
-		}
-
-		Core.use("module", module);
-		Core.init();
-		Core.remove("module");
-	});
-
 	test("Core remove", function (done) {
 		var Core = instance();
 		var module = {
@@ -107,43 +64,33 @@ suite("Core", function () {
 		Core.remove("module");
 	});
 
-	test("Core destroy", function (done) {
-		var counter = 0;
-		var Core = instance();
-		var module = {
-			detach: function () {
-				assert.equal(counter, 1, "counter is not correct");
-				done();
-			},
-			destroy: function () {
-				assert(true, "destroy is not called");
-				counter++;
-			}
-		}
-
-		Core.use("module", module);
-		Core.init();
-		Core.destroy();
-	});
-
 	test("Core module", function (done) {
-		var Core = instance();
+		var Core = instance(),
+			count = 0;
 
 		var module = {
 			attach: function () {
 				assert.equal(this.mediator, Core,
 					"mediator is not Core");
 				this.foo();
-				done();
 			},
 			foo: function () {
 				assert.equal(this, module, 
 					"this is not module");
+			},
+			init: function () {
+				count++;
+			},
+			detach: function () {
+				count++;
 			}
 		};
 
 		Core.module("module", module);
-		Core.init();
+		Core.emit("init");
+		Core.emit("destroy");
+		assert(count === 2, "count is wrong");
+		done();
 	});
 });
 

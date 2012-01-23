@@ -1,6 +1,6 @@
 {
 	"name": "ncore",
-	"version": "0.2.8",
+	"version": "0.3.0-alpha",
 	"description": "Core library for your application",
 	"keywords": ["core", "architecture", "infrastructure"],
 	"author": "Raynos <raynos2@gmail.com>",

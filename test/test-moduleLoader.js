@@ -14,7 +14,7 @@ suite("module loader", function () {
     });
 
     teardown(function () {
-        Core.destroy(); 
+        Core.emit("destroy");
     });
 
     test("module loader loads dummy", function (done) {
