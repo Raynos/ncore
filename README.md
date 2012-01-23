@@ -42,6 +42,10 @@ nCore is used to as a very minimal core to your entire application. Your entire 
 
 The idea is also for all your modules to communicate through the mediator (which is the core).
 
+## Articles
+
+ - [Live coding architecture](http://programmers.stackexchange.com/a/130535/4642)
+
 ## Documentation
 
 ### Modules
