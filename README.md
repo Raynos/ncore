@@ -5,6 +5,7 @@ A Core library for your node application infrastructure.
 ## Status: Beta
 
 ## Example
+
 ```javascript
 var Core = require("nCore"),
 	http = require("http");
@@ -22,14 +23,13 @@ Core.module("helloworld server", {
 	init: function _init() {
 		var server = http.createServer(this.handleRequest);
 		server.listen(4000);
-
 	},
 	handleRequest: function _handleRequest(req, res) {
 		this.mediator.emit("helloworld", res);
 	}
 });
 
-Core.init();
+Core.emit("init");
 
 console.log("server ready");
 ```
@@ -62,13 +62,14 @@ A module is just an object.
 	},
 	init: function () {
 		/*
-			Called when the core starts.
+			Called when someone emits "init" on the core
+			Only attached if using the .module method
 		*/
 	},
 	destroy: function () {
 		/*
-			Called when the core is destroyed or the module
-			is detached
+			Called when someone emits "destroy" on the core
+			Only attached if using the .module method
 		*/
 	}
 }
@@ -95,34 +96,21 @@ Core.use("name", module)
 Core.use({ moduleName: moduleOne, otherModuleName: moduleTwo });
 ```
 
-Also note that if the core is already running then the init method on the module will be invoked directly
+
+### init <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
+
+When attaching modules using the module method they listen on the "init" event.
+
+So to invoke init on all your modules just emit init
 
 ```javascript
-Core.init();
-Core.use("name", {
-	init: function () {
-		/*
-			If this particular core is already running.
-			i.e. init has already been invoked
-			then any module attached will also be initialized,
-			i.e. it's init routine gets called
-		*/
-	}
-});
-```
-
-### Core.init(...) <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
-
-Core.init starts your core. When the core is started all your modules are started. Every module should have an init method.
-
-```javascript
-Core.use("name", {
+Core.module("name", {
 	init: function () {
 		/* do stuff */
 	}
 });
 
-Core.init();
+Core.emit("init");
 ```
 
 ### Core.remove(...) <a name="core.remove" href="#core.remove"><small><sup>link</sup></small></a>
@@ -139,35 +127,37 @@ Core.remove is also overloaded
 Core.remove({ firstName: anything, secondName: anythingOther });
 ```
 
-Core.remove will also invoke destroy if the module has been initialized but has not been destroyed. Destroy is invoked before detach
+### destroy <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
+
+When attaching modules using the module method they listen on the "destroy" event
+
+So to invoke destroy on all your modules just emit destroy
 
 ```javascript
-Core.use("name", {
+Core.module("name", {
 	destroy: function () {
-		/* destroy it */
+		/* do stuff */
 	}
 });
-Core.init();
-Core.remove("name");
+
+Core.emit("destroy");
 ```
 
-### Core.destroy(...) <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
+### Core.constructor(ee) <a name="core.constructor" href="#core.constructor"><small><sup>link</sup></small></a>
 
-Core.destroy destroys all modules in the core. It also removes them.
+Core.constructor initializes the core. 
 
-```javascript
-Core.destroy();
-```
+You can pass an event emitter object along to have it mixed in. For example if you want to use EventEmitter2 instead of EventEmitter-light you can pass it along
 
-Note that core first destroys all the modules and _only_ then detaches all the modules. This means other modules can react to the destroy actions of modules before all the modules are detached.
-
-### Core.constructor() <a name="core.constructor" href="#core.constructor"><small><sup>link</sup></small></a>
-
-Core.constructor initializes the core. This should only be used if you want multiple seperate cores. You will have to initialize each core unless you want them to share data.
+``` javascript
+Core.constructor(require("eventemitter2").EventEmitter)
 
 ### Core.module(...) <a name="core.module" href="#core.module"><small><sup>link</sup></small></a>
 
 Core.module attaches a module to the core. This is virtually the same as use except a module has `this.mediator` set to be the mediator and all the methods of the module are bound to the module using `.bindAll`.
+
+It also binds the init and destroy methods of the object to the init and destroy
+events on the core.
 
 ```javascript
 Core.module({
