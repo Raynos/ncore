@@ -64,6 +64,13 @@ suite("Core", function () {
 		Core.remove("module");
 	});
 
+	test("Core remove on object without detach", function (done) {
+		var Core = instance();
+		Core.use("module", {});
+		Core.remove("module");
+		done();
+	});
+
 	test("Core module", function (done) {
 		var Core = instance(),
 			count = 0;
