@@ -15,6 +15,7 @@ suite("module loader", function () {
 
     teardown(function () {
         Core.emit("destroy");
+        Core.purge();
     });
 
     test("module loader loads dummy", function (done) {

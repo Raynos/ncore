@@ -49,6 +49,14 @@ suite("Core", function () {
 		done();
 	});
 
+	test("destroy fires on destroy", function (done) {
+		var module = { destroy: done };
+		var Core = instance();
+
+		Core.module("name", module);
+		Core.emit("destroy");
+	})
+
 	test("Core remove", function (done) {
 		var Core = instance();
 		var module = {
@@ -112,7 +120,7 @@ suite("Core", function () {
 			init: function () {
 				count++;
 			},
-			detach: function () {
+			destroy: function () {
 				count++;
 			}
 		};
