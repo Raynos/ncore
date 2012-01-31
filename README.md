@@ -151,6 +151,7 @@ You can pass an event emitter object along to have it mixed in. For example if y
 
 ``` javascript
 Core.constructor(require("eventemitter2").EventEmitter)
+```
 
 ### Core.module(...) <a name="core.module" href="#core.module"><small><sup>link</sup></small></a>
 
