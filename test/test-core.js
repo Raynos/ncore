@@ -71,6 +71,30 @@ suite("Core", function () {
 		done();
 	});
 
+	test("Core purge", function (done) {
+		var i = 0;
+		var Core = instance();
+		var module = {
+			attach: function () {
+				this.mediator.on("foo", this.foo);
+			},
+			foo: function () {
+				i++;
+			},
+			init: function () {
+				i++;
+			}
+		};
+
+		Core.module("module", module);
+		Core.emit("init");
+		Core.purge();
+		Core.emit("foo");
+		Core.emit("init");
+		assert(i === 1);
+		done();
+	});
+
 	test("Core module", function (done) {
 		var Core = instance(),
 			count = 0;

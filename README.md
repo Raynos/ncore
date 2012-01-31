@@ -174,6 +174,15 @@ Core.module({
 });
 ```
 
+### Core.purge() <a name="purge" href="#purge"><small><sup>link</sup></small></a>
+
+Core.purge detaches all modules from the core and cleans up the event listeners. It puts the core into a clean state.
+
+``` javascript
+Core.emit("destroy"); // destroy all modules
+Core.purge(); // clean the core
+```
+
 ## Installation
 
 `npm install ncore`
