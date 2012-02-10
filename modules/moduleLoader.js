@@ -3,11 +3,12 @@ var fs = require("fs"),
     path = require("path");
 
 /*
-    @on 'moduleLoader.load' path - loader listens on the module loading command
-        This will load all the js files in the folder (or the file path) as 
-        ncore modules
-    @on 'moduleLoader.autoload' path - same as load except it automatically
-        attaches the module to the core
+    @method 'moduleLoader.load' path cb - loader listens on the module 
+        loading command. This will load all the js files in the folder 
+        (or the file path) as ncore modules. The callback fires if all
+        the modules have been recursively loaded.
+    @method 'moduleLoader.autoload' path cb - same as load except it 
+        automatically attaches the module to the core
     @emit 'moduleLoader.loaded' module uri - every time a module is loaded 
         an event fires saying the module was attached
     @emit 'moduleLoader.error' error - every time an error occurs an
@@ -15,8 +16,8 @@ var fs = require("fs"),
 */
 module.exports = { 
     attach: function attach() {
-        this.mediator.on('moduleLoader.load', this.loadModules);
-        this.mediator.on('moduleLoader.autoload', this.autoLoadModules);
+        this.mediator.method('moduleLoader.load', this.loadModules);
+        this.mediator.method('moduleLoader.autoload', this.autoLoadModules);
     },
     detach: function detach() {
         this.mediator.removeListener('moduleLoader.load', this.loadModules);
