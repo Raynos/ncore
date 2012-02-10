@@ -227,13 +227,13 @@ Core.module("othermodule", {
 
 ## Installation
 
-`npm install ncore`
+`$ npm install ncore`
 
 ## Test
 
-`make test`
+`$ make test`
 
-## constructortributors
+## contributors
 
  - Raynos
 
