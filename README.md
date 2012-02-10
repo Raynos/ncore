@@ -255,5 +255,5 @@ Core.module("othermodule", {
   [2]: http://travis-ci.org/Raynos/ncore
   [3]: https://github.com/flatiron/broadway
   [4]: #modules
-  [5]: https://github.com/Raynos/ncore#core.use
-  [6]: https://github.com/Raynos/ncore#moduleLoader
+  [5]: #core.use
+  [6]: #moduleLoader
