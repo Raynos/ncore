@@ -105,7 +105,7 @@ Core.use({ moduleName: moduleOne, otherModuleName: moduleTwo });
 ```
 
 
-### init event <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
+### @emit init <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
 
 When attaching modules using the module method they listen on the "init" event.
 
@@ -135,7 +135,7 @@ Core.remove is also overloaded
 Core.remove({ firstName: anything, secondName: anythingOther });
 ```
 
-### destroy event <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
+### @emit destroy <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
 
 When attaching modules using the module method they listen on the "destroy" event
 
@@ -236,6 +236,53 @@ Core.module("othermodule", {
 ## nCore modules documentation
 
 ### moduleLoader <a name="moduleLoader" href="#moduleLoader"><small><sup>link</sup></small></a>
+
+The moduleLoader is a ready made nCore module you can use to load other modules
+
+``` javascript
+var Core = Object.create(nCore).constructor(),
+    moduleLoader = require("ncore/modules/moduleLoader");
+    
+Core.module("moduleLoader", moduleLoader);
+Core.invoke("moduleLoader.autoLoad", __dirname + "/modules", function () {
+  // All modules in modules folder have been loaded
+  // All done now.
+  // emit initialization event
+  Core.emit("init");
+});
+```
+
+### @invoke moduleLoader.load(folder, cb) <a name="moduleLoader.load" href="#moduleLoader.load"><small><sup>link</sup></small></a>
+
+You can ask the moduleLoader to load all the modules located in a folder. The folder is a path to the file and the callback get's
+fired when all the modules in it have been loaded. Loading means that they are just found and required.
+
+``` javascript
+Core.on("moduleLoader.loaded", function (module, uri) {
+ // A module was loaded
+});
+
+Core.invoke("moduleLoader.load", uri, function () {
+  ...
+});
+```
+
+### @invoke moduleLoader.autoload(folder, cb) <a name="moduleLoader.autoload" href="#moduleLoader.autoload"><small><sup>link</sup></small></a>
+
+autoloading modules means loading them and then attaching them to the core
+
+``` javascript
+Core.on("moduleLoader.attached", function (module, uri) {
+  // A module was attached
+});
+
+Core.invoke("moduleLoader.autoload", uri, function () {
+  // Core is ready with all the modules attached to it.
+  time.toParty();
+});
+```
+
+### @on moduleLoader.loaded(module, uri)
 
 ## Installation
 
