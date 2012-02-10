@@ -97,7 +97,7 @@ Core.use({ moduleName: moduleOne, otherModuleName: moduleTwo });
 ```
 
 
-### init <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
+### init event <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
 
 When attaching modules using the module method they listen on the "init" event.
 
@@ -127,7 +127,7 @@ Core.remove is also overloaded
 Core.remove({ firstName: anything, secondName: anythingOther });
 ```
 
-### destroy <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
+### destroy event <a name="core.destroy" href="#core.destroy"><small><sup>link</sup></small></a>
 
 When attaching modules using the module method they listen on the "destroy" event
 
@@ -161,7 +161,7 @@ It also binds the init and destroy methods of the object to the init and destroy
 events on the core.
 
 ```javascript
-Core.module({
+Core.module("name", {
 	attach: function () {
 		doSomethingAsync(this.doThings);
 	},
@@ -181,6 +181,48 @@ Core.purge detaches all modules from the core and cleans up the event listeners.
 ``` javascript
 Core.emit("destroy"); // destroy all modules
 Core.purge(); // clean the core
+```
+
+### mediator.method(name, function) <a name="method" href="#method"><small><sup>link</sup></small></a>
+
+mediator.method attaches a "method" to the core. This is basically adding a listener to a single event with the concept being that you want to use the mediator to invoke methods on a module
+
+
+``` javascript
+Core.module("mymodule", {
+	attach: function () {
+		this.mediator.method("mymodule.methodName", this.methodName);
+	},
+	methodName: function (data, callback) {
+		doStuffAsync(data, callback);
+	}
+});
+```
+
+### mediator.invoke(name, ...) <a name="invoke" href="#invoke"><small><sup>link</sup></small></a>
+
+Invoke a method defined by mediator.method. It should be noted that invoke/method is seperate from emit/on. This is meant to be a way to say "I want some module to do something for me". Rather then events which are "I am doing something, other people can listen to me".
+
+The main difference is events are one emitter, many listeners. Where as methods are one listener, many emitters.
+
+``` javascript
+Core.module("mymodule", {
+	attach: function () {
+		this.mediator.method("mymodule.methodName", this.methodName);
+	},
+	methodName: function (data, cb) {
+		cb(data, and, stuff);
+	}
+});
+
+Core.module("othermodule", {
+	init: function () {
+		this.mediator.invoke("mymodule.methodName", data, this.callback)
+	}, 
+	callback: function (data, and, stuff) {
+		...
+	}
+})
 ```
 
 ## Installation
