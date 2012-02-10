@@ -42,11 +42,19 @@ nCore is used to as a very minimal core to your entire application. Your entire 
 
 The idea is also for all your modules to communicate through the mediator (which is the core).
 
+ - nCore strictly defines a unit and makes mocking trivial. This means unit testing and TDD is real easy
+ - nCore gives you a mediator and enables loosely coupled EDA style architecture
+ - nCore gives you infrastructure for run-time module addition and removal to your application core
+
 ## Articles
 
  - [Live coding architecture](http://programmers.stackexchange.com/a/130535/4642)
 
 ## Documentation <a name="docs" href="#docs"><small><sup>link</sup></small></a>
+
+ - [Modules][4]
+ - [Core][5]
+ - [moduleLoader][6]
 
 ### Modules <a name="modules" href="#modules"><small><sup>link</sup></small></a>
 
@@ -225,6 +233,10 @@ Core.module("othermodule", {
 })
 ```
 
+## nCore modules documentation
+
+### moduleLoader <a name="moduleLoader" href="#moduleLoader"><small><sup>link</sup></small></a>
+
 ## Installation
 
 `$ npm install ncore`
@@ -242,3 +254,6 @@ Core.module("othermodule", {
   [1]: https://secure.travis-ci.org/Raynos/ncore.png
   [2]: http://travis-ci.org/Raynos/ncore
   [3]: https://github.com/flatiron/broadway
+  [4]: https://github.com/Raynos/ncore#modules
+  [5]: https://github.com/Raynos/ncore#core.use
+  [6]: https://github.com/Raynos/ncore#moduleLoader
