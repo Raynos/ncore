@@ -46,9 +46,9 @@ The idea is also for all your modules to communicate through the mediator (which
 
  - [Live coding architecture](http://programmers.stackexchange.com/a/130535/4642)
 
-## Documentation
+## Documentation <a name="docs" href="#docs"><small><sup>link</sup></small></a>
 
-### Modules
+### Modules <a name="modules" href="#modules"><small><sup>link</sup></small></a>
 
 A module is just an object.
 
