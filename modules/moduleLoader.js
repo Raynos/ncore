@@ -7,24 +7,32 @@ var fs = require("fs"),
         loading command. This will load all the js files in the folder 
         (or the file path) as ncore modules. The callback fires if all
         the modules have been recursively loaded.
+        
     @method 'moduleLoader.autoload' path cb - same as load except it 
         automatically attaches the module to the core
+        
     @emit 'moduleLoader.loaded' module uri - every time a module is loaded 
         an event fires saying the module was attached
+        
+    @emit 'moduleLoader.attached' module uri - every time a module is 
+        attached to the core this event will fire.
+    
     @emit 'moduleLoader.error' error - every time an error occurs an
         error event fires
 */
 module.exports = { 
     attach: function attach() {
-        this.mediator.method('moduleLoader.load', this.loadModules);
-        this.mediator.method('moduleLoader.autoload', this.autoLoadModules);
+        var mediator = this.mediator;
+        mediator.method('moduleLoader.load', this.loadModules);
+        mediator.method('moduleLoader.autoload', this.autoLoadModules);
     },
     detach: function detach() {
-        this.mediator.removeListener('moduleLoader.load', this.loadModules);
-        this.mediator.removeListener(
+        var mediator = this.mediator
+        mediator.removeListener('moduleLoader.load', this.loadModules);
+        mediator.removeListener(
             'moduleLoader.autoload', this.autoLoadModules);
         if (this._autoload) {
-            this.mediator.removeListener('moduleLoader.loaded', 
+            mediator.removeListener('moduleLoader.loaded', 
                 this.attachModuleToCore);
             delete this._autoload;
         }
@@ -37,8 +45,9 @@ module.exports = {
         this.loadModules(uri, cb);
     },
     attachModuleToCore: function attachModuleToCore(module, uri) {
-        this.mediator.module(uri, module);
-        this.mediator.emit('moduleLoader.attached', module);
+        var mediator = this.mediator;
+        mediator.module(uri, module);
+        mediator.emit('moduleLoader.attached', module);
     },
     loadModules: function loadModules(uri, cb) {
         createLoader(uri, this.mediator).loadModules(cb);
