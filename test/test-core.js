@@ -155,6 +155,14 @@ suite("nCore", function () {
 			Core.invoke("name");
 		});
 
+		test("Core unmethod", function () {
+			Core.method("name", function () { });
+			Core.unmethod("name");
+			assert.throws(function () {
+				Core.invoke("name");
+			});
+		});
+
 		test("Core invoke passes data", function (done) {
 			Core.method("name", function (data) {
 				assert.equal(data, "bar", "data is not passed properly");

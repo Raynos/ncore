@@ -207,6 +207,10 @@ Core.module("mymodule", {
 });
 ```
 
+### mediator.unmethod(name) <a name="unmethod" href="#unmethod"><small><sup>link</sup></small></a>
+
+Removes a method from the mediator
+
 ### mediator.invoke(name, ...) <a name="invoke" href="#invoke"><small><sup>link</sup></small></a>
 
 Invoke a method defined by mediator.method. It should be noted that invoke/method is seperate from emit/on. This is meant to be a way to say "I want some module to do something for me". Rather then events which are "I am doing something, other people can listen to me".
