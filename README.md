@@ -284,6 +284,10 @@ Core.invoke("moduleLoader.autoload", uri, function () {
 
 ### @on moduleLoader.loaded(module, uri)
 
+### @on moduleLoader.attached(module, uri)
+
+### @on moduleLoader.error(err)
+
 ## Installation
 
 `$ npm install ncore`
