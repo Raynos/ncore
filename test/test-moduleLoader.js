@@ -20,7 +20,7 @@ suite("module loader", function () {
 
     test("module loader loads dummy", function (done) {
         Core.on('moduleLoader.loaded', handleLoad);
-        Core.emit("moduleLoader.load", dummyPath);
+        Core.invoke("moduleLoader.load", dummyPath);
         
         function handleLoad(module, uri) {
             assert(module.attach, "is not a module");
@@ -32,7 +32,7 @@ suite("module loader", function () {
 
     test("module loader auto load", function (done) {
         Core.on("moduleLoader.attached", handleAttached);
-        Core.emit("moduleLoader.autoload", dummyPath, callback);
+        Core.invoke("moduleLoader.autoload", dummyPath, callback);
 
         function handleAttached(module) {
             assert(module.attach, "module is not a module");
@@ -49,7 +49,7 @@ suite("module loader", function () {
         var uri = path.join(__dirname, 'recursive');
 
         Core.on('moduleLoader.attached', handleAttached);
-        Core.emit("moduleLoader.autoload", uri);
+        Core.invoke("moduleLoader.autoload", uri);
 
         function handleAttached(module) {
             assert(module.attach, "module is not a module");
@@ -60,7 +60,7 @@ suite("module loader", function () {
 
     test("detaches cleanly", function () {
         Core.remove("moduleLoader");
-        assert.equal(0, Core._events['moduleLoader.load'].length,
+        assert.equal(undefined, Core._methods['moduleLoader.load'],
             "events did not remove cleanly");
     });
 });

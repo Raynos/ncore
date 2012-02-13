@@ -6,7 +6,7 @@
 	"author": "Raynos <raynos2@gmail.com>",
 	"main": "lib/core",
 	"dependencies": {
-		"pd": "0.4.2",
+		"pd": "0.6.1",
 		"eventemitter-light": "0.2.1"
 	},
 	"engines": {

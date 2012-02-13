@@ -28,9 +28,8 @@ module.exports = {
     },
     detach: function detach() {
         var mediator = this.mediator
-        mediator.removeListener('moduleLoader.load', this.loadModules);
-        mediator.removeListener(
-            'moduleLoader.autoload', this.autoLoadModules);
+        mediator.unmethod('moduleLoader.load');
+        mediator.unmethod('moduleLoader.autoload');
         if (this._autoload) {
             mediator.removeListener('moduleLoader.loaded', 
                 this.attachModuleToCore);
