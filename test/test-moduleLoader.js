@@ -60,7 +60,7 @@ suite("module loader", function () {
 
     test("detaches cleanly", function () {
         Core.remove("moduleLoader");
-        assert.equal(undefined, Core._methods['moduleLoader.load'],
+        assert.equal(0, Core._events['moduleLoader.load'].length,
             "events did not remove cleanly");
     });
 });

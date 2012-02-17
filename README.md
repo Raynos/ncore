@@ -83,7 +83,7 @@ A module is just an object.
 }
 ```
 
-Generally a modules live cycle is attach -> init -> destroy -> detach
+Generally a modules live cycle is attach -> init -> detach
 
 ### Core.use(...) <a name="core.use" href="#core.use"><small><sup>link</sup></small></a>
 
@@ -105,20 +105,26 @@ Core.use({ moduleName: moduleOne, otherModuleName: moduleTwo });
 ```
 
 
-### @emit init <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
+### Core.init(cb) <a name="core.init" href="#core.init"><small><sup>link</sup></small></a>
 
-When attaching modules using the module method they listen on the "init" event.
+Modules attached to the core optionally have an init method. When you invoke 
+init on the core it will invoke all the init methods of all the modules.
 
-So to invoke init on all your modules just emit init
+Note that Core.init has a callback which fires when all the modules are done
+intializating. A particular module can be say it's done by invoke the done
+method
 
 ```javascript
 Core.module("name", {
-	init: function () {
+	init: function (done) {
 		/* do stuff */
+		done();
 	}
 });
 
-Core.emit("init");
+Core.init(function () {
+	/* all done */
+});
 ```
 
 ### Core.remove(...) <a name="core.remove" href="#core.remove"><small><sup>link</sup></small></a>
@@ -193,7 +199,7 @@ Core.purge(); // clean the core
 
 ### mediator.method(name, function) <a name="method" href="#method"><small><sup>link</sup></small></a>
 
-mediator.method attaches a "method" to the core. This is basically adding a listener to a single event with the concept being that you want to use the mediator to invoke methods on a module
+mediator.method attaches a "method" to the core. This is a macro for `.on`
 
 
 ``` javascript
@@ -207,15 +213,9 @@ Core.module("mymodule", {
 });
 ```
 
-### mediator.unmethod(name) <a name="unmethod" href="#unmethod"><small><sup>link</sup></small></a>
-
-Removes a method from the mediator
-
 ### mediator.invoke(name, ...) <a name="invoke" href="#invoke"><small><sup>link</sup></small></a>
 
-Invoke a method defined by mediator.method. It should be noted that invoke/method is seperate from emit/on. This is meant to be a way to say "I want some module to do something for me". Rather then events which are "I am doing something, other people can listen to me".
-
-The main difference is events are one emitter, many listeners. Where as methods are one listener, many emitters.
+Invoke a method defined by mediator.method. This is a macro for `.emit`
 
 ``` javascript
 Core.module("mymodule", {

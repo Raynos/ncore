@@ -66,6 +66,32 @@ suite("nCore", function () {
 			Core.remove("module");
 		});
 
+		test("Core init", function (done) {
+			var module = {
+				init: function (d) {
+					d();
+				}
+			};
+
+			var module2 = {
+				init: function (d) {
+					setTimeout(d, 50);
+				}
+			};
+
+			var module3 = {
+				init: function () { }
+			};
+
+			Core.use("module", module);
+			Core.use("module2", module2);
+			Core.use("module3", module3);
+
+			Core.init(function () {
+				done();
+			});
+		});
+
 		test("Core remove on object without detach", function (done) {
 			Core.use("module", {});
 			Core.remove("module");
@@ -103,10 +129,10 @@ suite("nCore", function () {
 			};
 
 			Core.module("module", module);
-			Core.emit("init");
+			Core.init();
 			Core.purge();
 			Core.emit("foo");
-			Core.emit("init");
+			Core.init();
 			assert(i === 1);
 			done();
 		});
@@ -133,48 +159,10 @@ suite("nCore", function () {
 			};
 
 			Core.module("module", module);
-			Core.emit("init");
+			Core.init();
 			Core.emit("destroy");
 			assert(count === 2, "count is wrong");
 			done();
-		});
-	});
-
-	suite("Methods", function () {
-		test("methods exist", function () {
-			assert(Core.invoke, "invoke does not exist");
-			assert(Core.method, "method does not exist");
-		})
-
-		test("Core invoke", function (done) {
-			Core.method("name", function () {
-				assert(true, "is not called");
-				done();
-			});
-
-			Core.invoke("name");
-		});
-
-		test("Core unmethod", function () {
-			Core.method("name", function () { });
-			Core.unmethod("name");
-			assert.throws(function () {
-				Core.invoke("name");
-			});
-		});
-
-		test("Core invoke passes data", function (done) {
-			Core.method("name", function (data) {
-				assert.equal(data, "bar", "data is not passed properly");
-				done();
-			});
-
-			Core.invoke("name", "bar");
-		});
-
-		test("Core method", function (done) {
-			Core.method("name", done);
-			Core.invoke("name");
 		});
 	});
 });
