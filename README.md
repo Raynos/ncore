@@ -20,16 +20,16 @@ Core.module("helloworld controller", {
 });
 
 Core.module("helloworld server", {
-	init: function _init() {
+	init: function init() {
 		var server = http.createServer(this.handleRequest);
 		server.listen(4000);
 	},
-	handleRequest: function _handleRequest(req, res) {
+	handleRequest: function handleRequest(req, res) {
 		this.mediator.emit("helloworld", res);
 	}
 });
 
-Core.emit("init");
+Core.init();
 
 console.log("server ready");
 ```
