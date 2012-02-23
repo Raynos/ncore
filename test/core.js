@@ -56,6 +56,22 @@ suite("Core", function () {
             assert.equal(Core.interfaces.name.foo, 42, 
                 "interface changes were not persisted")
         })
+
+        test("interfaces are proxied", function () {
+            var cached_interface
+            attach(Core, function (interface) {
+                cached_interface = interface
+                interface.method = function (echo) {
+                    return echo
+                }
+            })
+            assert.notEqual(cached_interface, Core.interfaces.name,
+                "the interfaces are the same");
+            assert.notEqual(cached_interface.method, 
+                Core.interfaces.name.method, "the methods are the same")
+            assert.equal(Core.interfaces.name.method(42), 42,
+                "echo method does not work");
+        })
     })
 
     suite("Core.constructor", function () {
