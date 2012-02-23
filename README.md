@@ -2,7 +2,7 @@
 
 A Core library for your node application infrastructure.
 
-## Status: Beta
+## Status: Rewrite in progress
 
 ## Example
 
