@@ -4,15 +4,19 @@ A Core library for your node application infrastructure.
 
 ## Status: Rewrite in progress
 
-## Example
+ - <a href="#example"> example </a>
+ - <a href="#motivation"> motivation </a>
+ - <a href="#docs"> docs </a>
+ - <a href="#install"> Installation </a>
+ - <a href="#test"> test </a>
+ - <a href="#contributors"> contributors </a>
+ - <a href="#licence"> licence </a>
+
+## Example <a name="example" href="#example"><small><sup>link</sup></small></a>
 
 /* TODO */
 
-## Motivation
-
-/* TODO */
-
-## Articles
+## Motivation <a name="motivation" href="#motivation"><small><sup>link</sup></small></a>
 
 /* TODO */
 
@@ -22,19 +26,19 @@ A Core library for your node application infrastructure.
 
 /* TODO */
 
-## Installation
+## Installation <a name="install" href="#install"><small><sup>link</sup></small></a>
 
 `$ npm install ncore`
 
-## Test
+## Test <a name="test" href="#test"><small><sup>link</sup></small></a>
 
 `$ make test`
 
-## contributors
+## contributors <a name="contributors" href="#contributors"><small><sup>link</sup></small></a>
 
  - Raynos
 
-## MIT Licenced
+## MIT Licenced <a name="licence" href="#licence"><small><sup>link</sup></small></a>
 
   [1]: https://secure.travis-ci.org/Raynos/ncore.png
   [2]: http://travis-ci.org/Raynos/ncore
