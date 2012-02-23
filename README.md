@@ -1,8 +1,8 @@
-# nCore [![Build Status][1]][2]
+# nCore 0.x
 
 A Core library for your node application infrastructure.
 
-## Status: Beta
+## Status: Outdated, use [nCore 1.x][8]
 
 ## Example
 
@@ -312,3 +312,4 @@ Core.invoke("moduleLoader.autoload", uri, function () {
   [4]: #modules
   [5]: #core.use
   [6]: #moduleLoader
+  [8]: https://github.com/Raynos/nCore
