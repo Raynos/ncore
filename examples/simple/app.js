@@ -2,24 +2,25 @@ var Core = require("../../lib/core").constructor(),
 	http = require("http");
 
 Core.module("helloworld controller", {
-	attach: function _attach() {
+	attach: function attach() {
 		this.mediator.on("helloworld", this.handleHelloWorld);
 	},
-	handleHelloWorld: function _handleHelloWorld(res) {
+	handleHelloWorld: function handleHelloWorld(res) {
 		res.end("hello world");
 	}
 });
 
 Core.module("helloworld server", {
-	init: function _init() {
+	init: function init(done) {
 		var server = http.createServer(this.handleRequest);
-		server.listen(4000);
+		server.listen(4000, done);
 	},
-	handleRequest: function _handleRequest(req, res) {
+	handleRequest: function handleRequest(req, res) {
 		this.mediator.emit("helloworld", res);
 	}
 });
 
-Core.emit("init");
+Core.init(function () {
+  console.log("server ready");
+});
 
-console.log("server ready");
