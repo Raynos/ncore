@@ -81,6 +81,14 @@ suite("Core", function () {
             })
             assert(Core.interfaces.name.method(), "this is incorrect");
         })
+
+        test("interface only has what is exposed", function () {
+            attach(Core, function (interface) {
+                interface.method = function () {}
+            })
+            assert.equal(Object.keys(Core.interfaces.name).length,
+                1, "interface has too many keys")
+        })
     })
 
     suite("Core.constructor", function () {
