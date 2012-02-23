@@ -72,6 +72,15 @@ suite("Core", function () {
             assert.equal(Core.interfaces.name.method(42), 42,
                 "echo method does not work");
         })
+
+        test("this value is correct", function () {
+            attach(Core, function (interface) {
+                interface.method = function () {
+                    return this.attach;
+                }
+            })
+            assert(Core.interfaces.name.method(), "this is incorrect");
+        })
     })
 
     suite("Core.constructor", function () {
