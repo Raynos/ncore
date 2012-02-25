@@ -1,26 +1,24 @@
-var Core = require("../../lib/core").constructor(),
-	http = require("http");
+var Core = Object.create(require("../../lib/core")).constructor({
+        server: {
+            controller: "hello-world"
+        }
+    }),
+    http = require("http");
 
-Core.module("helloworld controller", {
-	attach: function attach() {
-		this.mediator.on("helloworld", this.handleHelloWorld);
-	},
-	handleHelloWorld: function handleHelloWorld(res) {
-		res.end("hello world");
-	}
+Core.use("hello-world", {
+    define: {
+        print: function (req, res) {
+            res.end("hello world");
+        }
+    }
+})
+
+Core.use("server", {
+    inject: function (deps) {
+        http.createServer(function (req, res) {
+            deps.controller.print(req, res);
+        }).listen(8080);
+    }
 });
 
-Core.module("helloworld server", {
-	init: function init(done) {
-		var server = http.createServer(this.handleRequest);
-		server.listen(4000, done);
-	},
-	handleRequest: function handleRequest(req, res) {
-		this.mediator.emit("helloworld", res);
-	}
-});
-
-Core.init(function () {
-  console.log("server ready");
-});
-
+Core.init();
