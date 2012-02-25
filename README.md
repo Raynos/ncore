@@ -23,10 +23,10 @@ var Core = Object.create(require("nCore")).constructor({
     http = require("http");
 
 Core.use("hello-world", {
-    define: {
-        print: function (req, res) {
+    define: function (interface) {
+        interface.print = function (req, res) {
             res.end("hello world");
-        }
+        };
     }
 })
 
