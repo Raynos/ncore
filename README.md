@@ -14,6 +14,7 @@ A Core library for your node application infrastructure.
 
 ## Example <a name="example" href="#example"><small><sup>link</sup></small></a>
 
+``` javascript
 var Core = Object.create(require("nCore")).constructor({
         server: {
             controller: "hello-world"
@@ -38,6 +39,7 @@ Core.use("server", {
 });
 
 Core.init();
+```
 
 ## Motivation <a name="motivation" href="#motivation"><small><sup>link</sup></small></a>
 
