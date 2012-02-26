@@ -9,31 +9,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       "type": "file",
       "data": {
         "language": {
-          "nameMatchers": [".md"],
-          "commentsOnly": true,
-          "name": "Markdown"
-        },
-        "sourcePath": "/home/raynos/Documents/nCore/README.md",
-        "projectPath": "README.md",
-        "targetPath": "index",
-        "title": "index"
-      },
-      "depth": 1,
-      "outline": [
-        {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Status: Rewrite in progress",
-            "slug": "status-rewrite-in-progress"
-          },
-          "depth": 2
-        }
-      ]
-    }, {
-      "type": "file",
-      "data": {
-        "language": {
           "nameMatchers": [".js"],
           "pygmentsLexer": "javascript",
           "singleLineComment": ["//"],
