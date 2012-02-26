@@ -16,7 +16,6 @@
 		"test": "make test"	
 	},
 	"devDependencies": {
-		"mocha": "0.13.0",
-		"groc": "0.2.8"
+		"mocha": "0.13.0"
 	}
 }

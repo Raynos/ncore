@@ -11,8 +11,5 @@ test-cov: lib-cov
 lib-cov:
 	@jscoverage lib lib-cov
 
-docs:
-	groc "lib/**/*.js" "test/**/*.js" --github
 
-
-.PHONY: test docs test-cov
+.PHONY: test test-cov
