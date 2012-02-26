@@ -615,3 +615,5 @@ moduleLoader.load("./modules", require("./dependencies.json"))
   [24]: https://github.com/Raynos/ncore#dependencies
   [25]: https://github.com/Raynos/ncore#modules
   [26]: https://github.com/Raynos/ncore#moduleLoader
+  [27]: https://github.com/Raynos/ncore#load
+  [28]: https://github.com/Raynos/ncore#finishedLoading
