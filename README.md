@@ -71,6 +71,12 @@ nCore is a dependency injection framework.
 
 ## <a name="module" href="#module">Module format <small><sup>link</sup></small></a>
 
+ - [define][11]
+ - [inject][12]
+ - [expose][13]
+ - [init][22]
+ - [destroy][23]
+
 A module has a few public properties that are used by the Core.
 
 A module defines it's own public interface through [`define`][11] and accepts it's dependencies through [`inject`][12]. Alternatively a module can define it's dependencies through [`expose`][13] and alternatively if the module has no [`inject`][12] method the dependencies are mixed into the module. 
@@ -82,12 +88,6 @@ Modules are handled in three step phases,
  1. First is the [`define`][11] phase where every module that is used defines it's public interface. Define is called once a module is used on the core
  2. Second is the [`inject`][12] phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.
  3. Lastly is the [`init`][22] phase, this happens after every module says it's done injecting. This also happens after the callback on [`Core.init`][5]. This phase is meant to start your application like starting your HTTP server.
-
- - [define][11]
- - [inject][12]
- - [expose][13]
- - [init][22]
- - [destroy][23]
 
 ### <a name="define" href="#define">`module.define(interface)` <small><sup>link</sup></small></a>
 
@@ -305,8 +305,6 @@ Core.remove("name");
 
 ## <a name="core" href="#core">`Core` <small><sup>link</sup></small></a>
 
-The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.
-
  - [Core.interfaces][9]
  - [Core.dependencies][24]
  - [Core.constructor][8]
@@ -314,6 +312,8 @@ The Core is an object you attach modules to. It keeps a record of the dependency
  - [Core.init][5]
  - [Core.remove][6]
  - [Core.purge][7]
+
+The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.
 
 ### <a name="interfaces" href="#interfaces">`Core.interfaces` <small><sup>link</sup></small></a>
 
@@ -540,13 +540,17 @@ Core.purge();
 
 ## <a name="modules" href="#modules">Modules <small><sup>link</sup></small></a>
 
-nCore comes with a set of default modules implemented to do specific tasks
-
  - [moduleLoader][26]
      - [moduleLoader.load][27]
      - [@on moduleLoader.finishedLoading][28]
 
+nCore comes with a set of default modules implemented to do specific tasks
+
+
 ## <a name="moduleLoader" href="#moduleLoader">moduleLoader <small><sup>link</sup><small></a>
+
+- [moduleLoader.load][27]
+- [@on moduleLoader.finishedLoading][28]
 
 The moduleLoader exposes an interface to autoLoad modules from a folder. It also
 exposes an API to write your dependency map based on files.
@@ -562,9 +566,6 @@ moduleLoader.on("finishedLoading", function () {
 })
 moduleLoader.load("./modules", require("./dependencies.json"))
 ```
-
-- [moduleLoader.load][27]
-- [@on moduleLoader.finishedLoading][28]
 
 ### <a name="load" href="#load">`moduleLoader.load(uri, deps)` <small><sup>link</sup></small></a>
 
