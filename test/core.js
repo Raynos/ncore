@@ -99,6 +99,18 @@ suite("Core", function () {
             assert.equal(Core.interfaces.name.foo, "bar",
                 "interface is not exposed properly")
         })
+
+        test("can expose methods", function () {
+            Core.use("name", {
+                foo: function () { },
+                bar: function () { },
+                baz: function () { },
+                expose: ["foo", "bar"]
+            })
+            var name = Core.interfaces.name;
+            assert(name.foo && name.bar && !name.baz, 
+                "methods not exposed properly");
+        })
     })
 
     suite("Core.constructor", function () {
