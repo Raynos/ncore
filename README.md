@@ -43,11 +43,20 @@ Core.init();
 
 ## Motivation <a name="motivation" href="#motivation"><small><sup>link</sup></small></a>
 
-/* TODO */
+nCore is a dependency injection framework.
+
+ - It strictly defines what a unit is and makes it easy to mock out that unit's dependencies. This makes testing and TDD easy
+ - It injects dependencies into your modules based on a file based configuration system and allows you to define the public interface of a module either using methods or using event emitters. This allows for loose coupling and encapsulation.
+ - It has support for hot reloading of modules. This basically means removing and adding modules on the fly whilst your core is still running
 
 ## Documentation <a name="docs" href="#docs"><small><sup>link</sup></small></a>
 
  - [nCore 0.x documentation][3]
+ - [Core.constructor][8]
+ - [Core.use][4]
+ - [Core.init][5]
+ - [Core.remove][6]
+ - [Core.purge][7]
 
 /* TODO */
 
@@ -68,3 +77,8 @@ Core.init();
   [1]: https://secure.travis-ci.org/Raynos/ncore.png
   [2]: http://travis-ci.org/Raynos/ncore
   [3]: https://github.com/Raynos/ncore/tree/0.x
+  [4]: https://github.com/Raynos/ncore#use
+  [5]: https://github.com/Raynos/ncore#init
+  [6]: https://github.com/Raynos/ncore#remove
+  [7]: https://github.com/Raynos/ncore#purge
+  [8]: https://github.com/Raynos/ncore#constructor

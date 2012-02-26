@@ -4,7 +4,7 @@
 	"description": "Core library for your application",
 	"keywords": ["core", "architecture", "infrastructure"],
 	"author": "Raynos <raynos2@gmail.com>",
-	"main": "lib/core",
+	"main": "index",
 	"dependencies": {
 		"pd": "0.6.1",
 		"eventemitter-light": "0.2.1"
@@ -16,6 +16,6 @@
 		"test": "make test"	
 	},
 	"devDependencies": {
-		"mocha": "0.8.1"
+		"mocha": "0.13.0"
 	}
 }

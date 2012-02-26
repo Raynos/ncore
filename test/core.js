@@ -1,4 +1,4 @@
-var nCore = require("../lib/core"),
+var nCore = require("../"),
     assert = require("assert")
 
 suite("Core", function () {
