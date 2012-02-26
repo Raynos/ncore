@@ -14,32 +14,30 @@ A Core library for your node application infrastructure. Handles initialization,
 
 ## <a name="example" href="#example">Example <small><sup>link</sup></small></a>
 
-``` javascript
-var Core = Object.create(require("nCore")).constructor({
-        server: {
-            controller: "hello-world"
+    var Core = Object.create(require("nCore")).constructor({
+            server: {
+                controller: "hello-world"
+            }
+        }),
+        http = require("http");
+
+    Core.use("hello-world", {
+        define: function (interface) {
+            interface.print = function (req, res) {
+                res.end("hello world");
+            };
         }
-    }),
-    http = require("http");
+    })
 
-Core.use("hello-world", {
-    define: function (interface) {
-        interface.print = function (req, res) {
-            res.end("hello world");
-        };
-    }
-})
+    Core.use("server", {
+        inject: function (deps) {
+            http.createServer(function (req, res) {
+                deps.controller.print(req, res);
+            }).listen(8080);
+        }
+    });
 
-Core.use("server", {
-    inject: function (deps) {
-        http.createServer(function (req, res) {
-            deps.controller.print(req, res);
-        }).listen(8080);
-    }
-});
-
-Core.init();
-```
+    Core.init();
 
 ## <a name="motivation" href="#motivation">Motivation <small><sup>link</sup></small></a>
 
