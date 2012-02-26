@@ -375,22 +375,22 @@ Instantiate an instance of the core. You need to pass the dependency mapping to 
   [1]: https://secure.travis-ci.org/Raynos/ncore.png
   [2]: http://travis-ci.org/Raynos/ncore
   [3]: https://github.com/Raynos/ncore/tree/0.x
-  [4]: https://github.com/Raynos/ncore#use
-  [5]: https://github.com/Raynos/ncore#init
-  [6]: https://github.com/Raynos/ncore#remove
-  [7]: https://github.com/Raynos/ncore#purge
-  [8]: https://github.com/Raynos/ncore#constructor
-  [9]: https://github.com/Raynos/ncore#interfaces
-  [10]: https://github.com/Raynos/ncore#module
-  [11]: https://github.com/Raynos/ncore#define
-  [12]: https://github.com/Raynos/ncore#inject
-  [13]: https://github.com/Raynos/ncore#expose
-  [14]: https://github.com/Raynos/ncore#example
-  [15]: https://github.com/Raynos/ncore#motivation
-  [16]: https://github.com/Raynos/ncore#docs
-  [17]: https://github.com/Raynos/ncore#install
-  [18]: https://github.com/Raynos/ncore#test
-  [19]: https://github.com/Raynos/ncore#contributors
-  [20]: https://github.com/Raynos/ncore#licence
-  [21]: https://github.com/Raynos/ncore#core
-  [22]: https://github.com/Raynos/ncore#module.init
+  [4]: #use
+  [5]: #init
+  [6]: #remove
+  [7]: #purge
+  [8]: #constructor
+  [9]: #interfaces
+  [10]: #module
+  [11]: #define
+  [12]: #inject
+  [13]: #expose
+  [14]: #example
+  [15]: #motivation
+  [16]: #docs
+  [17]: #install
+  [18]: #test
+  [19]: #contributors
+  [20]: #licence
+  [21]: #core
+  [22]: #module.init
