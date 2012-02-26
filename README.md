@@ -2,7 +2,7 @@
 
 A Core library for your node application infrastructure. Handles initialization, bootstrapping and dependency injection for you.
 
-## Status: Rewrite in progress
+## Status: Beta
 
  - [example][14]
  - [motivation][15]
