@@ -63,11 +63,9 @@ nCore is a dependency injection framework.
 Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.
 
 <details><summary> Examples </summary>
-    <div class="highlight">
-        <pre>
-            Content
-        </pre>
-    </div>
+    <code>
+        Content
+    </code>
 </details>
 
 /* TODO */
