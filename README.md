@@ -1,6 +1,6 @@
 # nCore [![Build Status][1]][2]
 
-A Core library for your node application infrastructure.
+A Core library for your node application infrastructure. Handles initialization, bootstrapping and dependency injection for you.
 
 ## Status: Rewrite in progress
 
@@ -12,7 +12,7 @@ A Core library for your node application infrastructure.
  - [contributors][19]
  - [licence][20]
 
-## Example <a name="example" href="#example"><small><sup>link</sup></small></a>
+## <a name="example" href="#example">Example <small><sup>link</sup></small></a>
 
 ``` javascript
 var Core = Object.create(require("nCore")).constructor({
@@ -41,7 +41,7 @@ Core.use("server", {
 Core.init();
 ```
 
-## Motivation <a name="motivation" href="#motivation"><small><sup>link</sup></small></a>
+## <a name="motivation" href="#motivation">Motivation <small><sup>link</sup></small></a>
 
 nCore is a dependency injection framework.
 
@@ -49,7 +49,7 @@ nCore is a dependency injection framework.
  - It injects dependencies into your modules based on a file based configuration system and allows you to define the public interface of a module either using methods or using event emitters. This allows for loose coupling and encapsulation.
  - It has support for hot reloading of modules. This basically means removing and adding modules on the fly whilst your core is still running
 
-## Documentation <a name="docs" href="#docs"><small><sup>link</sup></small></a>
+## <a name="docs" href="#docs">Documentation <small><sup>link</sup></small></a>
 
  - [nCore 0.x documentation][3]    
  - [Module format][10]
@@ -65,7 +65,7 @@ nCore is a dependency injection framework.
     - [Core.remove][6]
     - [Core.purge][7]
 
-## Module format <a name="module" href="#module"><small><sup>link</sup></small></a>
+## <a name="module" href="#module">Module format <small><sup>link</sup></small></a>
 
 A module has a few public properties that are used by the Core.
 
@@ -79,7 +79,7 @@ Modules are handled in three step phases,
  2. Second is the [`inject`][12] phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.
  3. Lastly is the [`init`][22] phase, this happens after every module says it's done injecting. This also happens after the callback on [`Core.init`][5]. This phase is meant to start your application like starting your HTTP server.
 
-### `module.define(interface)` <a name="define" href="#define"><small><sup>link</sup></small></a>
+### <a name="define" href="#define">`module.define(interface)` <small><sup>link</sup></small></a>
 
 A module is the implementation of an interface. When other modules want to interact with it, they should interact through a public interface. The way to define the public interface of a module is by defining an interface.
 
@@ -163,7 +163,7 @@ Core.use("name", {
 assert.equal(Core.interfaces.name.method(), 42);
 ```
 
-### `module.inject(deps, [done])` <a name="inject" href="#inject"><small><sup>link</sup></small></a>
+### <a name="inject" href="#inject">`module.inject(deps, [done])` <small><sup>link</sup></small></a>
 
 A module exposes an inject method which is used to handle the dependencies that are injected. It also has an optional done callback to allow the module to do asynchronous startup procedures.
 
@@ -227,7 +227,7 @@ Core.use("foo", {
 Core.init()
 ```
 
-### `module.expose` <a name="expose" href="#expose"><small><sup>link</sup></small></a>
+### <a name="expose" href="#expose">`module.expose` <small><sup>link</sup></small></a>
 
 Instead of defining an interface you can say what parts of the module should be exposed. Expose should contain an array containing the propertyNames that should become part of the interface
 
@@ -253,7 +253,7 @@ Core.interfaces.name.public();
 assert(!Core.interfaces.name.private)
 ```
 
-### `module.init()` <a name="module.init" href="#module.init"><small><sup>link</sup></small</a>
+### <a name="module.init" href="#module.init">`module.init()` <small><sup>link</sup></small</a>
 
 A module exposes an init method which is invoked when the core is done initializing.
 
@@ -275,11 +275,11 @@ Core.init(function () {
 })
 ```
 
-## `Core` <a name="core" href="#core"><small><sup>link</sup></small></a>
+## <a name="core" href="#core">`Core` <small><sup>link</sup></small></a>
 
 The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.
 
-### `Core.constructor(deps, [ee])` <a name="constructor" href="#constructor"><small><sup>link</sup></small></a>
+### <a name="constructor" href="#constructor">`Core.constructor(deps, [ee])` <small><sup>link</sup></small></a>
 
 Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.
 
@@ -338,7 +338,7 @@ Core.init()
 assert(Core.interfaces.bar.many)
 ```
 
-### `Core.interfaces` <a name="interfaces" href="#interfaces"><small><sup>link</sup></small></a>
+### <a name="interfaces" href="#interfaces">`Core.interfaces` <small><sup>link</sup></small></a>
 
 The Core has a public property named interfaces that contains all the public interfaces attached to the core.
 
