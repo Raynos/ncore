@@ -48,6 +48,11 @@ suite("Core", function () {
             })
         })
 
+        test("public interface is an event emitter", function () {
+            define(Core)
+            assert(Core.interfaces.name.on, "interface is not an EE")
+        })
+
         test("interface properties are persisted", function () {
             define(Core, function (interface) {
                 interface.foo = 42
@@ -86,7 +91,9 @@ suite("Core", function () {
                 interface.method = function () {}
             })
             assert.equal(Object.keys(Core.interfaces.name).length,
-                1, "interface has too many keys")
+                // 1 + 5 from the eventemitter (on, removeListener, once,
+                //  emit, constructor)
+                6, "interface has too many keys")
         })
 
         test("Core supports objects", function () {
