@@ -570,7 +570,7 @@ moduleLoader.load("./modules", require("./dependencies.json"))
 
 
 
-### <a name="finishedLoading" href="#finishedLoading"`@on moduleLoader.finishedLoading` <small><sup>link</sup></small></a>
+### <a name="finishedLoading" href="#finishedLoading">`@on moduleLoader.finishedLoading` <small><sup>link</sup></small></a>
 
 
 /* TODO */
