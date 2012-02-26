@@ -17,7 +17,6 @@ suite("Core", function () {
         assert(Core.constructor, "constructor does not exist")
         assert(Core.use, "Core.use does not exist")
         assert(Core.init, "Core.init does not exist")
-        assert(Core.module, "Core.module does not exist")
         assert(Core.remove, "Core.remove does not exist")
         assert(Core.purge, "Core.purge does not exist")
     })
@@ -99,18 +98,6 @@ suite("Core", function () {
             assert.equal(Core.interfaces.name.foo, "bar",
                 "interface is not exposed properly")
         })
-
-        test("can expose methods", function () {
-            Core.use("name", {
-                foo: function () { },
-                bar: function () { },
-                baz: function () { },
-                expose: ["foo", "bar"]
-            })
-            var name = Core.interfaces.name;
-            assert(name.foo && name.bar && !name.baz, 
-                "methods not exposed properly");
-        })
     })
 
     suite("Core.constructor", function () {
@@ -161,6 +148,16 @@ suite("Core", function () {
             assert(!Core._interfaces.name, "_interface is not removed")
             assert(!Core._modules.name, "_modules is not removed")
         })
+
+        test("calls destroy on module", function (done) {
+            Core.use("name", {
+                destroy: function () {
+                    assert(true, "was not called");
+                    done();
+                }
+            })
+            Core.remove("name");
+        })
     })
 
     suite("Core.purge", function () {
@@ -180,6 +177,13 @@ suite("Core", function () {
                 , "interfaces still exist")
             assert.equal(Object.keys(Core._modules).length, 0
                 , "interfaces still exist")
+        })
+
+        test("calles destroy on module", function (done) {
+            Core.use("name", {
+                destroy: function () { done() }
+            })
+            Core.purge()
         })
     })
 
@@ -213,6 +217,42 @@ suite("Core", function () {
                 }
             })
             Core.init()
+        })
+
+        test("init invokes callback", function (done) {
+            inject(Core);
+
+            Core.init(function () {
+                assert(true, "callback called");
+                done();
+            })
+        })
+
+        test("init invokes callback after done", function (done) {
+            var counter = 0;
+            inject(Core, function (deps, done) {
+                counter++;
+                done();
+            })
+
+            Core.init(function () {
+                assert(counter === 1, "counter is wrong");
+                done();
+            })
+        })
+
+        test("dependencies are mixed in", function () {
+            Core.use("name", {
+                foo: function () { return this.bar },
+                expose: ["foo"]
+            });
+
+            Core.dependencies.name = {
+                bar: "bar"
+            };
+            Core.use("bar", {});
+            Core.init();
+            assert(Core.interfaces.name.foo(), "bar not mixed in");
         })
     })
 })
