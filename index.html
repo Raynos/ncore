@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><meta name="groc-github-url" content="https://github.com/Raynos/ncore"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Raynos/ncore/blob/master/README.md">README.md</a></div></div><div id="document"><div class="segment"><div class="comments"><div class="wrapper"><h1 id="ncorebuildstatus12">nCore <a href="http://travis-ci.org/Raynos/ncore"><img src="https://secure.travis-ci.org/Raynos/ncore.png" alt="Build Status" title="" /></a></h1>
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><meta name="groc-github-url" content="https://github.com/Raynos/ncore"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Raynos/ncore/blob/master/README.md">README.md</a></div></div><div id="document"><div class="segment"><div class="comments"><div class="wrapper"><h1>nCore <a href="http://travis-ci.org/Raynos/ncore"><img src="https://secure.travis-ci.org/Raynos/ncore.png" alt="Build Status" title="" /></a></h1>
 
 <p>A Core library for your node application infrastructure. Handles initialization, bootstrapping and dependency injection for you.</p>
 
-<h2 id="status-rewrite-in-progress">Status: Rewrite in progress</h2>
+<h2>Status: Rewrite in progress</h2>
 
 <ul>
 <li><a href="https://github.com/Raynos/ncore#example">example</a></li>
@@ -14,7 +14,7 @@
 <li><a href="https://github.com/Raynos/ncore#licence">licence</a></li>
 </ul>
 
-<h2 id="anameexamplehrefexampleexamplesmallsuplinksupsmalla"><a name="example" href="#example">Example <small><sup>link</sup></small></a></h2>
+<h2><a name="example" href="#example">Example <small><sup>link</sup></small></a></h2>
 
 <p>``` javascript
 var Core = Object.create(require("nCore")).constructor({
@@ -43,7 +43,7 @@ var Core = Object.create(require("nCore")).constructor({
 <p>Core.init();
 ```</p>
 
-<h2 id="anamemotivationhrefmotivationmotivationsmallsuplinksupsmalla"><a name="motivation" href="#motivation">Motivation <small><sup>link</sup></small></a></h2>
+<h2><a name="motivation" href="#motivation">Motivation <small><sup>link</sup></small></a></h2>
 
 <p>nCore is a dependency injection framework.</p>
 
@@ -53,7 +53,7 @@ var Core = Object.create(require("nCore")).constructor({
 <li>It has support for hot reloading of modules. This basically means removing and adding modules on the fly whilst your core is still running</li>
 </ul>
 
-<h2 id="anamedocshrefdocsdocumentationsmallsuplinksupsmalla"><a name="docs" href="#docs">Documentation <small><sup>link</sup></small></a></h2>
+<h2><a name="docs" href="#docs">Documentation <small><sup>link</sup></small></a></h2>
 
 <ul>
 <li><a href="https://github.com/Raynos/ncore/tree/0.x">nCore 0.x documentation</a>    </li>
@@ -71,7 +71,7 @@ var Core = Object.create(require("nCore")).constructor({
 <li><a href="https://github.com/Raynos/ncore#purge">Core.purge</a></li></ul></li>
 </ul>
 
-<h2 id="anamemodulehrefmodulemoduleformatsmallsuplinksupsmalla"><a name="module" href="#module">Module format <small><sup>link</sup></small></a></h2>
+<h2><a name="module" href="#module">Module format <small><sup>link</sup></small></a></h2>
 
 <p>A module has a few public properties that are used by the Core.</p>
 
@@ -87,7 +87,7 @@ var Core = Object.create(require("nCore")).constructor({
 <li>Lastly is the <a href="https://github.com/Raynos/ncore#module.init"><code>init</code></a> phase, this happens after every module says it's done injecting. This also happens after the callback on <a href="https://github.com/Raynos/ncore#init"><code>Core.init</code></a>. This phase is meant to start your application like starting your HTTP server.</li>
 </ol>
 
-<h3 id="anamedefinehrefdefinemoduledefineinterfacesmallsuplinksupsmalla"><a name="define" href="#define"><code>module.define(interface)</code> <small><sup>link</sup></small></a></h3>
+<h3><a name="define" href="#define"><code>module.define(interface)</code> <small><sup>link</sup></small></a></h3>
 
 <p>A module is the implementation of an interface. When other modules want to interact with it, they should interact through a public interface. The way to define the public interface of a module is by defining an interface.</p>
 
@@ -171,7 +171,7 @@ var Core = Object.create(require("ncore")).constructor(),
 <p>assert.equal(Core.interfaces.name.method(), 42);
 ```</p>
 
-<h3 id="anameinjecthrefinjectmoduleinjectdepsdonesmallsuplinksupsmalla"><a name="inject" href="#inject"><code>module.inject(deps, [done])</code> <small><sup>link</sup></small></a></h3>
+<h3><a name="inject" href="#inject"><code>module.inject(deps, [done])</code> <small><sup>link</sup></small></a></h3>
 
 <p>A module exposes an inject method which is used to handle the dependencies that are injected. It also has an optional done callback to allow the module to do asynchronous startup procedures.</p>
 
@@ -235,7 +235,7 @@ var Core = Object.create(require("ncore")).constructor({
 <p>Core.init()
 ```</p>
 
-<h3 id="anameexposehrefexposemoduleexposesmallsuplinksupsmalla"><a name="expose" href="#expose"><code>module.expose</code> <small><sup>link</sup></small></a></h3>
+<h3><a name="expose" href="#expose"><code>module.expose</code> <small><sup>link</sup></small></a></h3>
 
 <p>Instead of defining an interface you can say what parts of the module should be exposed. Expose should contain an array containing the propertyNames that should become part of the interface</p>
 
@@ -261,7 +261,7 @@ Core.interfaces.name.public();
 assert(!Core.interfaces.name.private)
 ```</p>
 
-<h3 id="anamemoduleinithrefmoduleinitmoduleinitsmallsuplinksupsmalla"><a name="module.init" href="#module.init"><code>module.init()</code> <small><sup>link</sup></small</a></h3>
+<h3><a name="module.init" href="#module.init"><code>module.init()</code> <small><sup>link</sup></small</a></h3>
 
 <p>A module exposes an init method which is invoked when the core is done initializing.</p>
 
@@ -283,11 +283,11 @@ var Core = Object.create(require("ncore")).constructor(),
 })
 ```</p>
 
-<h2 id="anamecorehrefcorecoresmallsuplinksupsmalla"><a name="core" href="#core"><code>Core</code> <small><sup>link</sup></small></a></h2>
+<h2><a name="core" href="#core"><code>Core</code> <small><sup>link</sup></small></a></h2>
 
 <p>The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.</p>
 
-<h3 id="anameinterfaceshrefinterfacescoreinterfacessmallsuplinksupsmalla"><a name="interfaces" href="#interfaces"><code>Core.interfaces</code> <small><sup>link</sup></small></a></h3>
+<h3><a name="interfaces" href="#interfaces"><code>Core.interfaces</code> <small><sup>link</sup></small></a></h3>
 
 <p>The Core has a public property named interfaces that contains all the public interfaces attached to the core.</p>
 
@@ -306,7 +306,7 @@ var Core = Object.create(require("ncore")).constructor(),
 <p>assert(Core.interfaces.name.method);
 ```</p>
 
-<h3 id="anameconstructorhrefconstructorcoreconstructordepseesmallsuplinksupsmalla"><a name="constructor" href="#constructor"><code>Core.constructor(deps, [ee])</code> <small><sup>link</sup></small></a></h3>
+<h3><a name="constructor" href="#constructor"><code>Core.constructor(deps, [ee])</code> <small><sup>link</sup></small></a></h3>
 
 <p>Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.</p>
 
@@ -367,18 +367,18 @@ assert(Core.interfaces.bar.many)
 
 <p>/* TODO */</p>
 
-<h2 id="installationanameinstallhrefinstallsmallsuplinksupsmalla">Installation <a name="install" href="#install"><small><sup>link</sup></small></a></h2>
+<h2>Installation <a name="install" href="#install"><small><sup>link</sup></small></a></h2>
 
 <p><code>$ npm install ncore</code></p>
 
-<h2 id="testanametesthreftestsmallsuplinksupsmalla">Test <a name="test" href="#test"><small><sup>link</sup></small></a></h2>
+<h2>Test <a name="test" href="#test"><small><sup>link</sup></small></a></h2>
 
 <p><code>$ make test</code></p>
 
-<h2 id="contributorsanamecontributorshrefcontributorssmallsuplinksupsmalla">contributors <a name="contributors" href="#contributors"><small><sup>link</sup></small></a></h2>
+<h2>contributors <a name="contributors" href="#contributors"><small><sup>link</sup></small></a></h2>
 
 <ul>
 <li>Raynos</li>
 </ul>
 
-<h2 id="mitlicencedanamelicencehreflicencesmallsuplinksupsmalla">MIT Licenced <a name="licence" href="#licence"><small><sup>link</sup></small></a></h2></div></div></div></div></body></html>
+<h2>MIT Licenced <a name="licence" href="#licence"><small><sup>link</sup></small></a></h2></div></div></div></div></body></html>
