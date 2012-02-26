@@ -20,7 +20,44 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "title": "core"
       },
       "depth": 1,
-      "outline": []
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Modules have three phases.",
+            "slug": "modules-have-three-phases"
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "The definition phase:",
+                "slug": "the-definition-phase"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "The injection phase:",
+                "slug": "the-injection-phase"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "The init phase:",
+                "slug": "the-init-phase"
+              },
+              "depth": 2
+            }
+          ]
+        }
+      ]
     }, {
       "type": "folder",
       "data": {
