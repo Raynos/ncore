@@ -58,6 +58,18 @@ nCore is a dependency injection framework.
  - [Core.remove][6]
  - [Core.purge][7]
 
+### Core.constructor(deps, [ee]) <a name="constructor" href="#constructor"><small><sup>link</sup></small></a>
+
+Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.
+
+<details><summary> Examples </summary>
+
+``` javascript
+test
+```
+
+</details>
+
 /* TODO */
 
 ## Installation <a name="install" href="#install"><small><sup>link</sup></small></a>
