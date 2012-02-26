@@ -56,6 +56,7 @@ nCore is a dependency injection framework.
     - [define][11]
     - [inject][12]
     - [expose][13]
+    - [init][22]
  - [Core][21]
     - [Core.interfaces][9]
     - [Core.constructor][8]
@@ -68,14 +69,210 @@ nCore is a dependency injection framework.
 
 A module has a few public properties that are used by the Core.
 
-A module defines it's own public interface through [`define`][11] and accepts it's dependencies through [`inject`][12]. Alternatively a module can define it's dependencies through [`expose`][13] and alternatively if the module has no [`inject`][12] method the dependencies are mixed into the module
+A module defines it's own public interface through [`define`][11] and accepts it's dependencies through [`inject`][12]. Alternatively a module can define it's dependencies through [`expose`][13] and alternatively if the module has no [`inject`][12] method the dependencies are mixed into the module. 
 
-### `define(interface)` <a name="define" href="#define"><small><sup>link</sup></small></a>
+A module also has an [`init`][22] method which is invoked when the core is done initializing.
 
-A module is the implementation of an interface. When other modules want to interact with it, they should interact through a public interface. The way to define the public interface of a module is by defining an interface
+Modules are handled in three step phases, 
+
+ 1. First is the [`define`][11] phase where every module that is used defines it's public interface. Define is called once a module is used on the core
+ 2. Second is the [`inject`][12] phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.
+ 3. Lastly is the [`init`][22] phase, this happens after every module says it's done injecting. This also happens after the callback on [`Core.init`][5]. This phase is meant to start your application like starting your HTTP server.
+
+### `module.define(interface)` <a name="define" href="#define"><small><sup>link</sup></small></a>
+
+A module is the implementation of an interface. When other modules want to interact with it, they should interact through a public interface. The way to define the public interface of a module is by defining an interface.
+
+Note that the public interface passed to other modules and exposed as [`Core.interfaces`][9] is actually a proxy of the interface created through define. This means that it has all the same properties and it's methods are thin wrappers that call the real interface. This allows for the interface to change at run-time without other modules having references to dead interfaces. This is needed for hot reloading.
+
+The core invokes define when the module is used
 
 ``` javascript
-var Core = Object.create(require("ncore")).constructor()
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    // define an interface
+    define: function (interface) {
+        interface.method = function () {
+            ...
+        }
+    }
+})
+
+assert(Core.interfaces.name.method)
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    pd = require("pd"),
+    assert = require("assert");
+
+Core.use("name", {
+    define: function (interface) {
+        pd.extend(interface, {
+            method: this.method,
+            public: this.public,
+            otherMethod: this.otherMethod
+        })
+    },
+    method: function () {
+        // this is the module
+        this.counter++;
+    },
+    otherMethod: function () {
+        return this._getCounter();
+    },
+    _getCounter: function () {
+        return this.counter;
+    },
+    public: function () {
+        this.private();
+    },
+    private: function () {
+        this.emit("foobar");
+    }
+})
+
+var name = Core.interfaces.name;
+name.method();
+assert.equal(name.otherMethod(), 1);
+name.on("foobar", function () {
+    assert(true);
+})
+name.public();
+assert(!name.private);
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    define: {
+        method: function () {
+            // this is actually the module, not the interface
+            return this.private()
+        }
+    },
+    private: function () {
+        return 42;
+    }
+})
+
+assert.equal(Core.interfaces.name.method(), 42);
+```
+
+### `module.inject(deps, [done])` <a name="inject" href="#inject"><small><sup>link</sup></small></a>
+
+A module exposes an inject method which is used to handle the dependencies that are injected. It also has an optional done callback to allow the module to do asynchronous startup procedures.
+
+The core invokes inject when the core is initialized
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor({
+        foo: {
+            bar: "bar"
+        }
+    }),
+    assert = require("assert");
+
+Core.use("bar", barObject);
+
+Core.use("foo", {
+    inject: function (deps) {
+        // deps.bar is the "bar" interface
+        assert.equal(deps.bar, Core.interfaces.bar);
+    }
+})
+
+Core.init()
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert");
+
+Core.use("foo", {
+    inject: function (_, done) {
+        // Do asynchronous startup
+        initializeDatabase(configSettings, done);
+    }
+})
+
+Core.init(function () {
+    // all modules are done
+    doStuff();
+})
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor({
+        foo: {
+            bar: "bar"
+        }
+    }),
+    assert = require("assert")
+
+Core.use("bar", barObject);
+
+Core.use("foo", {
+    // if a module has no inject method
+    // then dependencies are mixed into the module
+    init: function() {
+        assert(this.bar);
+    }
+})
+
+Core.init()
+```
+
+### `module.expose` <a name="expose" href="#expose"><small><sup>link</sup></small></a>
+
+Instead of defining an interface you can say what parts of the module should be exposed. Expose should contain an array containing the propertyNames that should become part of the interface
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    public: function () {
+        this.private();
+    },
+    private: function () {
+        // this is also an event emitter
+        this.emit("somethingHappened");
+    },
+    expose: ["public"]
+})
+
+Core.interfaces.name.on("somethingHappened", function () {
+    assert(true);
+})
+Core.interfaces.name.public();
+assert(!Core.interfaces.name.private)
+```
+
+### `module.init()` <a name="module.init" href="#module.init"><small><sup>link</sup></small</a>
+
+A module exposes an init method which is invoked when the core is done initializing.
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    inject: function () {
+        assert("happens first");
+    },
+    init: function () {
+        assert("happens third");
+    }
+})
+
+Core.init(function () {
+    assert("happens second")
+})
 ```
 
 ## `Core` <a name="core" href="#core"><small><sup>link</sup></small></a>
@@ -112,10 +309,19 @@ Core.use("baz", bazObject);
 Core.use("foo", {
     inject: function (deps) {
         // For module foo the deps object contains a bar property
-        // that is bazObject
-        assert.equal(deps.bar, bazObject);
+        // that is the interface of bazObject
+        assert.equal(deps.bar, Core.interfaces.bar);
     }
 });
+
+Core.init()
+```
+
+``` javascript
+var ncore = require("ncore");
+
+// constructor also accepts strings as arguments
+var Core = Object.create(ncore).constructor(require("./dependency.json"));
 ```
 
 ``` javascript
@@ -125,6 +331,8 @@ var ncore = require("ncore"),
 var Core = Object.create(ncore).constructor(null, EventEmitter);
 
 Core.use("bar", {});
+
+Core.init()
 
 // The bar interface is now an EventEmitter2 instance
 assert(Core.interfaces.bar.many)
@@ -186,3 +394,4 @@ assert(Core.interfaces.name.method);
   [19]: https://github.com/Raynos/ncore#contributors
   [20]: https://github.com/Raynos/ncore#licence
   [21]: https://github.com/Raynos/ncore#core
+  [22]: https://github.com/Raynos/ncore#module.init

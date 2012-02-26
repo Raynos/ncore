@@ -248,6 +248,27 @@ suite("Core", function () {
             })
         })
 
+        test("init invokes init after callback", function (done) {
+            var counter = 0;
+            Core.use("name", {
+                inject: function (_, done) {
+                    counter++;
+                    assert.equal(counter, 1, "counter incorrect");
+                    done();
+                },
+                init: function () {
+                    counter++;
+                    assert.equal(counter, 3, "counter incorrect");
+                    done();
+                }
+            })
+
+            Core.init(function () {
+                counter++;
+                assert.equal(counter, 2, "counter incorrect");
+            })
+        })
+
         test("dependencies are mixed in", function () {
             Core.use("name", {
                 foo: function () { return this.bar },
