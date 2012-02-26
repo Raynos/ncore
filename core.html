@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><title>core</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="core"><meta name="groc-project-path" content="lib/core.js"><meta name="groc-github-url" content="https://github.com/Raynos/ncore"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Raynos/ncore/blob/master/lib/core.js">lib/core.js</a></div></div><div id="document"><div class="segment"><div class="comments"><div class="wrapper"><p>Modules have three phases.</p>
+<!DOCTYPE html><html lang="en"><head><title>core</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="core"><meta name="groc-project-path" content="lib/core.js"><meta name="groc-github-url" content="https://github.com/Raynos/ncore"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Raynos/ncore/blob/master/lib/core.js">lib/core.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;eventemitter-light&quot;</span><span class="p">),</span>
+    <span class="nx">pd</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>Modules have three phases.</p>
 
 <p>The definition phase:</p>
 
@@ -42,9 +43,7 @@ invokes the interfaces methods. This proxy is used to enable hot code
 reload without having to get rid of references to dead objects.</p>
 
 <p>Note that inside the interfaces methods the thisContext value is the module
-itself.</p>
-
-<p>Construct a Core with dependencies and an optional EventEmitter
+itself.</p></div></div><div class="code"><div class="wrapper"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>Construct a Core with dependencies and an optional EventEmitter
 prototype.</p>
 
 <p>The dependencies contain the dependency mapping setup for
@@ -67,18 +66,7 @@ of <OtherModuleName></p>
 
 <p>@param {Object} ee - An optional EventEmitter prototype. Used if you
 want the interface to inherit from a different EventEmitter then
-eventemitter-light</p>
-
-<p>This is used to attach a module to the core. When a module is attached
-the core asks the module to define it's interface.</p>
-
-<p>@param {String} name - The name of this module</p>
-
-<p>@param {Object} module - The implementation of the module.</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;eventemitter-light&quot;</span><span class="p">),</span>
-    <span class="nx">pd</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">);</span>
-
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">constructor</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">ee</span><span class="p">)</span> <span class="p">{</span>
+eventemitter-light</p></div></div><div class="code"><div class="wrapper">    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">constructor</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">ee</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
         <span class="nx">that</span><span class="p">.</span><span class="nx">interfaces</span>  <span class="o">=</span> <span class="p">{};</span>
         <span class="nx">that</span><span class="p">.</span><span class="nx">_ee</span> <span class="o">=</span> <span class="nx">ee</span> <span class="o">||</span> <span class="nx">EventEmitter</span><span class="p">;</span>
@@ -90,8 +78,12 @@ the core asks the module to define it's interface.</p>
             <span class="nx">that</span><span class="p">.</span><span class="nx">dependencies</span> <span class="o">=</span> <span class="nx">dependencies</span> <span class="o">||</span> <span class="p">{};</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="nx">that</span><span class="p">;</span>
-    <span class="p">},</span>
-    <span class="nx">use</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">use</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">},</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>This is used to attach a module to the core. When a module is attached
+the core asks the module to define it's interface.</p>
+
+<p>@param {String} name - The name of this module</p>
+
+<p>@param {Object} module - The implementation of the module.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">use</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">use</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="kr">interface</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ee</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span><span class="p">.</span><span class="nx">define</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">module</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="kr">interface</span><span class="p">);</span>
@@ -106,8 +98,7 @@ the core asks the module to define it's interface.</p>
         <span class="kd">function</span> <span class="nx">addToInterface</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
             <span class="kr">interface</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">module</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
         <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">init</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">},</span></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">init</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
             <span class="nx">counter</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
