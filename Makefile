@@ -15,4 +15,4 @@ docs:
 	groc "lib/**/*.js" "test/**/*.js" README.md --github
 
 
-.PHONY: test
+.PHONY: test docs test-cov

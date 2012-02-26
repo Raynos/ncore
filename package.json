@@ -17,6 +17,7 @@
 	},
 	"devDependencies": {
 		"mocha": "0.13.0",
-		"groc": "0.2.8"
+		"groc": "0.2.8-pre",
+		"docco": "0.3.0"
 	}
 }
