@@ -1,11 +1,11 @@
-var nCore = require("../"),
+var ncore = require("../"),
     assert = require("assert")
 
 suite("Core", function () {
     var Core
 
     setup(function () {
-        Core = Object.create(nCore).constructor()
+        Core = Object.create(ncore).constructor()
     })
 
     teardown(function () {
@@ -105,6 +105,12 @@ suite("Core", function () {
             assert.equal(Core.interfaces.name.foo, "bar",
                 "interface is not exposed properly")
         })
+
+        test("use returns the public interface", function () {
+            var name = define(Core)
+            assert.equal(Core.interfaces.name, name,
+                "name is not the public interface");
+        })
     })
 
     suite("Core.constructor", function () {
@@ -114,7 +120,7 @@ suite("Core", function () {
 
         test("can pass in custom ee", function (done) {
             var ee = { bar: 42 }
-            Core = Object.create(nCore).constructor(null, ee)
+            Core = Object.create(ncore).constructor(null, ee)
             define(Core, function (interface) {
                 assert.equal(interface.bar, 42, "custom ee not used")
                 done()
@@ -122,7 +128,7 @@ suite("Core", function () {
         })
 
         test("can pass in dependencies", function () {
-            Core = Object.create(nCore).constructor({
+            Core = Object.create(ncore).constructor({
                 foo: "bar"
             })
             assert.equal(Core.dependencies.foo, "bar",
@@ -130,7 +136,7 @@ suite("Core", function () {
         })
 
         test("can pass in dependency JSON string", function () {
-            Core = Object.create(nCore).constructor(
+            Core = Object.create(ncore).constructor(
                 "{ \"foo\": \"bar\" }"
             )
             assert.equal(Core.dependencies.foo, "bar",
@@ -286,13 +292,13 @@ suite("Core", function () {
 })
 
 function define(Core, define) {
-    Core.use("name", {
+    return Core.use("name", {
         define: define
     })
 }
 
 function inject(Core, inject) {
-    Core.use("name", {
+    return Core.use("name", {
         inject: inject
     })
 }

@@ -51,19 +51,23 @@ nCore is a dependency injection framework.
 
  - [nCore 0.x documentation][3]    
  - [Module format][10]
-    - [define][11]
-    - [inject][12]
-    - [expose][13]
-    - [init][22]
-    - [destroy][23]
+     - [define][11]
+     - [inject][12]
+     - [expose][13]
+     - [init][22]
+     - [destroy][23]
  - [Core][21]
-    - [Core.interfaces][9]
-    - [Core.dependencies][24]
-    - [Core.constructor][8]
-    - [Core.use][4]
-    - [Core.init][5]
-    - [Core.remove][6]
-    - [Core.purge][7]
+     - [Core.interfaces][9]
+     - [Core.dependencies][24]
+     - [Core.constructor][8]
+     - [Core.use][4]
+     - [Core.init][5]
+     - [Core.remove][6]
+     - [Core.purge][7]
+ - [modules][25]
+     - [moduleLoader][26]
+         - [moduleLoader.load][27]
+         - [@on moduleLoader.finishedLoading][28]
 
 ## <a name="module" href="#module">Module format <small><sup>link</sup></small></a>
 
@@ -78,6 +82,12 @@ Modules are handled in three step phases,
  1. First is the [`define`][11] phase where every module that is used defines it's public interface. Define is called once a module is used on the core
  2. Second is the [`inject`][12] phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.
  3. Lastly is the [`init`][22] phase, this happens after every module says it's done injecting. This also happens after the callback on [`Core.init`][5]. This phase is meant to start your application like starting your HTTP server.
+
+ - [define][11]
+ - [inject][12]
+ - [expose][13]
+ - [init][22]
+ - [destroy][23]
 
 ### <a name="define" href="#define">`module.define(interface)` <small><sup>link</sup></small></a>
 
@@ -297,6 +307,14 @@ Core.remove("name");
 
 The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.
 
+ - [Core.interfaces][9]
+ - [Core.dependencies][24]
+ - [Core.constructor][8]
+ - [Core.use][4]
+ - [Core.init][5]
+ - [Core.remove][6]
+ - [Core.purge][7]
+
 ### <a name="interfaces" href="#interfaces">`Core.interfaces` <small><sup>link</sup></small></a>
 
 The Core has a public property named interfaces that contains all the public interfaces attached to the core.
@@ -403,6 +421,8 @@ assert(Core.interfaces.bar.many)
 Use a module to attach it to the Core. The core will ask the module to define it's
 public interface. 
 
+Core.use returns the public interface
+
 ``` javascript
 var Core = Object.create(require("ncore")).constructor(),
     assert = require("assert")
@@ -448,6 +468,15 @@ Core.use("name", {
     },
     expose: ["public"]
 })
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+var name = Core.use("name", {});
+
+assert.equal(name, Core.interfaces.name);
 ```
 
 ### <a name="init" href="#init">`Core.init([callback])` <small><sup>link</sup></small></a>
@@ -509,6 +538,41 @@ Core.purge();
 // Core is clean now
 ```
 
+## <a name="modules" href="#modules">Modules <small><sup>link</sup></small></a>
+
+nCore comes with a set of default modules implemented to do specific tasks
+
+ - [moduleLoader][26]
+     - [moduleLoader.load][27]
+     - [@on moduleLoader.finishedLoading][28]
+
+## <a name="moduleLoader" href="#moduleLoader">moduleLoader <small><sup>link</sup><small></a>
+
+The moduleLoader exposes an interface to autoLoad modules from a folder. It also
+exposes an API to write your dependency map based on files.
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+    moduleLoader = Core.use("moduleLoader", 
+        require("ncore/modules/moduleLoader"))
+
+moduleLoader.on("finishedLoading", function () {
+    Core.init()
+})
+moduleLoader.load("./modules", require("./dependencies.json"))
+```
+
+- [moduleLoader.load][27]
+- [@on moduleLoader.finishedLoading][28]
+
+### <a name="load" href="#load">`moduleLoader.load(uri, deps)` <small><sup>link</sup></small></a>
+
+
+
+### <a name="finishedLoading" href="#finishedLoading"`@on moduleLoader.finishedLoading` <small><sup>link</sup></small></a>
+
+
 /* TODO */
 
 ## Installation <a name="install" href="#install"><small><sup>link</sup></small></a>
@@ -549,3 +613,5 @@ Core.purge();
   [22]: https://github.com/Raynos/ncore#module.init
   [23]: https://github.com/Raynos/ncore#destroy
   [24]: https://github.com/Raynos/ncore#dependencies
+  [25]: https://github.com/Raynos/ncore#modules
+  [26]: https://github.com/Raynos/ncore#moduleLoader
