@@ -94,28 +94,27 @@ Core.init();
 
 <p>The core invokes define when the module is used</p>
 
-<p>``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert")</p>
+<pre><code>var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
 
-<p>Core.use("name", {
+Core.use("name", {
     // define an interface
     define: function (interface) {
         interface.method = function () {
             ...
         }
     }
-})</p>
+})
 
-<p>assert(Core.interfaces.name.method)
-```</p>
+assert(Core.interfaces.name.method)
 
-<p>``` javascript
+
+
 var Core = Object.create(require("ncore")).constructor(),
     pd = require("pd"),
-    assert = require("assert");</p>
+    assert = require("assert");
 
-<p>Core.use("name", {
+Core.use("name", {
     define: function (interface) {
         pd.extend(interface, {
             method: this.method,
@@ -139,9 +138,9 @@ var Core = Object.create(require("ncore")).constructor(),
     private: function () {
         this.emit("foobar");
     }
-})</p>
+})
 
-<p>var name = Core.interfaces.name;
+var name = Core.interfaces.name;
 name.method();
 assert.equal(name.otherMethod(), 1);
 name.on("foobar", function () {
@@ -149,13 +148,13 @@ name.on("foobar", function () {
 })
 name.public();
 assert(!name.private);
-```</p>
 
-<p>``` javascript
+
+
 var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert")</p>
+    assert = require("assert")
 
-<p>Core.use("name", {
+Core.use("name", {
     define: {
         method: function () {
             // this is actually the module, not the interface
@@ -165,10 +164,10 @@ var Core = Object.create(require("ncore")).constructor(),
     private: function () {
         return 42;
     }
-})</p>
+})
 
-<p>assert.equal(Core.interfaces.name.method(), 42);
-```</p>
+assert.equal(Core.interfaces.name.method(), 42);
+</code></pre>
 
 <h3 id="anameinjecthrefinjectmoduleinjectdepsdonesmallsuplinksupsmalla"><a name="inject" href="#inject"><code>module.inject(deps, [done])</code> <small><sup>link</sup></small></a></h3>
 
@@ -176,73 +175,71 @@ var Core = Object.create(require("ncore")).constructor(),
 
 <p>The core invokes inject when the core is initialized</p>
 
-<p>``` javascript
-var Core = Object.create(require("ncore")).constructor({
+<pre><code>var Core = Object.create(require("ncore")).constructor({
         foo: {
             bar: "bar"
         }
     }),
-    assert = require("assert");</p>
+    assert = require("assert");
 
-<p>Core.use("bar", barObject);</p>
+Core.use("bar", barObject);
 
-<p>Core.use("foo", {
+Core.use("foo", {
     inject: function (deps) {
         // deps.bar is the "bar" interface
         assert.equal(deps.bar, Core.interfaces.bar);
     }
-})</p>
+})
 
-<p>Core.init()
-```</p>
+Core.init()
 
-<p>``` javascript
+
+
 var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert");</p>
+    assert = require("assert");
 
-<p>Core.use("foo", {
+Core.use("foo", {
     inject: function (_, done) {
         // Do asynchronous startup
         initializeDatabase(configSettings, done);
     }
-})</p>
+})
 
-<p>Core.init(function () {
+Core.init(function () {
     // all modules are done
     doStuff();
 })
-```</p>
 
-<p>``` javascript
+
+
 var Core = Object.create(require("ncore")).constructor({
         foo: {
             bar: "bar"
         }
     }),
-    assert = require("assert")</p>
+    assert = require("assert")
 
-<p>Core.use("bar", barObject);</p>
+Core.use("bar", barObject);
 
-<p>Core.use("foo", {
+Core.use("foo", {
     // if a module has no inject method
     // then dependencies are mixed into the module
     init: function() {
         assert(this.bar);
     }
-})</p>
+})
 
-<p>Core.init()
-```</p>
+Core.init()
+</code></pre>
 
 <h3 id="anameexposehrefexposemoduleexposesmallsuplinksupsmalla"><a name="expose" href="#expose"><code>module.expose</code> <small><sup>link</sup></small></a></h3>
 
 <p>Instead of defining an interface you can say what parts of the module should be exposed. Expose should contain an array containing the propertyNames that should become part of the interface</p>
 
-<p>``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert")</p>
+<pre><code>var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
 
-<p>Core.use("name", {
+Core.use("name", {
     public: function () {
         this.private();
     },
@@ -251,36 +248,35 @@ var Core = Object.create(require("ncore")).constructor(),
         this.emit("somethingHappened");
     },
     expose: ["public"]
-})</p>
+})
 
-<p>Core.interfaces.name.on("somethingHappened", function () {
+Core.interfaces.name.on("somethingHappened", function () {
     assert(true);
 })
 Core.interfaces.name.public();
 assert(!Core.interfaces.name.private)
-```</p>
+</code></pre>
 
 <h3 id="anamemoduleinithrefmoduleinitmoduleinitsmallsuplinksupsmalla"><a name="module.init" href="#module.init"><code>module.init()</code> <small><sup>link</sup></small</a></h3>
 
 <p>A module exposes an init method which is invoked when the core is done initializing.</p>
 
-<p>``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert")</p>
+<pre><code>var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
 
-<p>Core.use("name", {
+Core.use("name", {
     inject: function () {
         assert("happens first");
     },
     init: function () {
         assert("happens third");
     }
-})</p>
+})
 
-<p>Core.init(function () {
+Core.init(function () {
     assert("happens second")
 })
-```</p>
+</code></pre>
 
 <h2 id="anamecorehrefcorecoresmallsuplinksupsmalla"><a name="core" href="#core"><code>Core</code> <small><sup>link</sup></small></a></h2>
 
@@ -292,77 +288,76 @@ var Core = Object.create(require("ncore")).constructor(),
 
 <p>A public interface is a proxy of the internal interface (the one passed to define) which means it has all the same properties / methods, it just has a thin proxy that invokes them indirectly. This proxy exist for easy module hot reloading.</p>
 
-<p>``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert");</p>
+<pre><code>var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert");
 
-<p>Core.use("name", {
+Core.use("name", {
     define: function (interface) {
         interface.method = function () { }
     }
-})</p>
+})
 
-<p>assert(Core.interfaces.name.method);
-```</p>
+// the interface exposed by name is stored at Core.interfaces.name
+assert(Core.interfaces.name.method);
+</code></pre>
 
 <h3 id="anameconstructorhrefconstructorcoreconstructordepseesmallsuplinksupsmalla"><a name="constructor" href="#constructor"><code>Core.constructor(deps, [ee])</code> <small><sup>link</sup></small></a></h3>
 
 <p>Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.</p>
 
-<p>``` javascript
-var ncore = require("ncore");</p>
+<pre><code>var ncore = require("ncore");
 
-<p>// create an instance
-var Core = Object.create(ncore).constructor();</p>
+// create an instance
+var Core = Object.create(ncore).constructor();
 
-<p>Core.use(...);
-```</p>
+Core.use(...);
 
-<p>``` javascript
+
+
 var ncore = require("ncore"),
-    assert = require("assert");</p>
+    assert = require("assert");
 
-<p>var Core = Object.create(ncore).constructor({
+var Core = Object.create(ncore).constructor({
     // The dependencies for foo are
     foo: {
         // an object called bar that contains the interface baz
         bar: "baz"
     }
-});</p>
+});
 
-<p>Core.use("baz", bazObject);</p>
+Core.use("baz", bazObject);
 
-<p>Core.use("foo", {
+Core.use("foo", {
     inject: function (deps) {
         // For module foo the deps object contains a bar property
         // that is the interface of bazObject
         assert.equal(deps.bar, Core.interfaces.bar);
     }
-});</p>
+});
 
-<p>Core.init()
-```</p>
+Core.init()
 
-<p>``` javascript
-var ncore = require("ncore");</p>
 
-<p>// constructor also accepts strings as arguments
+
+var ncore = require("ncore");
+
+// constructor also accepts strings as arguments
 var Core = Object.create(ncore).constructor(require("./dependency.json"));
-```</p>
+```
 
-<p>``` javascript
+``` javascript
 var ncore = require("ncore"),
-    EventEmitter = require("eventemitter2").EventEmitter.prototype;</p>
+    EventEmitter = require("eventemitter2").EventEmitter.prototype;
 
-<p>var Core = Object.create(ncore).constructor(null, EventEmitter);</p>
+var Core = Object.create(ncore).constructor(null, EventEmitter);
 
-<p>Core.use("bar", {});</p>
+Core.use("bar", {});
 
-<p>Core.init()</p>
+Core.init()
 
-<p>// The bar interface is now an EventEmitter2 instance
+// The bar interface is now an EventEmitter2 instance
 assert(Core.interfaces.bar.many)
-```</p>
+</code></pre>
 
 <p>/* TODO */</p>
 
