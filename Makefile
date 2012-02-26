@@ -12,7 +12,7 @@ lib-cov:
 	@jscoverage lib lib-cov
 
 docs:
-	groc "lib/**/*.js" "test/**/*.js" README.md --github
+	groc "lib/**/*.js" "test/**/*.js" --github
 
 
 .PHONY: test docs test-cov
