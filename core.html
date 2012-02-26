@@ -1,76 +1,74 @@
 <!DOCTYPE html><html lang="en"><head><title>core</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="core"><meta name="groc-project-path" content="lib/core.js"><meta name="groc-github-url" content="https://github.com/Raynos/ncore"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Raynos/ncore/blob/master/lib/core.js">lib/core.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;eventemitter-light&quot;</span><span class="p">),</span>
-    <span class="nx">pd</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><pre><code># Modules have three phases.
+    <span class="nx">pd</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h1 id="modules-have-three-phases">Modules have three phases.</h1>
 
-## The definition phase:
+<h2 id="the-definition-phase">The definition phase:</h2>
 
-    When a module is used on the core, the core will ask the module to 
-    define it's interface. This can be done by having a method called 
-    define which takes the interface as the first argument. 
+<p>When a module is used on the core, the core will ask the module to
+define it's interface. This can be done by having a method called
+define which takes the interface as the first argument.</p>
 
-    Alternatively this can be done by having a property define which is
-    an object that is the interface
+<p>Alternatively this can be done by having a property define which is
+an object that is the interface</p>
 
-    Alternatively this can be done by having a property expose which is
-    an array of propertyNames. Those propertyNames are to be taken from
-    the module and put into the interface
+<p>Alternatively this can be done by having a property expose which is
+an array of propertyNames. Those propertyNames are to be taken from
+the module and put into the interface</p>
 
-## The injection phase:
+<h2 id="the-injection-phase">The injection phase:</h2>
 
-    When the core is initialized all the dependencies are injected into
-    all the modules. This injection is based on the dependency mapping
-    passed into the core when it's constructed
+<p>When the core is initialized all the dependencies are injected into
+all the modules. This injection is based on the dependency mapping
+passed into the core when it's constructed</p>
 
-    A module should have an inject method which accepts the 
-    dependencies for the module as the first argument. The inject method 
-    also get's an optional done callback as the second argument. This is
-    used to tell the core that the module is done doing any asynchronous
-    startup logic.
+<p>A module should have an inject method which accepts the
+dependencies for the module as the first argument. The inject method
+also get's an optional done callback as the second argument. This is
+used to tell the core that the module is done doing any asynchronous
+startup logic.</p>
 
-    If the module doesn't have an inject method then the dependencies
-    are mixed into the module
+<p>If the module doesn't have an inject method then the dependencies
+are mixed into the module</p>
 
-## The init phase:
+<h2 id="the-init-phase">The init phase:</h2>
 
-    After all the dependencies are injected into all the modules, the core
-    is ready. Then the init method is invoked on modules that have it.
+<p>After all the dependencies are injected into all the modules, the core
+is ready. Then the init method is invoked on modules that have it.</p>
 
-    The init method is used to start your application, i.e. create your 
-    HTTP server or start your cron jobs, etc.
+<p>The init method is used to start your application, i.e. create your
+HTTP server or start your cron jobs, etc.</p>
 
-Modules expose a public interface, which is a proxy of the interface
+<p>Modules expose a public interface, which is a proxy of the interface
 that the module defines. This proxy is just a thin wrapper that indireclty
 invokes the interfaces methods. This proxy is used to enable hot code
-reload without having to get rid of references to dead objects.
+reload without having to get rid of references to dead objects.</p>
 
-Note that inside the interfaces methods the thisContext value is the module
-itself.
-</code></pre></div></div><div class="code"><div class="wrapper"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><pre><code>    ## `constructor(deps, [ee])`
+<p>Note that inside the interfaces methods the thisContext value is the module
+itself.</p></div></div><div class="code"><div class="wrapper"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h2 id="constructordepsee"><code>constructor(deps, [ee])</code></h2>
 
-    Construct a Core with dependencies and an optional EventEmitter 
-    prototype. 
+<p>Construct a Core with dependencies and an optional EventEmitter
+prototype.</p>
 
-    The dependencies contain the dependency mapping setup for
-    modules, so the core knows what dependencies to inject into what
-    modules. 
+<p>The dependencies contain the dependency mapping setup for
+modules, so the core knows what dependencies to inject into what
+modules.</p>
 
-    The eventemitter prototype is used to choose the eventEmitter 
-    implementation that interfaces have.
+<p>The eventemitter prototype is used to choose the eventEmitter
+implementation that interfaces have.</p>
 
-    `@param {Object} dependencies` - This is a map of dependencies.
-        {
-            ModuleName: {
-                PropertyName: OtherModuleName
-            }
-        }
+<p><code>@param {Object} dependencies</code> - This is a map of dependencies.
+{
+ModuleName: {
+PropertyName: OtherModuleName
+}
+}</p>
 
-        This means that ModuleName will have a deps object injected with
-            a property PropertyName which contains the public interface
-            of OtherModuleName
+<p>This means that ModuleName will have a deps object injected with
+a property PropertyName which contains the public interface
+of OtherModuleName</p>
 
-    `@param {Object} ee` - An optional EventEmitter prototype. Used if you 
-        want the interface to inherit from a different EventEmitter then
-        eventemitter-light
-</code></pre></div></div><div class="code"><div class="wrapper">    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">constructor</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">ee</span><span class="p">)</span> <span class="p">{</span>
+<p><code>@param {Object} ee</code> - An optional EventEmitter prototype. Used if you
+want the interface to inherit from a different EventEmitter then
+eventemitter-light</p></div></div><div class="code"><div class="wrapper">    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">constructor</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">ee</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
         <span class="nx">that</span><span class="p">.</span><span class="nx">interfaces</span>  <span class="o">=</span> <span class="p">{};</span>
         <span class="nx">that</span><span class="p">.</span><span class="nx">_ee</span> <span class="o">=</span> <span class="nx">ee</span> <span class="o">||</span> <span class="nx">EventEmitter</span><span class="p">;</span>
@@ -82,15 +80,14 @@ itself.
             <span class="nx">that</span><span class="p">.</span><span class="nx">dependencies</span> <span class="o">=</span> <span class="nx">dependencies</span> <span class="o">||</span> <span class="p">{};</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="nx">that</span><span class="p">;</span>
-    <span class="p">},</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><pre><code>    ## `use(name, module)`
+    <span class="p">},</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h2 id="usenamemodule"><code>use(name, module)</code></h2>
 
-    This is used to attach a module to the core. When a module is attached
-    the core asks the module to define it's interface.
+<p>This is used to attach a module to the core. When a module is attached
+the core asks the module to define it's interface.</p>
 
-    `@param {String} name` - The name of this module
+<p><code>@param {String} name</code> - The name of this module</p>
 
-    `@param {Object} module` - The implementation of the module. 
-</code></pre></div></div><div class="code"><div class="wrapper">    <span class="nx">use</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">use</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
+<p><code>@param {Object} module</code> - The implementation of the module.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">use</span><span class="o">:</span> <span class="kd">function</span> <span class="nx">use</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="kr">interface</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ee</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span><span class="p">.</span><span class="nx">define</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">module</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="kr">interface</span><span class="p">);</span>
