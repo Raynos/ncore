@@ -398,6 +398,117 @@ Core.init()
 assert(Core.interfaces.bar.many)
 ```
 
+### <a name="use" href="#use">`Core.use(name, module)` <small><sup>link</sup></small></a>
+
+Use a module to attach it to the Core. The core will ask the module to define it's
+public interface. 
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    define: function (interface) {
+        interface.prop = true;
+        interface.method = function () { 
+            // this === module
+            this.private();
+        }
+    },
+    private: function () {
+        ...
+    }
+})
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    // define the interface as an object
+    define: {
+        interface_method: function () {
+
+        }
+    }
+})
+```
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    public: function () {
+        ...
+    },
+    private: function () {
+
+    },
+    expose: ["public"]
+})
+```
+
+### <a name="init" href="#init">`Core.init([callback])` <small><sup>link</sup></small></a>
+
+init will inject dependencies into modules. It also invokes the init method on modules after they are done with dependency injection.
+
+The optional callback to init will be called after all modules are done with the
+injection.
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("bar", barObject);
+
+Core.use("name", {
+    inject: function (deps, done) {
+        assert(deps.bar);
+        assert("happens first");
+        done();
+    },
+    init: function () {
+        assert("happens third");
+    }
+})
+
+Core.dependencies.name = {
+    bar: "bar"
+};
+
+Core.init(function () {
+    assert("happens second");
+})
+```
+
+### <a name="remove" href="#remove">`Core.remove(name)` <small><sup>link</sup></small></a>
+
+Remove the module by that name. This will invoke the destroy method on the module
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    destroy: function () {
+        ...
+    }
+})
+
+Core.remove("name");
+```
+
+### <a name="purge" href="#purge">`Core.purge` <small><sup>link</sup></small></a>
+
+removes all modules
+
+``` javascript
+Core.purge();
+// Core is clean now
+```
+
 /* TODO */
 
 ## Installation <a name="install" href="#install"><small><sup>link</sup></small></a>
