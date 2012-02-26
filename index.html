@@ -5,13 +5,13 @@
 <h2 id="status-rewrite-in-progress">Status: Rewrite in progress</h2>
 
 <ul>
-<li><a href="https://github.com/Raynos/ncore#example">example</a></li>
-<li><a href="https://github.com/Raynos/ncore#motivation">motivation</a></li>
-<li><a href="https://github.com/Raynos/ncore#docs">docs</a></li>
-<li><a href="https://github.com/Raynos/ncore#install">Installation</a></li>
-<li><a href="https://github.com/Raynos/ncore#test">test</a></li>
-<li><a href="https://github.com/Raynos/ncore#contributors">contributors</a></li>
-<li><a href="https://github.com/Raynos/ncore#licence">licence</a></li>
+<li><a href="#example">example</a></li>
+<li><a href="#motivation">motivation</a></li>
+<li><a href="#docs">docs</a></li>
+<li><a href="#install">Installation</a></li>
+<li><a href="#test">test</a></li>
+<li><a href="#contributors">contributors</a></li>
+<li><a href="#licence">licence</a></li>
 </ul>
 
 <h2 id="anameexamplehrefexampleexamplesmallsuplinksupsmalla"><a name="example" href="#example">Example <small><sup>link</sup></small></a></h2>
@@ -56,41 +56,41 @@ Core.init();
 
 <ul>
 <li><a href="https://github.com/Raynos/ncore/tree/0.x">nCore 0.x documentation</a>    </li>
-<li><a href="https://github.com/Raynos/ncore#module">Module format</a>
-<ul><li><a href="https://github.com/Raynos/ncore#define">define</a></li>
-<li><a href="https://github.com/Raynos/ncore#inject">inject</a></li>
-<li><a href="https://github.com/Raynos/ncore#expose">expose</a></li>
-<li><a href="https://github.com/Raynos/ncore#module.init">init</a></li></ul></li>
-<li><a href="https://github.com/Raynos/ncore#core">Core</a>
-<ul><li><a href="https://github.com/Raynos/ncore#interfaces">Core.interfaces</a></li>
-<li><a href="https://github.com/Raynos/ncore#constructor">Core.constructor</a></li>
-<li><a href="https://github.com/Raynos/ncore#use">Core.use</a></li>
-<li><a href="https://github.com/Raynos/ncore#init">Core.init</a></li>
-<li><a href="https://github.com/Raynos/ncore#remove">Core.remove</a></li>
-<li><a href="https://github.com/Raynos/ncore#purge">Core.purge</a></li></ul></li>
+<li><a href="#module">Module format</a>
+<ul><li><a href="#define">define</a></li>
+<li><a href="#inject">inject</a></li>
+<li><a href="#expose">expose</a></li>
+<li><a href="#module.init">init</a></li></ul></li>
+<li><a href="#core">Core</a>
+<ul><li><a href="#interfaces">Core.interfaces</a></li>
+<li><a href="#constructor">Core.constructor</a></li>
+<li><a href="#use">Core.use</a></li>
+<li><a href="#init">Core.init</a></li>
+<li><a href="#remove">Core.remove</a></li>
+<li><a href="#purge">Core.purge</a></li></ul></li>
 </ul>
 
 <h2 id="anamemodulehrefmodulemoduleformatsmallsuplinksupsmalla"><a name="module" href="#module">Module format <small><sup>link</sup></small></a></h2>
 
 <p>A module has a few public properties that are used by the Core.</p>
 
-<p>A module defines it's own public interface through <a href="https://github.com/Raynos/ncore#define"><code>define</code></a> and accepts it's dependencies through <a href="https://github.com/Raynos/ncore#inject"><code>inject</code></a>. Alternatively a module can define it's dependencies through <a href="https://github.com/Raynos/ncore#expose"><code>expose</code></a> and alternatively if the module has no <a href="https://github.com/Raynos/ncore#inject"><code>inject</code></a> method the dependencies are mixed into the module. </p>
+<p>A module defines it's own public interface through <a href="#define"><code>define</code></a> and accepts it's dependencies through <a href="#inject"><code>inject</code></a>. Alternatively a module can define it's dependencies through <a href="#expose"><code>expose</code></a> and alternatively if the module has no <a href="#inject"><code>inject</code></a> method the dependencies are mixed into the module. </p>
 
-<p>A module also has an <a href="https://github.com/Raynos/ncore#module.init"><code>init</code></a> method which is invoked when the core is done initializing.</p>
+<p>A module also has an <a href="#module.init"><code>init</code></a> method which is invoked when the core is done initializing.</p>
 
 <p>Modules are handled in three step phases, </p>
 
 <ol>
-<li>First is the <a href="https://github.com/Raynos/ncore#define"><code>define</code></a> phase where every module that is used defines it's public interface. Define is called once a module is used on the core</li>
-<li>Second is the <a href="https://github.com/Raynos/ncore#inject"><code>inject</code></a> phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.</li>
-<li>Lastly is the <a href="https://github.com/Raynos/ncore#module.init"><code>init</code></a> phase, this happens after every module says it's done injecting. This also happens after the callback on <a href="https://github.com/Raynos/ncore#init"><code>Core.init</code></a>. This phase is meant to start your application like starting your HTTP server.</li>
+<li>First is the <a href="#define"><code>define</code></a> phase where every module that is used defines it's public interface. Define is called once a module is used on the core</li>
+<li>Second is the <a href="#inject"><code>inject</code></a> phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.</li>
+<li>Lastly is the <a href="#module.init"><code>init</code></a> phase, this happens after every module says it's done injecting. This also happens after the callback on <a href="#init"><code>Core.init</code></a>. This phase is meant to start your application like starting your HTTP server.</li>
 </ol>
 
 <h3 id="anamedefinehrefdefinemoduledefineinterfacesmallsuplinksupsmalla"><a name="define" href="#define"><code>module.define(interface)</code> <small><sup>link</sup></small></a></h3>
 
 <p>A module is the implementation of an interface. When other modules want to interact with it, they should interact through a public interface. The way to define the public interface of a module is by defining an interface.</p>
 
-<p>Note that the public interface passed to other modules and exposed as <a href="https://github.com/Raynos/ncore#interfaces"><code>Core.interfaces</code></a> is actually a proxy of the interface created through define. This means that it has all the same properties and it's methods are thin wrappers that call the real interface. This allows for the interface to change at run-time without other modules having references to dead interfaces. This is needed for hot reloading.</p>
+<p>Note that the public interface passed to other modules and exposed as <a href="#interfaces"><code>Core.interfaces</code></a> is actually a proxy of the interface created through define. This means that it has all the same properties and it's methods are thin wrappers that call the real interface. This allows for the interface to change at run-time without other modules having references to dead interfaces. This is needed for hot reloading.</p>
 
 <p>The core invokes define when the module is used</p>
 
