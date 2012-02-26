@@ -55,8 +55,10 @@ nCore is a dependency injection framework.
     - [inject][12]
     - [expose][13]
     - [init][22]
+    - [destroy][23]
  - [Core][21]
     - [Core.interfaces][9]
+    - [Core.dependencies][24]
     - [Core.constructor][8]
     - [Core.use][4]
     - [Core.init][5]
@@ -273,6 +275,24 @@ Core.init(function () {
 })
 ```
 
+### <a name="destroy" href="#destroy">`module.destroy()` <small><sup>link</sup></small></a>
+
+The destroy method is invoked when the module is removed from the core. This is the cleanup method, here your supposed to clean up any coupling to other modules and destroy any state/objects that still exist
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    bigObject = new BigObject();
+
+Core.use("name", {
+    destroy: function () {
+        // clean objects from memory
+        bigObject = null;
+    }
+})
+
+Core.remove("name");
+```
+
 ## <a name="core" href="#core">`Core` <small><sup>link</sup></small></a>
 
 The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.
@@ -294,6 +314,29 @@ Core.use("name", {
 })
 
 assert(Core.interfaces.name.method);
+```
+
+### <a name="dependencies" href="#dependencies">`Core.dependencies` <small><sup>link</sup></small></a>
+
+The Core exposes it's dependency mapping as `Core.dependencies`. This can be manipulated after the constructor is invoked
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    inject: function (deps) {
+        assert(deps.a);
+    }
+})
+
+Core.use("a", moduleA);
+
+Core.dependencies.name = {
+    a: "a"
+};
+
+Core.init();
 ```
 
 ### <a name="constructor" href="#constructor">`Core.constructor(deps, [ee])` <small><sup>link</sup></small></a>
@@ -393,3 +436,5 @@ assert(Core.interfaces.bar.many)
   [20]: https://github.com/Raynos/ncore#licence
   [21]: https://github.com/Raynos/ncore#core
   [22]: https://github.com/Raynos/ncore#module.init
+  [23]: https://github.com/Raynos/ncore#destroy
+  [24]: https://github.com/Raynos/ncore#dependencies
