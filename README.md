@@ -279,6 +279,25 @@ Core.init(function () {
 
 The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.
 
+### <a name="interfaces" href="#interfaces">`Core.interfaces` <small><sup>link</sup></small></a>
+
+The Core has a public property named interfaces that contains all the public interfaces attached to the core.
+
+A public interface is a proxy of the internal interface (the one passed to define) which means it has all the same properties / methods, it just has a thin proxy that invokes them indirectly. This proxy exist for easy module hot reloading.
+
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert");
+
+Core.use("name", {
+    define: function (interface) {
+        interface.method = function () { }
+    }
+})
+
+assert(Core.interfaces.name.method);
+```
+
 ### <a name="constructor" href="#constructor">`Core.constructor(deps, [ee])` <small><sup>link</sup></small></a>
 
 Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.
@@ -336,25 +355,6 @@ Core.init()
 
 // The bar interface is now an EventEmitter2 instance
 assert(Core.interfaces.bar.many)
-```
-
-### <a name="interfaces" href="#interfaces">`Core.interfaces` <small><sup>link</sup></small></a>
-
-The Core has a public property named interfaces that contains all the public interfaces attached to the core.
-
-A public interface is a proxy of the internal interface (the one passed to define) which means it has all the same properties / methods, it just has a thin proxy that invokes them indirectly. This proxy exist for easy module hot reloading.
-
-``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert");
-
-Core.use("name", {
-    define: function (interface) {
-        interface.method = function () { }
-    }
-})
-
-assert(Core.interfaces.name.method);
 ```
 
 /* TODO */
