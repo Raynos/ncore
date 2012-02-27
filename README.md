@@ -558,20 +558,23 @@ exposes an API to write your dependency map based on files.
 
 ``` javascript
 var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert")
     moduleLoader = Core.use("moduleLoader", 
         require("ncore/modules/moduleLoader"))
 
-moduleLoader.on("finishedLoading", function () {
-    Core.init()
+moduleLoader.load({
+  uri: "./modules", 
+  dependencies: require("./dependencies.json")),
+  callback: Core.init.bind(Core),
+  core: Core
 })
-moduleLoader.load("./modules", require("./dependencies.json"))
 ```
 
-### <a name="load" href="#load">`moduleLoader.load(uri, deps)`</a>
+### <a name="load" href="#load">`moduleLoader.load(options)`</a>
 
+Call load on the moduleLoader to load all the modules in a folder, moduleLoader
+also takes a callback that's called when it's done loading and it also takes
+a file based dependencies object.
 
-### <a name="finishedLoading" href="#finishedLoading">`@on moduleLoader.finishedLoading`</a>
 
 
 /* TODO */
