@@ -1,0 +1,11 @@
+{
+    "./foo.js": {
+        "bar": "./bar/bar.js",
+        "foo": "./bar/"
+    },
+    "./bar/": {
+        "foo": "./foo.js",
+        "bars": ["./bar/"],
+        "foobar": "./bar/"
+    }
+}

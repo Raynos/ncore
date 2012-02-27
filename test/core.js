@@ -288,6 +288,22 @@ suite("Core", function () {
             Core.init();
             assert(Core.interfaces.name.foo(), "bar not mixed in");
         })
+
+        test("dependency format supports arrays", function () {
+            var name = Core.use("name", {
+                foo: function () { return this.bars },
+                expose: ["foo"]
+            });
+
+            Core.dependencies.name = {
+                bars: ["bar", "foo", "baz"]
+            };
+            Core.use("bar", {})
+            Core.use("foo", {})
+            Core.use("baz", {})
+            Core.init()
+            assert.equal(name.foo().length, 3, "length is not correct")
+        })
     })
 })
 

@@ -7,6 +7,9 @@
 	"main": "index",
 	"dependencies": {
 		"pd": "0.6.1",
+		"stak": "0.1.2",
+		"error": "0.1.0",
+		"after": "0.3.1",
 		"eventemitter-light": "0.2.1"
 	},
 	"engines": {
