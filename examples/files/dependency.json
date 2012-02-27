@@ -1,0 +1,5 @@
+{
+    "./controllers/": {
+        "server": "./server.js"
+    }
+}

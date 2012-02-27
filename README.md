@@ -358,6 +358,28 @@ Core.dependencies.name = {
 Core.init();
 ```
 
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+var name = Core.use("name", {
+    foo: function () {
+        return this.bars;
+    },
+    expose: ["foo"]
+})
+
+Core.use("a", moduleA)
+Core.use("b", moduleB)
+
+Core.dependencies.name = {
+    bars: ["a", "b"]
+}
+
+Core.init
+assert(name.foo().length === 2)
+```
+
 ### <a name="constructor" href="#constructor">`Core.constructor(deps, [ee])`</a>
 
 Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.
@@ -557,15 +579,16 @@ The moduleLoader exposes an interface to autoLoad modules from a folder. It also
 exposes an API to write your dependency map based on files.
 
 ``` javascript
-var Core = Object.create(require("ncore")).constructor(),
+var Core = Object.create(require("ncore")).constructor()
     moduleLoader = Core.use("moduleLoader", 
-        require("ncore/modules/moduleLoader"))
+        require("ncore/modules/moduleLoader")),
+    path = require("path")
 
 moduleLoader.load({
-  uri: "./modules", 
-  dependencies: require("./dependencies.json")),
-  callback: Core.init.bind(Core),
-  core: Core
+  uri: path.join(__dirname, "./modules"),
+  dependencies: require("./dependencies.json"),
+  core: Core,
+  callback: init
 })
 ```
 
@@ -575,9 +598,50 @@ Call load on the moduleLoader to load all the modules in a folder, moduleLoader
 also takes a callback that's called when it's done loading and it also takes
 a file based dependencies object.
 
+``` javascript
+var Core = Object.create(require("ncore")).constructor()
+    moduleLoader = Core.use("moduleLoader", 
+        require("ncore/modules/moduleLoader")),
+    path = require("path")
 
+moduleLoader.load({
+  uri: path.join(__dirname, "./modules"),
+  dependencies: require("./dependencies.json"),
+  core: Core,
+  callback: init
+});
 
-/* TODO */
+function init(err) {
+  if (err) {
+    return console.log("error loading", err, err.stack);
+  }
+  Core.init();
+}
+```
+
+``` javascript
+// dependencies.json format
+{
+    // bar and foo will be injected into module located at foo.js
+    "./foo.js": {
+        // value of bar will be /bar/bar.js
+        "bar": "./bar/bar.js",
+        // value of foo will be the module inside folder /bar/ that matches the same fileName as this module
+        // in this case that would be foo.js
+        "foo": "./bar/"
+    },
+    // foo, bars and foobar will be injected into all modules located directly under folder bar
+    "./bar/": {
+        // value of foo will be fine /foo.js
+        "foo": "./foo.js",
+        // value of bars will be an (unsorted) array containing all modules directly under folder bar
+        "bars": ["./bar/"],
+        // value of foobar will be the module matching the same fileName under bar as the current
+        // module fileName (i.e. itself, for each module under bar)
+        "foobar": "./bar/"
+    }
+}
+```
 
 ## <a name="install" href="#install">Installation</a>
 
