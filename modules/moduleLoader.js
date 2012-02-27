@@ -18,8 +18,8 @@ pd.extend(ModuleLoader, {
             if (this.uri.substr(-3) !== ".js") {
                 return this.callback();
             }
-            var module = require(this.uri);
-            var relative = makeRelative.call(this);
+            var module = require(this.uri),
+                relative = makeRelative.call(this);
             this.core.use(relative, module);
             this.callback();
         } else if (stats.isDirectory()) {
@@ -150,8 +150,12 @@ module.exports = {
         })
 
         function next(err) {
-            if (err) return options.callback(err)
-            --counter === 0 && options.callback()
+            if (err) {
+                return options.callback(err)
+            }
+            if (--counter === 0) {
+                options.callback();
+            }
         }
 
         function writeDependencies(depObject, fileName, callback) {

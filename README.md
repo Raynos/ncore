@@ -2,7 +2,7 @@
 
 A Core library for your node application infrastructure. Handles initialization, bootstrapping and dependency injection for you.
 
-## Status: Beta
+## Status: Production Ready
 
  - [example][14]
  - [motivation][15]
@@ -44,9 +44,10 @@ A Core library for your node application infrastructure. Handles initialization,
 nCore is a dependency injection framework.
 
  - It strictly defines what a unit is and makes it easy to mock out that unit's dependencies. This makes testing and TDD easy
- - It injects dependencies into your modules based on a file based configuration system and allows you to define the public interface of a module either using methods or using event emitters. This allows for loose coupling and encapsulation.
+ - It injects dependencies into your modules and allows you to define the public interface of a module either using methods or using event emitters. This allows for loose coupling and encapsulation.
  - It has support for hot reloading of modules. This basically means removing and adding modules on the fly whilst your core is still running
  - It gives you tiered infrasture to define your objects, bootstrapping and application initialization
+ - It allows you to auto load all your modules from file and set up dependency mappings based on file based relations
 
 ## <a name="docs" href="#docs">Documentation</a>
 
@@ -68,7 +69,6 @@ nCore is a dependency injection framework.
  - [modules][25]
      - [moduleLoader][26]
          - [moduleLoader.load][27]
-         - [@on moduleLoader.finishedLoading][28]
 
 ## <a name="module" href="#module">Module format</a>
 
@@ -565,7 +565,6 @@ Core.purge();
 
  - [moduleLoader][26]
      - [moduleLoader.load][27]
-     - [@on moduleLoader.finishedLoading][28]
 
 nCore comes with a set of default modules implemented to do specific tasks
 
@@ -573,7 +572,6 @@ nCore comes with a set of default modules implemented to do specific tasks
 ## <a name="moduleLoader" href="#moduleLoader">moduleLoader</a>
 
 - [moduleLoader.load][27]
-- [@on moduleLoader.finishedLoading][28]
 
 The moduleLoader exposes an interface to autoLoad modules from a folder. It also
 exposes an API to write your dependency map based on files.
