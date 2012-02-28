@@ -3,6 +3,7 @@ REPORTER = spec
 test: 
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--ui tdd \
+		--bail \
 		--reporter $(REPORTER)
 
 test-cov: lib-cov

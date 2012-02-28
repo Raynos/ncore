@@ -6,18 +6,18 @@ var Core = Object.create(require("../../lib/core")).constructor({
     http = require("http");
 
 Core.use("hello-world", {
-    define: {
-        print: function (req, res) {
-            res.end("hello world");
-        }
-    }
+    print: function (res) {
+        res.end("hello world");
+    },
+    expose: ["print"]
 })
 
 Core.use("server", {
-    inject: function (deps) {
-        http.createServer(function (req, res) {
-            deps.controller.print(req, res);
-        }).listen(8080);
+    init: function () {
+        http.createServer(this.handleRequest).listen(8080);
+    },
+    handleRequest: function (req, res) {
+        this.controller.print(res);
     }
 });
 

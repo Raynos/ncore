@@ -22,75 +22,51 @@ suite("Core", function () {
     })
 
     suite("Core.use", function () {
-        test("define is invoked when a module is used", function (done) {
-            define(Core, function () {
-                assert(true, "define was not called")
-                done()
-            })
-        })
-
-        test("define is passed an interface", function (done) {
-            define(Core, function (interface) {
-                assert(interface, "interface does not exist")
-                done()
-            })
-        })
-
         test("interface is stored on interfaces", function () {
             Core.use("name", {})
             assert(Core.interfaces.name, "interfaces is not set")
         })
 
-        test("interface is an eventemitter", function (done) {
-            define(Core, function (interface) {
-                assert(interface.on, "interface is not an eventemitter")
-                done()
-            })
+        test("interface can emit events", function () {
+            Core.use("name", {
+                method: function () {
+                    assert(this.emit, "interface is not an eventemitter")
+                },
+                expose: ["method"]
+            }).method()
+            
         })
 
         test("public interface is an event emitter", function () {
-            define(Core)
-            assert(Core.interfaces.name.on, "interface is not an EE")
+            var name = Core.use("name", {})
+            assert(name.on, "interface is not an EE")
             // ee throws error if not initialized
-            Core.interfaces.name.emit("foo")
+            name.emit("foo")
         })
 
         test("interface properties are persisted", function () {
-            define(Core, function (interface) {
-                interface.foo = 42
+            Core.use("name", {
+                foo: 42,
+                expose: ["foo"]
             })
             assert.equal(Core.interfaces.name.foo, 42, 
                 "interface changes were not persisted")
         })
 
-        test("interfaces are proxied", function () {
-            var cached_interface
-            define(Core, function (interface) {
-                cached_interface = interface
-                interface.method = function (echo) {
-                    return echo
-                }
-            })
-            assert.notEqual(cached_interface, Core.interfaces.name,
-                "the interfaces are the same")
-            assert.notEqual(cached_interface.method, 
-                Core.interfaces.name.method, "the methods are the same")
-            assert.equal(Core.interfaces.name.method(42), 42,
-                "echo method does not work")
-        })
-
         test("this value is correct", function () {
-            define(Core, function (interface) {
-                interface.method = function () {
-                    return this.define
-                }
+            Core.use("name", {
+                method: function () {
+                    return this.expose
+                },
+                expose: ["method"]
             })
             assert(Core.interfaces.name.method(), "this is incorrect")
         })
 
         test("interface only has what is exposed", function () {
-            define(Core, function (interface) {
-                interface.method = function () {}
+            Core.use("name", {
+                method: function () {},
+                expose: ["method"]
             })
             assert.equal(Object.keys(Core.interfaces.name).length,
                 // 1 + 6 from the eventemitter (on, removeListener, once,
@@ -100,7 +76,7 @@ suite("Core", function () {
 
         test("Core supports objects", function () {
             Core.use("name", {
-                define: {
+                expose: {
                     foo: "bar"
                 }
             })
@@ -109,7 +85,7 @@ suite("Core", function () {
         })
 
         test("use returns the public interface", function () {
-            var name = define(Core)
+            var name = Core.use("name", {})
             assert.equal(Core.interfaces.name, name,
                 "name is not the public interface");
         })
@@ -120,27 +96,17 @@ suite("Core", function () {
             assert(Core.interfaces, "interfaces is not exposed")
         })
 
-        test("can pass in custom ee", function (done) {
+        test("can pass in custom ee", function () {
             var ee = { bar: 42 }
             Core = Object.create(ncore).constructor(null, ee)
-            define(Core, function (interface) {
-                assert.equal(interface.bar, 42, "custom ee not used")
-                done()
-            })
+            var name = Core.use("name", {})
+            assert.equal(name.bar, 42, "custom ee not used")
         })
 
         test("can pass in dependencies", function () {
             Core = Object.create(ncore).constructor({
                 foo: "bar"
             })
-            assert.equal(Core.dependencies.foo, "bar",
-                "dependency not loaded properly")
-        })
-
-        test("can pass in dependency JSON string", function () {
-            Core = Object.create(ncore).constructor(
-                "{ \"foo\": \"bar\" }"
-            )
             assert.equal(Core.dependencies.foo, "bar",
                 "dependency not loaded properly")
         })
@@ -152,13 +118,13 @@ suite("Core", function () {
 
     suite("Core.remove", function () {
         test("removes interface from interfaces", function () {
-            define(Core)
+            Core.use("name", {})
             Core.remove("name")
             assert(!Core.interfaces.name, "interface not removed")
         })
 
         test("removes interface and module from internal lists", function () {
-            define(Core)
+            Core.use("name", {})
             Core.remove("name")
             assert(!Core._interfaces.name, "_interface is not removed")
             assert(!Core._modules.name, "_modules is not removed")
@@ -177,7 +143,7 @@ suite("Core", function () {
 
     suite("Core.purge", function () {
         test("removes all interfaces from core", function () {
-            define(Core)
+            Core.use("name", {})
             Core.use("name2", {})
             Core.purge()
             assert.equal(Object.keys(Core.interfaces).length, 0
@@ -185,7 +151,7 @@ suite("Core", function () {
         })
 
         test("removes internal storage from core", function () {
-            define(Core)
+            Core.use("name", {})
             Core.use("name2", {})
             Core.purge()
             assert.equal(Object.keys(Core._interfaces).length, 0
@@ -204,38 +170,23 @@ suite("Core", function () {
 
     suite("Core.init", function () {
         test("init works with normal modules", function () {
-            inject(Core)
+            Core.use("name", {})
             Core.init()
             assert(Core.interfaces.name, "module does not exist")
         })
 
-        test("init calls inject", function (done) {
-            inject(Core, function () {
-                assert(true, "was not called")
-                done()
-            })
-            Core.init()
-        })
-
-        test("init injects dependencies", function (done) {
-            inject(Core, function (deps) {
-                assert.equal(deps.bar.foo, "bar",
-                    "dependency is not injected properly")
-                done()
-            })
-            Core.dependencies.name = {
-                bar: "bar"
-            }
-            Core.use("bar", {
-                define: {
-                    foo: "bar"
+        test("init calls setup", function (done) {
+            Core.use("name", {
+                setup: function () {
+                    assert(true, "was not called")
+                    done()
                 }
             })
             Core.init()
         })
 
         test("init invokes callback", function (done) {
-            inject(Core);
+            Core.use("name", {})
 
             Core.init(function () {
                 assert(true, "callback called");
@@ -245,9 +196,12 @@ suite("Core", function () {
 
         test("init invokes callback after done", function (done) {
             var counter = 0;
-            inject(Core, function (deps, done) {
-                counter++;
-                done();
+            
+            Core.use("name",{
+                setup: function (done) {
+                    counter++;
+                    done();
+                }
             })
 
             Core.init(function () {
@@ -259,7 +213,7 @@ suite("Core", function () {
         test("init invokes init after callback", function (done) {
             var counter = 0;
             Core.use("name", {
-                inject: function (_, done) {
+                setup: function (done) {
                     counter++;
                     assert.equal(counter, 1, "counter incorrect");
                     done();
@@ -308,15 +262,3 @@ suite("Core", function () {
         })
     })
 })
-
-function define(Core, define) {
-    return Core.use("name", {
-        define: define
-    })
-}
-
-function inject(Core, inject) {
-    return Core.use("name", {
-        inject: inject
-    })
-}

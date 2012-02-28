@@ -22,18 +22,18 @@ A Core library for your node application infrastructure. Handles initialization,
         http = require("http");
 
     Core.use("hello-world", {
-        define: function (interface) {
-            interface.print = function (req, res) {
-                res.end("hello world");
-            };
-        }
+        print: function (res) {
+            res.end("hello world");
+        },
+        expose: ["print"]
     })
 
     Core.use("server", {
-        inject: function (deps) {
-            http.createServer(function (req, res) {
-                deps.controller.print(req, res);
-            }).listen(8080);
+        init: function () {
+            http.createServer(this.handleRequest).listen(8080);
+        },
+        handleRequest: function (req, res) {
+            this.controller.print(res);
         }
     });
 
@@ -53,8 +53,7 @@ nCore is a dependency injection framework.
 
  - [nCore 0.x documentation][3]    
  - [Module format][10]
-     - [define][11]
-     - [inject][12]
+     - [setup][11]
      - [expose][13]
      - [init][22]
      - [destroy][23]
@@ -72,166 +71,35 @@ nCore is a dependency injection framework.
 
 ## <a name="module" href="#module">Module format</a>
 
- - [define][11]
- - [inject][12]
+ - [setup][11]
  - [expose][13]
  - [init][22]
  - [destroy][23]
 
 A module has a few public properties that are used by the Core.
 
-A module defines it's own public interface through [`define`][11] and accepts it's dependencies through [`inject`][12]. Alternatively a module can define it's dependencies through [`expose`][13] and alternatively if the module has no [`inject`][12] method the dependencies are mixed into the module. 
+A module can define it's dependencies through [`expose`][13] and the dependencies are mixed into the module.
 
-A module also has an [`init`][22] method which is invoked when the core is done initializing.
+A module also has an [`init`][22] method which is invoked when the core is done initializing and a [`setup`][12] method which is invoked before init to do asynchronous setup logic for that module
 
-Modules are handled in three step phases, 
+Modules are handled in four phases, 
 
- 1. First is the [`define`][11] phase where every module that is used defines it's public interface. Define is called once a module is used on the core
- 2. Second is the [`inject`][12] phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. In the inject phase modules can do asynchronous startup like opening database connections or asynchronously loading config data from files.
- 3. Lastly is the [`init`][22] phase, this happens after every module says it's done injecting. This also happens after the callback on [`Core.init`][5]. This phase is meant to start your application like starting your HTTP server.
+ 1. First is the interface definition phase where every module that is used exposes it's public interface. The core extracts the exposed interface once the module is used.
+ 2. Second is the dependency injection phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. 
+ 3. Thirdy is the [`setup`][11] phase, where modules can do asynchronous setup up logic. This happens after all dependencies are injected into all modules
+ 4. Lastly is the [`init`][22] phase, this happens after every module says it's done it's setup. This also happens after the callback on [`Core.init`][5]. This phase is meant to start your application like starting your HTTP server.
 
-### <a name="define" href="#define">`module.define(interface)`</a>
+### <a name="setup" href="#setup">`module.setup`</a>
 
-A module is the implementation of an interface. When other modules want to interact with it, they should interact through a public interface. The way to define the public interface of a module is by defining an interface.
-
-Note that the public interface passed to other modules and exposed as [`Core.interfaces`][9] is actually a proxy of the interface created through define. This means that it has all the same properties and it's methods are thin wrappers that call the real interface. This allows for the interface to change at run-time without other modules having references to dead interfaces. This is needed for hot reloading.
-
-The core invokes define when the module is used
+The optional setup method allows a module to setup logic
 
 ``` javascript
 var Core = Object.create(require("ncore")).constructor(),
     assert = require("assert")
 
-Core.use("name", {
-    // define an interface
-    define: function (interface) {
-        interface.method = function () {
-            ...
-        }
-    }
-})
-
-assert(Core.interfaces.name.method)
-```
-
-``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    pd = require("pd"),
-    assert = require("assert");
-
-Core.use("name", {
-    define: function (interface) {
-        pd.extend(interface, {
-            method: this.method,
-            public: this.public,
-            otherMethod: this.otherMethod
-        })
-    },
-    method: function () {
-        // this is the module
-        this.counter++;
-    },
-    otherMethod: function () {
-        return this._getCounter();
-    },
-    _getCounter: function () {
-        return this.counter;
-    },
-    public: function () {
-        this.private();
-    },
-    private: function () {
-        this.emit("foobar");
-    }
-})
-
-var name = Core.interfaces.name;
-name.method();
-assert.equal(name.otherMethod(), 1);
-name.on("foobar", function () {
-    assert(true);
-})
-name.public();
-assert(!name.private);
-```
-
-``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert")
-
-Core.use("name", {
-    define: {
-        method: function () {
-            // this is actually the module, not the interface
-            return this.private()
-        }
-    },
-    private: function () {
-        return 42;
-    }
-})
-
-assert.equal(Core.interfaces.name.method(), 42);
-```
-
-### <a name="inject" href="#inject">`module.inject(deps, [done])`</a>
-
-A module exposes an inject method which is used to handle the dependencies that are injected. It also has an optional done callback to allow the module to do asynchronous startup procedures.
-
-The core invokes inject when the core is initialized
-
-``` javascript
-var Core = Object.create(require("ncore")).constructor({
-        foo: {
-            bar: "bar"
-        }
-    }),
-    assert = require("assert");
-
-Core.use("bar", barObject);
-
-Core.use("foo", {
-    inject: function (deps) {
-        // deps.bar is the "bar" interface
-        assert.equal(deps.bar, Core.interfaces.bar);
-    }
-})
-
-Core.init()
-```
-
-``` javascript
-var Core = Object.create(require("ncore")).constructor(),
-    assert = require("assert");
-
-Core.use("foo", {
-    inject: function (_, done) {
-        // Do asynchronous startup
-        initializeDatabase(configSettings, done);
-    }
-})
-
-Core.init(function () {
-    // all modules are done
-    doStuff();
-})
-```
-
-``` javascript
-var Core = Object.create(require("ncore")).constructor({
-        foo: {
-            bar: "bar"
-        }
-    }),
-    assert = require("assert")
-
-Core.use("bar", barObject);
-
-Core.use("foo", {
-    // if a module has no inject method
-    // then dependencies are mixed into the module
-    init: function() {
-        assert(this.bar);
+Core.use("db", {
+    setup: function (done) {
+        db.openConnection(done)
     }
 })
 
@@ -273,7 +141,7 @@ var Core = Object.create(require("ncore")).constructor(),
     assert = require("assert")
 
 Core.use("name", {
-    inject: function () {
+    setup: function () {
         assert("happens first");
     },
     init: function () {
@@ -327,9 +195,8 @@ var Core = Object.create(require("ncore")).constructor(),
     assert = require("assert");
 
 Core.use("name", {
-    define: function (interface) {
-        interface.method = function () { }
-    }
+    method: function () { },
+    expose: ["method"]
 })
 
 assert(Core.interfaces.name.method);
@@ -344,8 +211,8 @@ var Core = Object.create(require("ncore")).constructor(),
     assert = require("assert")
 
 Core.use("name", {
-    inject: function (deps) {
-        assert(deps.a);
+    init: function () {
+        assert(this.a);
     }
 })
 
@@ -405,13 +272,14 @@ var Core = Object.create(ncore).constructor({
     }
 });
 
-Core.use("baz", bazObject);
+var bar = Core.use("baz", bazObject);
 
 Core.use("foo", {
-    inject: function (deps) {
-        // For module foo the deps object contains a bar property
+    init: function () {
+        // For module foo the deps have been mixed in
+        // so this has a bar property
         // that is the interface of bazObject
-        assert.equal(deps.bar, Core.interfaces.bar);
+        assert.equal(this.bar, bar);
     }
 });
 
@@ -451,16 +319,15 @@ var Core = Object.create(require("ncore")).constructor(),
     assert = require("assert")
 
 Core.use("name", {
-    define: function (interface) {
-        interface.prop = true;
-        interface.method = function () { 
-            // this === module
-            this.private();
-        }
+    prop: true,
+    method: function () {
+        // this === module
+        this.private()
     },
     private: function () {
         ...
-    }
+    },
+    expose: ["prop", "method"]
 })
 ```
 
@@ -470,7 +337,7 @@ var Core = Object.create(require("ncore")).constructor(),
 
 Core.use("name", {
     // define the interface as an object
-    define: {
+    expose: {
         interface_method: function () {
 
         }
@@ -507,7 +374,7 @@ assert.equal(name, Core.interfaces.name);
 init will inject dependencies into modules. It also invokes the init method on modules after they are done with dependency injection.
 
 The optional callback to init will be called after all modules are done with the
-injection.
+setup.
 
 ``` javascript
 var Core = Object.create(require("ncore")).constructor(),
@@ -516,8 +383,8 @@ var Core = Object.create(require("ncore")).constructor(),
 Core.use("bar", barObject);
 
 Core.use("name", {
-    inject: function (deps, done) {
-        assert(deps.bar);
+    setup: function (done) {
+        assert(this.bar);
         assert("happens first");
         done();
     },
@@ -665,7 +532,7 @@ function init(err) {
   [8]: https://github.com/Raynos/ncore#constructor
   [9]: https://github.com/Raynos/ncore#interfaces
   [10]: https://github.com/Raynos/ncore#module
-  [11]: https://github.com/Raynos/ncore#define
+  [11]: https://github.com/Raynos/ncore#setup
   [12]: https://github.com/Raynos/ncore#inject
   [13]: https://github.com/Raynos/ncore#expose
   [14]: https://github.com/Raynos/ncore#example

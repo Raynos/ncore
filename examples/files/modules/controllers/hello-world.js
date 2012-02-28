@@ -1,5 +1,5 @@
 module.exports = {
-    boot: function () {
+    setup: function () {
         this.server.on("serverReady", this.attachController)
     },
     attachController: function (server) {
