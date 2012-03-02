@@ -13,6 +13,9 @@ lib-cov:
 	@jscoverage lib lib-cov
 
 browser:
-	webmake lib/core.js vendor/core.js
+	browserify ./lib/browser.js -o dist/core.js
+	
+webmake: 
+	webmake ./lib/browser.js dist/core.js
 
 .PHONY: test test-cov

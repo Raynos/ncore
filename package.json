@@ -21,6 +21,7 @@
 	"devDependencies": {
 		"mocha": "0.14.0",
 		"express": "git://github.com/visionmedia/express.git",
-		"webmake": "0.3.6"
+		"webmake": "0.3.6",
+		"browserify": "1.10.3"
 	}
 }
