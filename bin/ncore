@@ -1,0 +1,68 @@
+#!/usr/bin/env node
+
+var program = require("commander"),
+    _package = require("../package.json"),
+    path = require("path"),
+    pd = require("pd"),
+    fs = require("fs"),
+    after = require("after"),
+    DependencyWriter = require("../modules/dependencyWriter"),
+    browserify = require("browserify")
+
+program
+    .version(_package.version)
+    .usage('[options] <file>')
+    .option("-o, --out [value]", "output file location")
+    .parse(process.argv)
+
+var moduleUri = path.join(process.cwd(), program.args.pop())
+
+var dependencies = require(path.join(moduleUri, "dependency.json")),
+    core = { dependencies: {} },
+    cache = {}
+
+var code = "(function () { \n" +
+    "var Core = Object.create(nCore).constructor()\n" + 
+    "delete window.nCore \n"
+
+after.forEach(dependencies, writeDependencies, next)
+
+function writeDependencies(depObject, fileName, callback) {
+    var dw = DependencyWriter({
+        uri: path.join(moduleUri, fileName),
+        originalUri: moduleUri,
+        depObject: depObject,
+        core: core,
+        callback: callback
+    })
+
+    dw.emitter.on("dependencySet", function (name, uri) {
+        if (cache[name]) {
+            return
+        }
+        uri = "./" + path.relative(moduleUri, uri)
+        cache[name] = true
+        code += "Core.use('" + name + "', require('" + uri + "')) \n"
+    })
+}
+
+
+
+
+function next() {
+    var bundle = browserify({
+        debug: true
+    })
+
+    code += "Core.dependencies = " + JSON.stringify(core.dependencies) + "\n"
+    code += "Core.init()\n"
+    code += "})()"
+
+    bundle.addEntry("./lib/browser.js")
+    bundle.addEntry(path.join(moduleUri, "dummy.js"), { body: code })
+
+    code = bundle.bundle()
+
+    fs.writeFile(path.join(process.cwd(), program.out), code)
+}
+

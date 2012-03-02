@@ -7,14 +7,13 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="https://raw.github.com/visionmedia/mocha/master/mocha.js"></script>
   <script>mocha.setup('tdd')</script>
-  <script src="../dist/core.js"></script>
   <script src="browser/build.js"></script>
   <script src="browser/test.js"></script>
   <script>
     $(function () {
       mocha
         .run()
-        .globals(['nCore']) // acceptable globals
+        .globals([]) // acceptable globals
     })
   </script>
 </head>

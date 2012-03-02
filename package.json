@@ -10,7 +10,9 @@
 		"stak": "0.1.2",
 		"error": "0.1.0",
 		"after": "0.3.2",
-		"eventemitter-light": "0.2.1"
+		"eventemitter-light": "0.2.1",
+		"commander": "0.5.1",
+		"browserify": "1.10.3"
 	},
 	"engines": {
 		"node": "0.6.x"
@@ -21,7 +23,9 @@
 	"devDependencies": {
 		"mocha": "0.14.0",
 		"express": "git://github.com/visionmedia/express.git",
-		"webmake": "0.3.6",
-		"browserify": "1.10.3"
-	}
+		"webmake": "0.3.6"
+	},
+    "bin": { 
+    	"ncore": "./bin/ncore" 
+    }
 }

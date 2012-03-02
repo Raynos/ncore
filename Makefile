@@ -14,8 +14,11 @@ lib-cov:
 
 browser:
 	browserify ./lib/browser.js -o dist/core.js
+
+build-test:
+	./bin/ncore -o /test/browser/build.js ./test/modules/
 	
 webmake: 
 	webmake ./lib/browser.js dist/core.js
 
-.PHONY: test test-cov
+.PHONY: test test-cov webmake build-test browser
