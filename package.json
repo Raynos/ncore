@@ -6,7 +6,7 @@
 	"author": "Raynos <raynos2@gmail.com>",
 	"main": "index",
 	"dependencies": {
-		"pd": "0.6.1",
+		"pd": "0.6.2",
 		"stak": "0.1.2",
 		"error": "0.1.0",
 		"after": "0.3.2",
@@ -19,6 +19,8 @@
 		"test": "make test"	
 	},
 	"devDependencies": {
-		"mocha": "0.13.0"
+		"mocha": "0.14.0",
+		"express": "git://github.com/visionmedia/express.git",
+		"webmake": "0.3.6"
 	}
 }

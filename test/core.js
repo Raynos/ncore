@@ -34,7 +34,15 @@ suite("Core", function () {
                 },
                 expose: ["method"]
             }).method()
-            
+        })
+
+        test("interface without expose is public", function (done) {
+            Core.use("name", {
+                method: function () {
+                    assert("like a boss", "it doesnt work")
+                    done()
+                }
+            }).method()
         })
 
         test("public interface is an event emitter", function () {

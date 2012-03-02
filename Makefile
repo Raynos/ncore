@@ -12,5 +12,7 @@ test-cov: lib-cov
 lib-cov:
 	@jscoverage lib lib-cov
 
+browser:
+	webmake lib/core.js vendor/core.js
 
 .PHONY: test test-cov

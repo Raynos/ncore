@@ -48,6 +48,7 @@ nCore is a dependency injection framework.
  - It has support for hot reloading of modules. This basically means removing and adding modules on the fly whilst your core is still running
  - It gives you tiered infrasture to define your objects, bootstrapping and application initialization
  - It allows you to auto load all your modules from file and set up dependency mappings based on file based relations
+ - Works with node and the browser! (only 1.3KB min & gzipped)
 
 ## <a name="docs" href="#docs">Documentation</a>
 
@@ -130,6 +131,26 @@ Core.interfaces.name.on("somethingHappened", function () {
 })
 Core.interfaces.name.public();
 assert(!Core.interfaces.name.private)
+```
+``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")
+
+Core.use("name", {
+    public: function () {
+        this.private();
+    },
+    otherPublic: function () {
+        // this is also an event emitter
+        this.emit("somethingHappened");
+    }
+})
+
+Core.interfaces.name.on("somethingHappened", function () {
+    assert(true);
+})
+Core.interfaces.name.public();
+assert(Core.interfaces.name.otherPublic)
 ```
 
 ### <a name="module.init" href="#module.init">`module.init()`</a>
