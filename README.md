@@ -12,6 +12,8 @@ A transparent dependency injection library based on file based dependency config
  - [contributors][19]
  - [licence][20]
 
+***
+
 ## <a name="example" href="#example">Example</a>
 
     var Core = Object.create(require("nCore")).constructor({
@@ -45,6 +47,8 @@ A transparent dependency injection library based on file based dependency config
  - [files][33]
  - [express][34]
 
+***
+
 ## <a name="motivation" href="#motivation">Motivation</a>
 
 nCore is a dependency injection framework.
@@ -55,6 +59,8 @@ nCore is a dependency injection framework.
  - It gives you tiered infrasture to define your objects, bootstrapping and application initialization
  - It allows you to auto load all your modules from file and set up dependency mappings based on file based relations
  - Works with node and the browser! (only 1.3KB min & gzipped)
+
+***
 
 ## <a name="docs" href="#docs">Documentation</a>
 
@@ -91,6 +97,8 @@ And that's it. Everything just works. All the modules are loaded, bundled,
 attached to the core, nCore is loaded, the core is initialized.
 
 See [test/modules][31] for an example
+
+***
 
 ## <a name="module" href="#module">Module format</a>
 
@@ -214,6 +222,8 @@ Core.use("name", {
 
 Core.remove("name");
 ```
+
+***
 
 ## <a name="core" href="#core">`Core`</a>
 
@@ -471,6 +481,8 @@ Core.purge();
 // Core is clean now
 ```
 
+***
+
 ## <a name="modules" href="#modules">Modules</a>
 
  - [moduleLoader][26]
@@ -478,6 +490,7 @@ Core.purge();
 
 nCore comes with a set of default modules implemented to do specific tasks
 
+***
 
 ## <a name="moduleLoader" href="#moduleLoader">moduleLoader</a>
 
@@ -551,19 +564,29 @@ function init(err) {
 }
 ```
 
+***
+
 ## <a name="install" href="#install">Installation</a>
 
 `$ npm install ncore`
+
+***
 
 ## <a name="test" href="#test">Test</a>
 
 `$ make test`
 
+***
+
 ## <a name="contributors" href="#contributors">contributors</a>
 
  - [Raynos][29]
 
+***
+
 ## <a name="licence" href="#licence">MIT Licenced</a>
+
+***
 
   [1]: https://secure.travis-ci.org/Raynos/ncore.png
   [2]: http://travis-ci.org/Raynos/ncore
