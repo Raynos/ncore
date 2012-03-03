@@ -52,7 +52,8 @@ nCore is a dependency injection framework.
 
 ## <a name="docs" href="#docs">Documentation</a>
 
- - [nCore 0.x documentation][3]    
+ - [nCore 0.x documentation][3]
+ - [CLI for browsers][30]
  - [Module format][10]
      - [setup][11]
      - [expose][13]
@@ -69,6 +70,21 @@ nCore is a dependency injection framework.
  - [modules][25]
      - [moduleLoader][26]
          - [moduleLoader.load][27]
+
+## <a name="cli" href="#cli">CLI</a>
+
+nCore gives you a CLI to build a browser bundle using browserify with the same
+syntax as the [moduleLoader][26]
+
+This means you can set up your modules folder and you dependency.json file 
+directly inside your modules folder then just
+
+`$ ncore ./modules/ -o /build/bundle.js`
+
+And that's it. Everything just works. All the modules are loaded, bundled, 
+attached to the core, nCore is loaded, the core is initialized.
+
+See [test/modules][31] for an example
 
 ## <a name="module" href="#module">Module format</a>
 
@@ -572,3 +588,5 @@ function init(err) {
   [27]: https://github.com/Raynos/ncore#load
   [28]: https://github.com/Raynos/ncore#finishedLoading
   [29]: https://github.com/Raynos
+  [30]: https://github.com/Raynos/ncore#cli
+  [31]: https://github.com/Raynos/ncore/test/modules
