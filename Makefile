@@ -19,6 +19,6 @@ build-test:
 	./bin/ncore -o /test/browser/build.js ./test/modules/
 	
 webmake: 
-	webmake ./lib/browser.js dist/core.js
+	./node_modules/.bin/webmake ./lib/browser.js dist/core.js
 
 .PHONY: test test-cov webmake build-test browser
