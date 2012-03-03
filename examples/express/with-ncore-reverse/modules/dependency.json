@@ -1,0 +1,11 @@
+{
+    "./app.js": {
+        "server": "./server.js"
+    },
+    "./configure.js": {
+        "app": "./app.js"
+    },
+    "./routes/": {
+        "app": "./app.js"
+    }
+}
