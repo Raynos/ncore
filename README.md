@@ -595,7 +595,7 @@ function init(err) {
   [28]: https://github.com/Raynos/ncore#finishedLoading
   [29]: https://github.com/Raynos
   [30]: https://github.com/Raynos/ncore#cli
-  [31]: https://github.com/Raynos/ncore/tree/test/modules
-  [32]: https://github.com/Raynos/ncore/tree/examples/simple
-  [33]: https://github.com/Raynos/ncore/tree/examples/files
-  [34]: https://github.com/Raynos/ncore/tree/examples/express
+  [31]: https://github.com/Raynos/ncore/tree/master/test/modules
+  [32]: https://github.com/Raynos/ncore/tree/master/examples/simple
+  [33]: https://github.com/Raynos/ncore/tree/master/examples/files
+  [34]: https://github.com/Raynos/ncore/tree/master/examples/express
