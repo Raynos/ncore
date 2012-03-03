@@ -1,6 +1,6 @@
 # nCore [![Build Status][1]][2]
 
-A Core library for your node application infrastructure. Handles initialization, bootstrapping and dependency injection for you.
+A transparent dependency injection library based on file based dependency config. Handles initialization, bootstrapping and dependency injection for you.
 
 ## Status: Production Ready
 
