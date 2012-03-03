@@ -26,8 +26,7 @@ A transparent dependency injection library based on file based dependency config
     Core.use("hello-world", {
         print: function (res) {
             res.end("hello world");
-        },
-        expose: ["print"]
+        }
     })
 
     Core.use("server", {
@@ -82,6 +81,8 @@ nCore is a dependency injection framework.
  - [modules][25]
      - [moduleLoader][26]
          - [moduleLoader.load][27]
+
+***
 
 ## <a name="cli" href="#cli">CLI</a>
 
