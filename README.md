@@ -39,6 +39,12 @@ A Core library for your node application infrastructure. Handles initialization,
 
     Core.init();
 
+### <a name="further" href="#further"> Further examples </a>
+
+ - [simple][32]
+ - [files][33]
+ - [express][34]
+
 ## <a name="motivation" href="#motivation">Motivation</a>
 
 nCore is a dependency injection framework.
@@ -590,3 +596,6 @@ function init(err) {
   [29]: https://github.com/Raynos
   [30]: https://github.com/Raynos/ncore#cli
   [31]: https://github.com/Raynos/ncore/tree/test/modules
+  [32]: https://github.com/Raynos/ncore/tree/examples/simple
+  [33]: https://github.com/Raynos/ncore/tree/examples/files
+  [34]: https://github.com/Raynos/ncore/tree/examples/express
