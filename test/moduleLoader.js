@@ -59,9 +59,9 @@ suite("moduleLoader", function () {
                 function testBars(_bar, text) {
                     assert.equal(_bar.has("foo"), foo,
                         "foo dependency on "+text+" did not work")
-                    assert(_bar.has("bars").indexOf(bar) !== -1,
+                    assert.equal(_bar.has("bars").bar, bar,
                         "bars array does not contain bar on "+text)
-                    assert(_bar.has("bars").indexOf(barfoo) !== -1,
+                    assert.equal(_bar.has("bars").foo, barfoo,
                         "bars array does not contain barfoo on "+text)
                 }
 

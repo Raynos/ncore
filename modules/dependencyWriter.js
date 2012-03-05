@@ -58,13 +58,14 @@ pd.extend(DependencyWriter, {
             if (err) {
                 return callback(err)
             }
-            files = files.map(function (fileName) {
-                return makeRelative.call({
+            var deps = {}
+            files.forEach(function (fileName) {
+                deps[fileName.replace(".js", "")] = makeRelative.call({
                     relative: path.join(pattern[0], fileName)
-                });
-            } ,this)
+                })
+            }, this)
 
-            setDependency.call(this, files)
+            setDependency.call(this, deps)
         }
 
         function setDependency(deps) {
