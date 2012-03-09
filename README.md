@@ -21,24 +21,52 @@ A transparent dependency injection library based on file based dependency config
                 controller: "hello-world"
             }
         }),
-        http = require("http");
+        http = require("http")
 
     Core.use("hello-world", {
         print: function (res) {
-            res.end("hello world");
+            res.end("hello world")
         }
     })
 
     Core.use("server", {
         init: function () {
-            http.createServer(this.handleRequest).listen(8080);
+            http.createServer(this.handleRequest).listen(8080)
         },
         handleRequest: function (req, res) {
-            this.controller.print(res);
+            this.controller.print(res)
         }
     });
 
-    Core.init();
+    Core.init()
+    
+Or using the file based loader
+
+    // ./hello-world.js
+    module.exports = {
+        print: function (res) {
+            res.end("hello world")
+        }
+    }
+    
+    // ./server.js
+    var http = require("http")
+    
+    module.exports = {
+        init: function () {
+            http.createServer(this.handleRequest).listen(8080)
+        },
+        handleRequest: function (req, res) {
+            this.controller.print(res)
+        }
+    }
+       
+    // dependency.json
+    {
+        "./server.js": {
+            "controller": "./hello-world.js"
+        }
+    }
 
 ### <a name="further" href="#further"> Further examples </a>
 
