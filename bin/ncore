@@ -58,7 +58,9 @@ function next() {
     code += "Core.init()\n"
     code += "})()"
 
-    bundle.addEntry("./lib/browser.js")
+    console.log(__dirname)
+    bundle.addEntry(path.join(__dirname, "../lib/browser.js"))
+
     bundle.addEntry(path.join(moduleUri, "dummy.js"), { body: code })
 
     code = bundle.bundle()
