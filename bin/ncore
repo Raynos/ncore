@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// bugs
+//  - /node_modules/ncore/node_modules
+//  - doesn't include files not picked up by dependencySet
+
 var program = require("commander"),
     _package = require("../package.json"),
     path = require("path"),
@@ -7,6 +11,7 @@ var program = require("commander"),
     fs = require("fs"),
     after = require("after"),
     DependencyWriter = require("../modules/dependencyWriter"),
+    wrench = require("wrench"),
     browserify = require("browserify")
 
 program
@@ -25,9 +30,31 @@ var code = "(function () { \n" +
     "var Core = Object.create(nCore).constructor()\n" + 
     "delete window.nCore \n"
 
-after.forEach(dependencies, writeDependencies, next)
+var done = after(2, next)
+
+after.forEach(dependencies, writeDependencies, done)
+
+readDir(moduleUri, readFiles)
+
+function readFiles(err, files) {
+    if (err) {
+        throw err
+    }
+    after.forEach(files.files, tunnelWriteDependencies, done)
+}
+
+function tunnelWriteDependencies(fileName, callback) {
+    var relative = path.relative(moduleUri, fileName)
+    if (relative.indexOf(".json") === -1) {
+        writeDependencies({},
+            path.relative(moduleUri, fileName), callback)    
+    } else {
+        callback()
+    }
+}
 
 function writeDependencies(depObject, fileName, callback) {
+    console.log("writeDependencies", depObject, fileName)
     var dw = DependencyWriter({
         uri: path.join(moduleUri, fileName),
         originalUri: moduleUri,
@@ -46,9 +73,6 @@ function writeDependencies(depObject, fileName, callback) {
     })
 }
 
-
-
-
 function next() {
     var bundle = browserify({
         debug: true
@@ -58,13 +82,56 @@ function next() {
     code += "Core.init()\n"
     code += "})()"
 
-    console.log(__dirname)
     bundle.addEntry(path.join(__dirname, "../lib/browser.js"))
 
     bundle.addEntry(path.join(moduleUri, "dummy.js"), { body: code })
 
     code = bundle.bundle()
 
+    code.replace(/\/ncore\/node_modules/g, "")
+
     fs.writeFile(path.join(process.cwd(), program.out), code)
 }
 
+function readDir(start, callback) {
+    // Use lstat to resolve symlink if we are passed a symlink
+    fs.lstat(start, function(err, stat) {
+        if(err) {
+            return callback(err);
+        }
+        var found = {dirs: [], files: []},
+            total = 0,
+            processed = 0;
+        function isDir(abspath) {
+            fs.stat(abspath, function(err, stat) {
+                if(stat.isDirectory()) {
+                    found.dirs.push(abspath);
+                    // If we found a directory, recurse!
+                    readDir(abspath, function(err, data) {
+                        found.dirs = found.dirs.concat(data.dirs);
+                        found.files = found.files.concat(data.files);
+                        if(++processed == total) {
+                            callback(null, found);
+                        }
+                    });
+                } else {
+                    found.files.push(abspath);
+                    if(++processed == total) {
+                        callback(null, found);
+                    }
+                }
+            });
+        }
+        // Read through all the files in this directory
+        if(stat.isDirectory()) {
+            fs.readdir(start, function (err, files) {
+                total = files.length;
+                for(var x=0, l=files.length; x<l; x++) {
+                    isDir(path.join(start, files[x]));
+                }
+            });
+        } else {
+            return callback(new Error("path: " + start + " is not a directory"));
+        }
+    });
+}

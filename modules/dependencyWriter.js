@@ -14,6 +14,7 @@ pd.extend(DependencyWriter, {
         }
         if (stats.isFile()) {
             this.relative = makeRelative.call(this)
+            this.emitter.emit("dependencySet", this.relative, this.uri)
             after.forEach(this.depObject, this.injectDependency, 
                 this, this.callback)
         } else if (stats.isDirectory()) {
@@ -73,7 +74,6 @@ pd.extend(DependencyWriter, {
             if (!dependencies[this.relative]) {
                 dependencies[this.relative] = {}
             }
-            this.emitter.emit("dependencySet", this.relative, this.uri)
             dependencies[this.relative][name] = deps
             callback()
         }

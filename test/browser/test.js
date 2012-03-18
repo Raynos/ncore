@@ -10,11 +10,15 @@ suite("nCore", function () {
         var foo = window.foo
         var bar = window["bar.bar"]
         var barfoo = window["bar.foo"]
+        var baz = window.baz
 
         assert(foo.has("bar") === bar,
             "bar depedency on foo did not work")
         assert(foo.has("foo") === barfoo,
             "foo dependency on foo did not work")
+        console.log(foo.has("baz"), baz)
+        assert(foo.has("baz") === baz,
+            "baz dependency on foo did not work")
         testBars(bar, "bar")
         testBars(barfoo, "barfoo")
         assert(bar.has("foobar") === bar,
@@ -25,9 +29,9 @@ suite("nCore", function () {
         function testBars(_bar, text) {
             assert(_bar.has("foo") === foo,
                 "foo dependency on "+text+" did not work")
-            assert(_bar.has("bars").indexOf(bar) !== -1,
+            assert(_bar.has("bars").bar,
                 "bars array does not contain bar on "+text)
-            assert(_bar.has("bars").indexOf(barfoo) !== -1,
+            assert(_bar.has("bars").barfoo !== -1,
                 "bars array does not contain barfoo on "+text)
         }
 

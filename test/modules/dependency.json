@@ -1,7 +1,8 @@
 {
     "./foo.js": {
         "bar": "./bar/bar.js",
-        "foo": "./bar/"
+        "foo": "./bar/",
+        "baz": "./baz.js"
     },
     "./bar/": {
         "foo": "./foo.js",
