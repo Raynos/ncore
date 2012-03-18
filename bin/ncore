@@ -88,7 +88,7 @@ function next() {
 
     code = bundle.bundle()
 
-    code.replace(/\/ncore\/node_modules/g, "")
+    code = code.replace(/\/ncore\/node_modules/g, "")
 
     fs.writeFile(path.join(process.cwd(), program.out), code)
 }
