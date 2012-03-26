@@ -73,6 +73,7 @@ Or using the file based loader
  - [simple][32]
  - [files][33]
  - [express][34]
+ - [fyp, entire app build with ncore][42]
 
 ***
 
@@ -651,3 +652,4 @@ function init(err) {
   [32]: https://github.com/Raynos/ncore/tree/master/examples/simple
   [33]: https://github.com/Raynos/ncore/tree/master/examples/files
   [34]: https://github.com/Raynos/ncore/tree/master/examples/express
+  [42]: https://github.com/Raynos/fyp
