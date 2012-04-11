@@ -111,9 +111,9 @@ module.exports = {
     core: function core(uri, callback) {
         var Core = Object.create(require("..")).constructor()
 
-        Core.use("moduleLoader", module.exports)
+        Core.use("moduleLoader", this)
 
-        moduleLoader.load({
+        this.load({
             uri: uri,
             core: Core,
             skip: "client/",
