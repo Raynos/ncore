@@ -98,7 +98,32 @@ module.exports = {
             });
         }
     },
-    expose: ["load"]
+    /*
+        core reduces boilerplate by doing default actions
+    */
+    core: function core(uri, callback) {
+        var Core = Object.create(require("..")).constructor()
+
+        Core.use("moduleLoader", module.exports)
+
+        moduleLoader.load({
+            uri: uri,
+            core: Core,
+            dependencies: require(path.join(uri, "dependency.json")),
+            callback: init
+        })
+
+        function init(err) {
+            if (err) {
+                if (callback) {
+                    return callback(err)
+                }
+                console.log("Error occurred in moduleLoader.core", err)
+            }
+            Core.init(callback)
+        }
+    },
+    expose: ["load", "core"]
 };
 
 
