@@ -40,6 +40,9 @@ function readFiles(err, files) {
     if (err) {
         throw err
     }
+    files.files = files.files.filter(function (uri) {
+        return uri.indexOf("/server/") === -1
+    })
     after.forEach(files.files, tunnelWriteDependencies, done)
 }
 

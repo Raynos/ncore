@@ -26,6 +26,11 @@ pd.extend(ModuleLoader, {
             this.core.use(relative, module);
             this.callback();
         } else if (stats.isDirectory()) {
+            if (this.skip) {
+                if (this.uri.indexOf(skip) !== -1) {
+                    return this.callback()
+                }
+            }
             fs.readdir(this.uri, this.readFiles);
         }
     },
@@ -61,6 +66,7 @@ module.exports = {
                     files in the folder (uri). This is based on 
                     files/folderNames
                 uri: {String} - uri of the folder to load
+                skip: {String} - string to match the folder name again to skip
                 callback: {Function} - callback to invoke when all modules
                     are loaded and attached to core. Passes an error if
                     the error occurs
@@ -75,6 +81,7 @@ module.exports = {
 
         ModuleLoader({
             uri: options.uri,
+            skip: options.skip,
             core: options.core,
             callback: next
         })
@@ -109,6 +116,7 @@ module.exports = {
         moduleLoader.load({
             uri: uri,
             core: Core,
+            skip: "client/"
             dependencies: require(path.join(uri, "dependency.json")),
             callback: init
         })
