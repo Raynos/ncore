@@ -27,7 +27,7 @@ pd.extend(ModuleLoader, {
             this.callback();
         } else if (stats.isDirectory()) {
             if (this.skip) {
-                if (this.uri.indexOf(skip) !== -1) {
+                if (this.uri.indexOf(this.skip) !== -1) {
                     return this.callback()
                 }
             }
