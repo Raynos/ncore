@@ -44,6 +44,7 @@ pd.extend(ModuleLoader, {
             ModuleLoader({
                 uri: path.join(this.uri, fileName),
                 core: this.core,
+                skip: this.skip,
                 originalUri: this.originalUri,
                 callback: done
             });
