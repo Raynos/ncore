@@ -116,7 +116,7 @@ module.exports = {
         this.load({
             uri: uri,
             core: Core,
-            skip: "client/",
+            skip: "/client",
             dependencies: require(path.join(uri, "dependency.json")),
             callback: init
         })
