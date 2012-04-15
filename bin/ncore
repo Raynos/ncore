@@ -18,6 +18,7 @@ program
     .version(_package.version)
     .usage('[options] <file>')
     .option("-o, --out [value]", "output file location")
+    .option("--opinion", "undo opinionated bullshit")
     .parse(process.argv)
 
 var moduleUri = path.join(process.cwd(), program.args.pop())
@@ -32,18 +33,27 @@ var code = "(function () { \n" +
 
 var done = after(2, next)
 
-after.forEach(dependencies, writeDependencies, done)
+after.forEach(dependencies, function (depObject, fileName, callback) {
+    if (fileName.indexOf("/server/") === -1) {
+        return writeDependencies(depObject, fileName, callback)
+    }
+    callback()
+}, done)
 
 readDir(moduleUri, readFiles)
+console.log(moduleUri)
 
 function readFiles(err, files) {
     if (err) {
         throw err
     }
-    files.files = files.files.filter(function (uri) {
-        return uri.indexOf("/server/") === -1
-    })
-    after.forEach(files.files, tunnelWriteDependencies, done)
+    if (!program.opinion) {
+        files = files.filter(function (uri) {
+            return uri.indexOf("/server/") === -1
+        })
+    }
+    console.log("files", files)
+    after.forEach(files, tunnelWriteDependencies, done)
 }
 
 function tunnelWriteDependencies(fileName, callback) {
@@ -96,45 +106,38 @@ function next() {
     fs.writeFile(path.join(process.cwd(), program.out), code)
 }
 
+function flatten(array) {
+    return array.reduce(function (memo, value) {
+        if (Array.isArray(value)) {
+            return memo.concat(flatten(value))
+        }
+        memo[memo.length] = value
+        return memo
+    }, [])
+}
+
 function readDir(start, callback) {
-    // Use lstat to resolve symlink if we are passed a symlink
-    fs.lstat(start, function(err, stat) {
-        if(err) {
-            return callback(err);
+    fs.readdir(start, function (err, files) {
+        if (err) {
+            return callback(err)
         }
-        var found = {dirs: [], files: []},
-            total = 0,
-            processed = 0;
-        function isDir(abspath) {
-            fs.stat(abspath, function(err, stat) {
-                if(stat.isDirectory()) {
-                    found.dirs.push(abspath);
-                    // If we found a directory, recurse!
-                    readDir(abspath, function(err, data) {
-                        found.dirs = found.dirs.concat(data.dirs);
-                        found.files = found.files.concat(data.files);
-                        if(++processed == total) {
-                            callback(null, found);
-                        }
-                    });
-                } else {
-                    found.files.push(abspath);
-                    if(++processed == total) {
-                        callback(null, found);
-                    }
+
+        after.map(files.map(function (fileName) {
+            return path.join(start, fileName)
+        }), function (name, done) {
+            fs.stat(name, function (err, stat) {
+                if (stat.isDirectory()) {
+                    readDir(name, function (err, files) {
+                        done(err, files && flatten(files))
+                    })
+                } else if (stat.isFile()) {
+                    done(err, name)
                 }
-            });
-        }
-        // Read through all the files in this directory
-        if(stat.isDirectory()) {
-            fs.readdir(start, function (err, files) {
-                total = files.length;
-                for(var x=0, l=files.length; x<l; x++) {
-                    isDir(path.join(start, files[x]));
-                }
-            });
-        } else {
-            return callback(new Error("path: " + start + " is not a directory"));
-        }
-    });
+            })
+        }, function (err, files) {
+            callback(err, files && flatten(files).filter(function (value) {
+                return value !== undefined
+            }))
+        })
+    })
 }
