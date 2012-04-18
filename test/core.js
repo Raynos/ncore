@@ -253,6 +253,20 @@ suite("Core", function () {
             assert(Core.interfaces.name.foo(), "bar not mixed in");
         })
 
+        test("dependency expose event", function () {
+            var name = Core.use("name", {
+                setup: function () { 
+                    this.emit("ncore::expose", {
+                        foo: function () { return true }
+                    })
+                }
+            })
+
+            Core.init()
+
+            assert.equal(name.foo(), true, "name has no foo")
+        })
+
         test("dependency format supports arrays", function () {
             var name = Core.use("name", {
                 foo: function () { return this.bars },
