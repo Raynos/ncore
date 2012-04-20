@@ -19,6 +19,11 @@ pd.extend(ModuleLoader, {
             if (this.uri.substr(-3) !== ".js") {
                 return this.callback();
             }
+            if (this.skip) {
+                if (this.uri.indexOf(this.skip) !== -1) {
+                    return this.callback()
+                }
+            }
             var module = require(this.uri),
                 relative = path.relative(this.originalUri, this.uri);
             relative = relative.replace(".js", "");
@@ -117,7 +122,7 @@ module.exports = {
         this.load({
             uri: uri,
             core: Core,
-            skip: "/client",
+            skip: "client",
             dependencies: require(path.join(uri, "dependency.json")),
             callback: init
         })
