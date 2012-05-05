@@ -1,4 +1,4 @@
-var ncore = require("ncore"),
+var ncore = require(".."),
     assert = require("assert")
 
 suite("Core", function () {
