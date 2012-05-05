@@ -28,8 +28,8 @@ var dependencies = require(path.join(moduleUri, "dependency.json")),
     cache = {}
 
 var code = "(function () { \n" +
-    "var Core = Object.create(nCore).constructor()\n" + 
-    "delete window.nCore \n"
+    "var ncore = require('ncore')\n" +
+    "var Core = Object.create(ncore).constructor()\n"
 
 var done = after(2, next)
 
@@ -95,13 +95,11 @@ function next() {
     code += "Core.init()\n"
     code += "})()"
 
-    bundle.addEntry(path.join(__dirname, "../lib/browser.js"))
+    bundle.require("ncore")
 
     bundle.addEntry(path.join(moduleUri, "dummy.js"), { body: code })
 
     code = bundle.bundle()
-
-    code = code.replace(/\/ncore\/node_modules/g, "")
 
     fs.writeFile(path.join(process.cwd(), program.out), code)
 }

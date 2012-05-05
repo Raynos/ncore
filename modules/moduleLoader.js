@@ -28,7 +28,7 @@ pd.extend(ModuleLoader, {
                 relative = path.relative(this.originalUri, this.uri);
             relative = relative.replace(".js", "");
             relative = relative.replace(/\//g, ".");
-            this.core.use(relative, module);
+            this.core.add(relative, module);
             this.callback();
         } else if (stats.isDirectory()) {
             if (this.skip) {

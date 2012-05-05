@@ -9,11 +9,7 @@ suite("moduleLoader", function () {
 
     setup(function () {
         Core = Object.create(ncore).constructor()
-        moduleLoader = Core.use("moduleLoader", ModuleLoader)
-    })
-
-    teardown(function () {
-        Core.purge()
+        moduleLoader = Core.add("moduleLoader", ModuleLoader)
     })
 
     test("methods exist", function () {
@@ -25,11 +21,11 @@ suite("moduleLoader", function () {
         test("loading folder loades all files recursively", function (done) {
             loadModules(function (err) {
                 if (err) throw err;
-                //console.log(Core.interfaces);
-                assert(Core.interfaces.foo, "module foo was not loaded")
-                assert(Core.interfaces["bar.bar"], 
+                //console.log(Core.proxies);
+                assert(Core.proxies.foo, "module foo was not loaded")
+                assert(Core.proxies["bar.bar"], 
                     "module bar.bar was not loaded")
-                assert(Core.interfaces["bar.foo"], 
+                assert(Core.proxies["bar.foo"], 
                     "module bar.foo was not loaded")
                 done()
             })
@@ -39,9 +35,9 @@ suite("moduleLoader", function () {
             loadModules(function () {
                 Core.init()
 
-                var foo = Core.interfaces.foo
-                var bar = Core.interfaces["bar.bar"]
-                var barfoo = Core.interfaces["bar.foo"]
+                var foo = Core.proxies.foo
+                var bar = Core.proxies["bar.bar"]
+                var barfoo = Core.proxies["bar.foo"]
 
                 assert.equal(foo.has("bar"), bar,
                     "bar depedency on foo did not work")

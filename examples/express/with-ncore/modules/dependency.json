@@ -1,9 +1,0 @@
-{
-    "./server.js": {
-        "app": "./app.js"
-    },
-    "./app.js": {
-        "configure": "./configure.js",
-        "routes": ["./routes/"]
-    }
-}
