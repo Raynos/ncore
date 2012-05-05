@@ -82,13 +82,14 @@ function writeDependencies(depObject, fileName, callback) {
         }
         uri = "./" + path.relative(moduleUri, uri)
         cache[name] = true
-        code += "Core.use('" + name + "', require('" + uri + "')) \n"
+        code += "Core.add('" + name + "', require('" + uri + "')) \n"
     })
 }
 
 function next() {
     var bundle = browserify({
-        debug: true
+        debug: true,
+        cache: false
     })
 
     code += "Core.dependencies = " + JSON.stringify(core.dependencies) + "\n"

@@ -12,4 +12,7 @@ browser:
 build-test:
 	./bin/ncore -o /test/browser/build.js ./test/modules/
 
+run-test:
+	/opt/google/chrome/google-chrome --enable-plugins ./test/browser.html
+
 .PHONY: test build-test browser

@@ -5,9 +5,9 @@
 	"keywords": ["core", "architecture", "infrastructure"],
 	"author": "Raynos <raynos2@gmail.com>",
 	"repository": "git://github.com/Raynos/ncore.git",
-	"main": "index",
+	"main": "lib/core",
 	"dependencies": {
-		"pd": "0.8.0",
+		"pd": "0.8.1",
 		"after": "0.4.0",
 		"browserify": "1.10.12"
 	},

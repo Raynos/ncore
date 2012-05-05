@@ -1,4 +1,4 @@
-var ncore = require("../"),
+var ncore = require("ncore"),
     assert = require("assert")
 
 suite("Core", function () {
@@ -62,10 +62,10 @@ suite("Core", function () {
                 expose: ["method"]
             })
             assert.equal(Object.keys(Core.proxies.name).length,
-                // 1 + 9 from the eventemitter (on, removeListener, once,
-                //  emit, _events, addListener, listeners, 
-                // setMaxListeners, removeAllListeners)
-                10, "interface has too many keys")
+                // 1 + 10 from the eventemitter (on, removeListener, once,
+                //  emit, _events, addListener, listeners, constructor,
+                // setMaxListeners, removeAllListeners,)
+                11, "interface has too many keys")
         })
 
         test("add returns the public interface", function () {
