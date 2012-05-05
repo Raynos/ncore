@@ -61,11 +61,12 @@ suite("Core", function () {
                 method: function () {},
                 expose: ["method"]
             })
+            //console.log(Object.keys(Core.proxies.name))
             assert.equal(Object.keys(Core.proxies.name).length,
-                // 1 + 10 from the eventemitter (on, removeListener, once,
-                //  emit, _events, addListener, listeners, constructor,
+                // 1 + 9 from the eventemitter (on, removeListener, once,
+                //  emit, addListener, listeners, constructor,
                 // setMaxListeners, removeAllListeners,)
-                11, "interface has too many keys")
+                10, "interface has too many keys")
         })
 
         test("add returns the public interface", function () {
@@ -168,20 +169,6 @@ suite("Core", function () {
             Core.add("bar", {});
             Core.init();
             assert(Core.proxies.name.foo(), "bar not mixed in");
-        })
-
-        test("dependency expose event", function () {
-            var name = Core.add("name", {
-                setup: function () { 
-                    this.emit("ncore::expose", {
-                        foo: function () { return true }
-                    })
-                }
-            })
-
-            Core.init()
-
-            assert.equal(name.foo(), true, "name has no foo")
         })
 
         test("dependency format supports arrays", function () {
