@@ -69,6 +69,13 @@ suite("Core", function () {
                 10, "interface has too many keys")
         })
 
+        test("can add functions", function () {
+            var n = Core.add("name", function () {
+                return 42
+            })
+            assert.equal(n(), 42, "interface is not correct number")
+        })
+
         test("add returns the public interface", function () {
             var name = Core.add("name", {})
             assert.equal(Core.proxies.name, name,

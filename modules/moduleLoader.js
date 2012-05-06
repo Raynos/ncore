@@ -1,146 +1,84 @@
 var fs = require("fs"),
-    pd = require("pd"),
-    after = require("after"),
-    DependencyWriter = require("./dependencyWriter"),
-    path = require("path");
+    path = require("path"),
+    extend = require("pd").extend,
+    ncore = require(".."),
+    after = require("after")
 
-pd.extend(ModuleLoader, {
-    getStatsOfURI: function getStatsOfURI() {
-        if (!this.originalUri) {
-            this.originalUri = this.uri;
-        }
-        fs.stat(this.uri, this.readFileOrFolder);
+var MODULE_LOADER_DEFAULTS = {
+        uri: path.join(process.cwd(), "modules"),
+        skip: /client/
     },
-    readFileOrFolder: function readFileOrFolder(err, stats) {
-        if (err) {
-            return this.callback(err);
-        }
-        if (stats.isFile()) {
-            if (this.uri.substr(-3) !== ".js") {
-                return this.callback();
-            }
-            if (this.skip) {
-                if (this.uri.indexOf(this.skip) !== -1) {
-                    return this.callback()
-                }
-            }
-            var module = require(this.uri),
-                relative = path.relative(this.originalUri, this.uri);
-            relative = relative.replace(".js", "");
-            relative = relative.replace(/\//g, ".");
-            this.core.add(relative, module);
-            this.callback();
-        } else if (stats.isDirectory()) {
-            if (this.skip) {
-                if (this.uri.indexOf(this.skip) !== -1) {
-                    return this.callback()
-                }
-            }
-            fs.readdir(this.uri, this.readFiles);
-        }
-    },
-    readFiles: function readFiles(err, files) {
-        if (err) {
-            return this.callback(err);
-        }
-        after.forEach(files, readFile, this, this.callback);
-
-        function readFile(fileName, done) {
-            ModuleLoader({
-                uri: path.join(this.uri, fileName),
-                core: this.core,
-                skip: this.skip,
-                originalUri: this.originalUri,
-                callback: done
-            });
-        }
-    }
-});
+    isJsFile = /.js$/
 
 module.exports = {
     /*
-        loads all files in the folder. Each file is expected to be a export
-            a module which is then attached to the core under a filename
+        Loads modules and adds them to the core
 
-        Modules are stored by the naming convention of <fileName> if directly
-            in the folder or <folder>.<fileName>, <folder>.<folder>.<fileName>
-            if stored nested in the folder
-
-        @param {Object} options - 
+        @param {Object} options 
             {
-                dependencies: {Object} - A dependency mapping for the
-                    files in the folder (uri). This is based on 
-                    files/folderNames
-                uri: {String} - uri of the folder to load
-                skip: {String} - string to match the folder name again to skip
-                callback: {Function} - callback to invoke when all modules
-                    are loaded and attached to core. Passes an error if
-                    the error occurs
-                core: {Object} - instance of the core to attach to
+                Core: The core
+                skip: RegExp to skip by
+                uri: root uri to load
             }
-        
     */
-    load: function load(options) {
-        var counter = 2;
+    load: function (options, callback) {
+        options = extend(MODULE_LOADER_DEFAULTS, options)
+        var modulesFolder = options.uri
 
-        after.forEach(options.dependencies, writeDependencies, next)
+        iterateFiles(modulesFolder, loadModule, callback)
 
-        ModuleLoader({
-            uri: options.uri,
-            skip: options.skip,
-            core: options.core,
-            callback: next
-        })
-
-        function next(err) {
+        function loadModule(err, fileName) {
             if (err) {
-                return options.callback(err)
+                return callback(err)
             }
-            if (--counter === 0) {
-                options.callback();
+            if (options.skip && options.skip.test(fileName)) {
+                return
             }
+            var module = require(fileName)
+            var name = path.relative(options.uri, fileName)
+            options.core.add(name, module)
+        }
+    }
+}
+
+function iterateFiles(uri, callback, done) {
+    var counter = 1
+    fs.readdir(uri, readFiles)
+
+    function readFiles(err, files) {
+        if (err) {
+            return callback(err)
         }
 
-        function writeDependencies(depObject, fileName, callback) {
-            DependencyWriter({
-                uri: path.join(options.uri, fileName),
-                originalUri: options.uri,
-                depObject: depObject,
-                core: options.core,
-                callback: callback
-            });
-        }
-    },
-    /*
-        core reduces boilerplate by doing default actions
-    */
-    core: function core(uri, callback) {
-        var Core = Object.create(require("..")).constructor()
+        counter += files.length
+        files.forEach(isDirOrFile)
+        next()
+    }
 
-        Core.use("moduleLoader", this)
+    function isDirOrFile(fileName) {
+        fileName = path.join(uri, fileName)
 
-        this.load({
-            uri: uri,
-            core: Core,
-            skip: "client",
-            dependencies: require(path.join(uri, "dependency.json")),
-            callback: init
-        })
+        fs.stat(fileName, readOrRecurse)
 
-        function init(err) {
+        function readOrRecurse(err, stat) {
             if (err) {
-                if (callback) {
-                    return callback(err)
-                }
-                console.log("Error occurred in moduleLoader.core", err)
+                return callback(err)
             }
-            Core.init(callback)
+
+            if (stat.isDirectory()) {
+                iterateFiles(fileName, callback, next)
+            } else if (stat.isFile() && isJsFile.test(fileName)) {
+                callback(null, fileName)
+                next()
+            } else {
+                next()
+            }
         }
-    },
-    expose: ["load", "core"]
-};
+    }
 
-
-function ModuleLoader(options) {
-    pd.bindAll({}, ModuleLoader, options).getStatsOfURI();
+    function next() {
+        if (--counter === 0) {
+            done(null)
+        }
+    }
 }

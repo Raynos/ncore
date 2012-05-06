@@ -21,23 +21,22 @@ suite("moduleLoader", function () {
         test("loading folder loades all files recursively", function (done) {
             loadModules(function (err) {
                 if (err) throw err;
-                //console.log(Core.proxies);
-                assert(Core.proxies.foo, "module foo was not loaded")
-                assert(Core.proxies["bar.bar"], 
+                assert(Core.proxies["foo.js"], "module foo was not loaded")
+                assert(Core.proxies["bar/bar.js"], 
                     "module bar.bar was not loaded")
-                assert(Core.proxies["bar.foo"], 
+                assert(Core.proxies["bar/foo.js"], 
                     "module bar.foo was not loaded")
                 done()
             })
         })
 
-        test("dependency.json file is handled properly", function (done) {
+        test("dependency is handled properly", function (done) {
             loadModules(function () {
                 Core.init()
 
-                var foo = Core.proxies.foo
-                var bar = Core.proxies["bar.bar"]
-                var barfoo = Core.proxies["bar.foo"]
+                var foo = Core.proxies["foo.js"]
+                var bar = Core.proxies["bar/bar.js"]
+                var barfoo = Core.proxies["bar/foo.js"]
 
                 assert.equal(foo.has("bar"), bar,
                     "bar depedency on foo did not work")
@@ -68,9 +67,32 @@ suite("moduleLoader", function () {
     function loadModules(callback) {
         moduleLoader.load({
             uri: path.join(__dirname, "./modules"),
-            dependencies: require("./modules/dependency.json"),
-            core: Core,
-            callback: callback
+            core: Core
+        }, function () {
+            Core.dependencies = {
+                "foo.js": {
+                    "bar": "bar/bar.js",
+                    "foo": "bar/foo.js",
+                    "baz": "baz.js"
+                },
+                "bar/foo.js": {
+                    "foo": "foo.js",
+                    "bars": {
+                        "foo": "bar/foo.js", 
+                        "bar": "bar/bar.js"
+                    },
+                    "foobar": "bar/foo.js"
+                },
+                "bar/bar.js": {
+                    "foo": "foo.js",
+                    "bars": {
+                        "foo": "bar/foo.js", 
+                        "bar": "bar/bar.js"
+                    },
+                    "foobar": "bar/bar.js"
+                }
+            }
+            Core.init(callback)
         })
     }
 })

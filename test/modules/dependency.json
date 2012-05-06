@@ -1,12 +1,12 @@
 {
-    "./foo.js": {
-        "bar": "./bar/bar.js",
-        "foo": "./bar/",
-        "baz": "./baz.js"
+    "foo.js": {
+        "bar": "bar/bar.js",
+        "foo": "bar",
+        "baz": "baz.js"
     },
-    "./bar/": {
-        "foo": "./foo.js",
-        "bars": ["./bar/"],
-        "foobar": "./bar/"
+    "bar": {
+        "foo": "foo.js",
+        "bars": ["bar"],
+        "foobar": "bar"
     }
 }
