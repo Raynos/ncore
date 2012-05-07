@@ -7,7 +7,8 @@ var DEPENDENCY_WRITE_DEFAULTS = {
         jsonUri: path.join(process.cwd(), "dependencies.json"),
         uri: path.join(process.cwd(), "modules")
     },
-    isFile = /.js$/
+    isFile = /.js$/,
+    isFileFunction = isFile.test.bind(isFile)
 
 module.exports = {
     map: function (options, callback) {
@@ -21,12 +22,52 @@ module.exports = {
             if (isFile.test(moduleName)) {
                 after.forEach(dependencies, mapToProxyName, done)
             } else {
-                done()
+                var folderUri = path.join(options.uri, moduleName)
+                fs.readdir(folderUri, mapToMultipleFiles)
             }
 
             function mapToProxyName(proxyName, propertyName, callback) {
-                dependenciesResult[propertyName] = proxyName
-                callback()
+                if (isFile.test(proxyName)) {
+                    dependenciesResult[propertyName] = proxyName
+                    callback()
+                } else if (typeof proxyName === "string") {
+                    proxyName = path.join(proxyName, path.basename(moduleName))
+                    dependenciesResult[propertyName] = proxyName
+                    callback()
+                } else if (Array.isArray(proxyName)) {
+                    var proxyObject = {},
+                        folderUri = path.join(options.uri, proxyName[0])
+
+                    fs.readdir(folderUri, mapIntoProxyObject)
+                }
+
+                function mapIntoProxyObject(err, files) {
+                    if (err) {
+                        return callback(err)
+                    }
+                    files.filter(isFileFunction).forEach(addToProxyObject)
+                    dependenciesResult[propertyName] = proxyObject
+                    callback()
+                }
+
+                function addToProxyObject(fileName) {
+                    var propertyName = fileName.replace(isFile, "")
+
+                    proxyObject[propertyName] = 
+                        path.join(proxyName[0], fileName)
+                }
+            }
+
+            function mapToMultipleFiles(err, files) {
+                if (err) {
+                    return callback(err)
+                }
+                after.forEach(files, addFileToDependencies, callback)
+
+                function addFileToDependencies(fileName, callback) {
+                    fileName = path.join(moduleName, fileName)
+                    mapToDependencies(dependencies, fileName, callback)
+                }
             }
 
             function done() {

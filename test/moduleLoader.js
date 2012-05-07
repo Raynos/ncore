@@ -32,8 +32,6 @@ suite("moduleLoader", function () {
 
         test("dependency is handled properly", function (done) {
             loadModules(function () {
-                Core.init()
-
                 var foo = Core.proxies["foo.js"]
                 var bar = Core.proxies["bar/bar.js"]
                 var barfoo = Core.proxies["bar/foo.js"]
