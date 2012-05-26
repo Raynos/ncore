@@ -11,73 +11,94 @@ var DEPENDENCY_WRITE_DEFAULTS = {
     isFileFunction = isFile.test.bind(isFile)
 
 module.exports = {
+    /*
+        <moduleNameLeft>: {
+            <propertyName>: <moduleNameRight>
+        }
+    */
     map: function (options, callback) {
-        var json = require(options.jsonUri),
-            coreDependenciesResult = {}
+        var json = require(options.jsonUri)
 
-        after.forEach(json, mapToDependencies, returnResult)
+        // the JSON DSL has the option to have "/foo" in <moduleNameLeft>
+        after.reduce(json, createFoldersIntoFilesIterator(options.uri), 
+            {}, runDependencyMapper)
 
-        function mapToDependencies(dependencies, moduleName, callback) {
-            var dependenciesResult = {}
-            if (isFile.test(moduleName)) {
-                after.forEach(dependencies, mapToProxyName, done)
-            } else {
-                var folderUri = path.join(options.uri, moduleName)
-                fs.readdir(folderUri, mapToMultipleFiles)
+        function runDependencyMapper(err, data) {
+            if (err) {
+                return callback(err)
             }
-
-            function mapToProxyName(proxyName, propertyName, callback) {
-                if (isFile.test(proxyName)) {
-                    dependenciesResult[propertyName] = proxyName
-                    callback()
-                } else if (typeof proxyName === "string") {
-                    proxyName = path.join(proxyName, path.basename(moduleName))
-                    dependenciesResult[propertyName] = proxyName
-                    callback()
-                } else if (Array.isArray(proxyName)) {
-                    var proxyObject = {},
-                        folderUri = path.join(options.uri, proxyName[0])
-
-                    fs.readdir(folderUri, mapIntoProxyObject)
-                }
-
-                function mapIntoProxyObject(err, files) {
-                    if (err) {
-                        return callback(err)
-                    }
-                    files.filter(isFileFunction).forEach(addToProxyObject)
-                    dependenciesResult[propertyName] = proxyObject
-                    callback()
-                }
-
-                function addToProxyObject(fileName) {
-                    var propertyName = fileName.replace(isFile, "")
-
-                    proxyObject[propertyName] = 
-                        path.join(proxyName[0], fileName)
-                }
-            }
-
-            function mapToMultipleFiles(err, files) {
-                if (err) {
-                    return callback(err)
-                }
-                after.forEach(files, addFileToDependencies, callback)
-
-                function addFileToDependencies(fileName, callback) {
-                    fileName = path.join(moduleName, fileName)
-                    mapToDependencies(dependencies, fileName, callback)
-                }
-            }
-
-            function done() {
-                coreDependenciesResult[moduleName] = dependenciesResult
-                callback()
-            }
+            after.map(data, mapToDependencies, callback)
         }
 
-        function returnResult(err) {
-            callback(err, coreDependenciesResult)
+        function mapToDependencies(dependencies, moduleName, callback) {
+            if (isFile.test(moduleName)) {
+                // the JSON DSL has the option to have "/foo" or ["/foo"]
+                // in <moduleNameRight>.
+                after.map(dependencies, createConvertToProxyNameIterator({
+                    moduleName: moduleName,
+                    uri: options.uri
+                }), callback)
+            }
+        }
+    }
+}
+
+function createFoldersIntoFilesIterator(uri) {
+    return unpackFolderNames
+    
+    function unpackFolderNames(memo, dependencies, moduleName, callback) {
+        if (isFile.test(moduleName)) {
+            memo[moduleName] = dependencies
+            callback(null, memo)
+        } else {
+            var folderUri = path.join(uri, moduleName)
+            fs.readdir(folderUri, mapToMultipleFiles)
+        }
+
+        function mapToMultipleFiles(err, files) {
+            if (err) {
+                return callback(err)
+            }
+            files.forEach(addFileToDependencies)
+            callback(null, memo)
+        }
+
+        function addFileToDependencies(fileName) {
+            fileName = path.join(moduleName, fileName)
+            memo[fileName] = dependencies
+        }
+    }
+}
+
+function createConvertToProxyNameIterator(options) {
+    return mapToProxyName
+
+    function mapToProxyName(proxyName, propertyName, callback) {
+        if (isFile.test(proxyName)) {
+            callback(null, proxyName)
+        } else if (typeof proxyName === "string") {
+            proxyName = path.join(proxyName, path.basename(options.moduleName))
+            callback(null, proxyName)
+        } else if (Array.isArray(proxyName)) {
+            var proxyObject = {},
+                folderUri = path.join(options.uri, proxyName[0])
+
+            fs.readdir(folderUri, mapIntoProxyObject)
+        }
+
+        function mapIntoProxyObject(err, files) {
+            if (err) {
+                return callback(err)
+            }
+            files.filter(isFileFunction).forEach(addToProxyObject)
+            callback(null, proxyObject)
+        }
+
+        function addToProxyObject(fileName) {
+            var propertyName = fileName.replace(isFile, "")
+
+            proxyObject[propertyName] = 
+                path.join(proxyName[0], fileName)
         }
     }
 }
