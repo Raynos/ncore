@@ -17,6 +17,7 @@ module.exports = {
         }
     */
     map: function (options, callback) {
+        options = extend({}, DEPENDENCY_WRITE_DEFAULTS, options)
         var json = require(options.jsonUri)
 
         // the JSON DSL has the option to have "/foo" in <moduleNameLeft>

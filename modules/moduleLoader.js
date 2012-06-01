@@ -22,7 +22,7 @@ module.exports = {
             }
     */
     load: function (options, callback) {
-        options = extend(MODULE_LOADER_DEFAULTS, options)
+        options = extend({}, MODULE_LOADER_DEFAULTS, options)
         var modulesFolder = options.uri
 
         iterateFiles(modulesFolder, loadModule, callback)

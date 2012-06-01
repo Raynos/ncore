@@ -11,7 +11,7 @@ var CORE_DEFAULTS = {
 module.exports = core
 
 function core(options, callback) {
-    options = extend(CORE_DEFAULTS, options)
+    options = extend({}, CORE_DEFAULTS, options || {})
     if (!options.core) {
         options.core = extend({}, ncore).constructor()
     }
