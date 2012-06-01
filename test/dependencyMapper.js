@@ -13,6 +13,7 @@ suite("dependencyMapper", function () {
             jsonUri: path.join(__dirname, "modules", "dependency.json"),
             uri: path.join(__dirname, "modules")
         }, function (err, json) {
+
             assert.equal(err, null, "error is null")
             assert(json["foo.js"], "no foo.js")
             assert(json["bar/bar.js"], "no bar/bar.js")
@@ -42,6 +43,15 @@ suite("dependencyMapper", function () {
             }, "bar/foo.js bars is wrong")
             assert.equal(json["bar/foo.js"]["foobar"], "bar/foo.js",
                 "bar/foo.js foobar is wrong")
+
+            assert.deepEqual(json["deep/foo.js"]["shallow"], {
+                "bar": "shallow/foo/bar.js",
+                "baz": "shallow/foo/baz.js"
+            })
+
+            assert.equal(json["shallow/foo/bar.js"]["deep"], "deep/foo.js")
+
+            assert.equal(json["shallow/foo/baz.js"]["deep"], "deep/foo.js")
 
             done()
         })

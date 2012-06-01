@@ -8,5 +8,11 @@
         "foo": "foo.js",
         "bars": ["bar"],
         "foobar": "bar"
+    },
+    "deep": {
+        "shallow": "shallow"
+    },
+    "shallow": {
+        "deep": "deep"
     }
 }

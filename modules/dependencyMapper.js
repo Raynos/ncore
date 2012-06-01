@@ -1,7 +1,8 @@
 var fs = require("fs"),
     path = require("path"),
     extend = require("pd").extend,
-    after = require("after")
+    after = require("after"),
+    iterateFiles = require("iterate-files")
 
 var DEPENDENCY_WRITE_DEFAULTS = {
         jsonUri: path.join(process.cwd(), "dependencies.json"),
@@ -53,20 +54,19 @@ function createFoldersIntoFilesIterator(uri) {
             callback(null, memo)
         } else {
             var folderUri = path.join(uri, moduleName)
-            fs.readdir(folderUri, mapToMultipleFiles)
-        }
-
-        function mapToMultipleFiles(err, files) {
-            if (err) {
-                return callback(err)
-            }
-            files.forEach(addFileToDependencies)
-            callback(null, memo)
+            iterateFiles(folderUri, addFileToDependencies, returnMemo)
         }
 
         function addFileToDependencies(fileName) {
-            fileName = path.join(moduleName, fileName)
+            fileName = path.relative(uri, fileName)
             memo[fileName] = dependencies
+        }
+
+        function returnMemo(err)  {
+            if (err) {
+                return callback(err)
+            }
+            callback(null, memo)
         }
     }
 }
@@ -74,32 +74,89 @@ function createFoldersIntoFilesIterator(uri) {
 function createConvertToProxyNameIterator(options) {
     return mapToProxyName
 
+    /*
+        proxyname is like /foo
+        propertyName is the property
+    */
     function mapToProxyName(proxyName, propertyName, callback) {
         if (isFile.test(proxyName)) {
             callback(null, proxyName)
         } else if (typeof proxyName === "string") {
-            proxyName = path.join(proxyName, path.basename(options.moduleName))
-            callback(null, proxyName)
+            findProxyName(options.moduleName, proxyName, options.uri, callback)
         } else if (Array.isArray(proxyName)) {
-            var proxyObject = {},
-                folderUri = path.join(options.uri, proxyName[0])
-
-            fs.readdir(folderUri, mapIntoProxyObject)
+            findProxyObject(options.uri, proxyName[0], callback)
         }
+    }
+}
 
-        function mapIntoProxyObject(err, files) {
-            if (err) {
-                return callback(err)
+/*
+    moduleName is the address of this module relative to uri
+
+    proxyName is the thing like foo or bar/foo
+
+    uri is the uri of the entire folder
+*/
+function findProxyName(moduleName, proxyName, uri, callback) {
+    var base = path.basename(moduleName),
+        proxyUri = path.join(uri, proxyName, base)
+
+    fs.stat(proxyUri, checkIfProxyExists)
+
+    function checkIfProxyExists(err, stat) {
+        if (err) {
+            if (proxyUri.substr(-3, 3) === ".js") {
+                proxyUri = proxyUri.substr(0, proxyUri.length - 3)
+            } else {
+                proxyUri = proxyUri + ".js"
             }
-            files.filter(isFileFunction).forEach(addToProxyObject)
-            callback(null, proxyObject)
-        }
 
-        function addToProxyObject(fileName) {
-            var propertyName = fileName.replace(isFile, "")
+            fs.stat(proxyUri, checkIfChangedUriHelped)
+        } else {
 
-            proxyObject[propertyName] = 
-                path.join(proxyName[0], fileName)
+            callback(null, path.relative(uri, proxyUri))
         }
+    }
+
+    function checkIfChangedUriHelped(err, stat) {
+        if (err) {
+            moduleName = path.dirname(moduleName)
+
+            findProxyName(moduleName, proxyName, uri, callback)
+        } else {
+
+            if (proxyUri.substr(-3, 3) === ".js")  {
+                callback(null, path.relative(uri, proxyUri))
+            } else {
+                findProxyObject(uri, path.relative(uri, proxyUri),
+                    callback)
+            }
+        }
+    }
+}
+
+/*
+    uri of folder structure
+
+    proxyName is the name in the array
+*/
+function findProxyObject(uri, proxyName, callback) {
+    var proxyObject = {},
+        folderUri = path.join(uri, proxyName)
+
+    fs.readdir(folderUri, mapIntoProxyObject)
+
+    function mapIntoProxyObject(err, files) {
+        if (err) {
+            return callback(err)
+        }
+        files.filter(isFileFunction).forEach(addToProxyObject)
+        callback(null, proxyObject)
+    }
+
+    function addToProxyObject(fileName) {
+        var propertyName = fileName.replace(isFile, "")
+
+        proxyObject[propertyName] = 
+            path.join(proxyName, fileName)
     }
 }

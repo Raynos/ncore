@@ -66,7 +66,7 @@ suite("moduleLoader", function () {
         moduleLoader.load({
             uri: path.join(__dirname, "./modules"),
             core: Core
-        }, function () {
+        }, function (err) {
             Core.dependencies = {
                 "foo.js": {
                     "bar": "bar/bar.js",
