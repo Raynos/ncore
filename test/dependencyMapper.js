@@ -49,6 +49,13 @@ suite("dependencyMapper", function () {
                 "baz": "shallow/foo/baz.js"
             })
 
+            assert.deepEqual(json["deep/foo.js"]["tree"], {
+                foo: {
+                    bar: "shallow/foo/bar.js",
+                    baz: "shallow/foo/baz.js"
+                }
+            })
+
             assert.equal(json["shallow/foo/bar.js"]["deep"], "deep/foo.js")
 
             assert.equal(json["shallow/foo/baz.js"]["deep"], "deep/foo.js")

@@ -10,7 +10,8 @@
         "foobar": "bar"
     },
     "deep": {
-        "shallow": "shallow"
+        "shallow": "shallow",
+        "tree": ["shallow"]
     },
     "shallow": {
         "deep": "deep"

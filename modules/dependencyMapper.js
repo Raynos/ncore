@@ -143,7 +143,26 @@ function findProxyObject(uri, proxyName, callback) {
     var proxyObject = {},
         folderUri = path.join(uri, proxyName)
 
-    fs.readdir(folderUri, mapIntoProxyObject)
+    iterateFiles(folderUri, function (fileName) {
+        var relativePropertyName = path.relative(folderUri, fileName),
+            relativeValue = path.relative(uri, fileName)
+
+        relativePropertyName = relativePropertyName.replace(isFile, "")
+        var props = relativePropertyName.split("/")
+
+        props.reduce(function (memo, value, index) {
+            if (index === props.length - 1) {
+                memo[value] = relativeValue
+            } else {
+                return (memo[value] = memo[value] || {})
+            }
+        }, proxyObject)
+
+    }, function (err) {
+        callback(err, proxyObject)
+    })
+
+    //fs.readdir(folderUri, mapIntoProxyObject)
 
     function mapIntoProxyObject(err, files) {
         if (err) {
