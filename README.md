@@ -14,6 +14,10 @@ A transparent dependency injection library based on file based dependency config
 
 ***
 
+It should be noted that examples and documentation are only valid for v1.x.y and not for v2.x.y. 
+
+Documentation for v2.x.y to come shortly
+
 ## <a name="example" href="#example">Example</a>
 
     var Core = Object.create(require("nCore")).constructor({
