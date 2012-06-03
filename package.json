@@ -1,6 +1,6 @@
 {
 	"name": "ncore",
-	"version": "2.2.0",
+	"version": "2.2.1",
 	"description": "Core library for your application",
 	"keywords": ["core", "architecture", "infrastructure"],
 	"author": "Raynos <raynos2@gmail.com>",
@@ -10,7 +10,7 @@
 		"pd": "0.8.1",
 		"after": "0.5.0",
 		"browserify": "1.10.12",
-        "iterate-files": "0.1.0"
+        "iterate-files": "0.1.1"
 	},
 	"homepage": "https://github.com/Raynos/ncore",
     "contributors": [{
