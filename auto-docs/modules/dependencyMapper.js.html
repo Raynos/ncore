@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>dependencyMapper.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../', thisFile = 'modules/dependencyMapper.js';
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>dependencyMapper.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;fs&quot;</span><span class="p">),</span>
+    <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">),</span>
+    <span class="nx">extend</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">).</span><span class="nx">extend</span><span class="p">,</span>
+    <span class="nx">after</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">),</span>
+    <span class="nx">iterateFiles</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;iterate-files&quot;</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">DEPENDENCY_WRITE_DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">jsonUri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">(),</span> <span class="s2">&quot;dependencies.json&quot;</span><span class="p">),</span>
+        <span class="nx">uri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">(),</span> <span class="s2">&quot;modules&quot;</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="nx">isFile</span> <span class="o">=</span> <span class="sr">/.js$/</span><span class="p">,</span>
+    <span class="nx">isFileFunction</span> <span class="o">=</span> <span class="nx">isFile</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">isFile</span><span class="p">)</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p><moduleNameLeft>: {
+          <propertyName>: <moduleNameRight>
+      }</p>
+  </div>
+  <div class="body">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="nx">map</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span> <span class="o">=</span> <span class="nx">extend</span><span class="p">({},</span> <span class="nx">DEPENDENCY_WRITE_DEFAULTS</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+        <span class="kd">var</span> <span class="nx">json</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">jsonUri</span><span class="p">)</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>the JSON DSL has the option to have "/foo" in <moduleNameLeft></p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>        <span class="nx">after</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">json</span><span class="p">,</span> <span class="nx">createFoldersIntoFilesIterator</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">uri</span><span class="p">),</span> 
+            <span class="p">{},</span> <span class="nx">runDependencyMapper</span><span class="p">)</span>
+
+        <span class="kd">function</span> <span class="nx">runDependencyMapper</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="nx">after</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">mapToDependencies</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="kd">function</span> <span class="nx">mapToDependencies</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">moduleName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">isFile</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">))</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>the JSON DSL has the option to have "/foo" or ["/foo"]
+in <moduleNameRight>.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>                <span class="nx">after</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">,</span> <span class="nx">createConvertToProxyNameIterator</span><span class="p">({</span>
+                    <span class="nx">moduleName</span><span class="o">:</span> <span class="nx">moduleName</span><span class="p">,</span>
+                    <span class="nx">uri</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span>
+                <span class="p">}),</span> <span class="nx">callback</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">createFoldersIntoFilesIterator</span><span class="p">(</span><span class="nx">uri</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">unpackFolderNames</span>
+    
+    <span class="kd">function</span> <span class="nx">unpackFolderNames</span><span class="p">(</span><span class="nx">memo</span><span class="p">,</span> <span class="nx">dependencies</span><span class="p">,</span> <span class="nx">moduleName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">isFile</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">memo</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">dependencies</span>
+            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">memo</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">folderUri</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">moduleName</span><span class="p">)</span>
+            <span class="nx">iterateFiles</span><span class="p">(</span><span class="nx">folderUri</span><span class="p">,</span> <span class="nx">addFileToDependencies</span><span class="p">,</span> <span class="nx">returnMemo</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="kd">function</span> <span class="nx">addFileToDependencies</span><span class="p">(</span><span class="nx">fileName</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">fileName</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">relative</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">fileName</span><span class="p">)</span>
+            <span class="nx">memo</span><span class="p">[</span><span class="nx">fileName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">dependencies</span>
+        <span class="p">}</span>
+
+        <span class="kd">function</span> <span class="nx">returnMemo</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>  <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">memo</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">createConvertToProxyNameIterator</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">mapToProxyName</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>proxyname is like /foo
+      propertyName is the property</p>
+  </div>
+  <div class="body">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">mapToProxyName</span><span class="p">(</span><span class="nx">proxyName</span><span class="p">,</span> <span class="nx">propertyName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">isFile</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">proxyName</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">proxyName</span> <span class="o">===</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">findProxyName</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">moduleName</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">,</span> <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">proxyName</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">findProxyObject</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">callback</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>moduleName is the address of this module relative to uri</p>
+  </div>
+  <div class="body"><p>proxyName is the thing like foo or bar/foo</p>
+
+<p>uri is the uri of the entire folder</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">findProxyName</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">,</span> <span class="nx">uri</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">),</span>
+        <span class="nx">proxyUri</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">,</span> <span class="nx">base</span><span class="p">)</span>
+
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">stat</span><span class="p">(</span><span class="nx">proxyUri</span><span class="p">,</span> <span class="nx">checkIfProxyExists</span><span class="p">)</span>
+
+    <span class="kd">function</span> <span class="nx">checkIfProxyExists</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">stat</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">proxyUri</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">===</span> <span class="s2">&quot;.js&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">proxyUri</span> <span class="o">=</span> <span class="nx">proxyUri</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">proxyUri</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">proxyUri</span> <span class="o">=</span> <span class="nx">proxyUri</span> <span class="o">+</span> <span class="s2">&quot;.js&quot;</span>
+            <span class="p">}</span>
+
+            <span class="nx">fs</span><span class="p">.</span><span class="nx">stat</span><span class="p">(</span><span class="nx">proxyUri</span><span class="p">,</span> <span class="nx">checkIfChangedUriHelped</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+
+            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">relative</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyUri</span><span class="p">))</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">checkIfChangedUriHelped</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">stat</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">moduleName</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">)</span>
+
+            <span class="nx">findProxyName</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">,</span> <span class="nx">uri</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">proxyUri</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">===</span> <span class="s2">&quot;.js&quot;</span><span class="p">)</span>  <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">relative</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyUri</span><span class="p">))</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">findProxyObject</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">relative</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyUri</span><span class="p">),</span>
+                    <span class="nx">callback</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>uri of folder structure</p>
+  </div>
+  <div class="body"><p>proxyName is the name in the array</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">findProxyObject</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">proxyObject</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="nx">folderUri</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">proxyName</span><span class="p">)</span>
+
+    <span class="nx">iterateFiles</span><span class="p">(</span><span class="nx">folderUri</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">fileName</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">relativePropertyName</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">relative</span><span class="p">(</span><span class="nx">folderUri</span><span class="p">,</span> <span class="nx">fileName</span><span class="p">),</span>
+            <span class="nx">relativeValue</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">relative</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">fileName</span><span class="p">)</span>
+
+        <span class="nx">relativePropertyName</span> <span class="o">=</span> <span class="nx">relativePropertyName</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">isFile</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="kd">var</span> <span class="nx">props</span> <span class="o">=</span> <span class="nx">relativePropertyName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+        <span class="nx">props</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">memo</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">===</span> <span class="nx">props</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">memo</span><span class="p">[</span><span class="nx">value</span><span class="p">]</span> <span class="o">=</span> <span class="nx">relativeValue</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">(</span><span class="nx">memo</span><span class="p">[</span><span class="nx">value</span><span class="p">]</span> <span class="o">=</span> <span class="nx">memo</span><span class="p">[</span><span class="nx">value</span><span class="p">]</span> <span class="o">||</span> <span class="p">{})</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="nx">proxyObject</span><span class="p">)</span>
+
+    <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">proxyObject</span><span class="p">)</span>
+    <span class="p">})</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>fs.readdir(folderUri, mapIntoProxyObject)</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="kd">function</span> <span class="nx">mapIntoProxyObject</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">files</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nx">files</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">isFileFunction</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">addToProxyObject</span><span class="p">)</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">proxyObject</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">addToProxyObject</span><span class="p">(</span><span class="nx">fileName</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">propertyName</span> <span class="o">=</span> <span class="nx">fileName</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">isFile</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="nx">proxyObject</span><span class="p">[</span><span class="nx">propertyName</span><span class="p">]</span> <span class="o">=</span> 
+            <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">proxyName</span><span class="p">,</span> <span class="nx">fileName</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>core.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../', thisFile = 'lib/core.js';
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>core.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">pd</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">),</span>
+    <span class="nx">bindAll</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">bindAll</span><span class="p">,</span>
+    <span class="nx">extend</span> <span class="o">=</span> <span class="nx">pd</span><span class="p">.</span><span class="nx">extend</span><span class="p">,</span>
+    <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">).</span><span class="nx">EventEmitter</span><span class="p">.</span><span class="nx">prototype</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Construct a new core instance. Supply the original dependencies hash
+          to set up the dependency mapping for the core</p>
+  </div>
+  <div class="body"><p>@param {Object} dependencies - This is a map of dependencies</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">dependencies</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">proxies</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_interfaces</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dependencies</span> <span class="o">=</span> <span class="nx">dependencies</span> <span class="o">||</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="k">this</span>
+    <span class="p">},</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Store a module in the core. </p>
+  </div>
+  <div class="body"><p>@param {String} name - name of module, used in dependency mapping</p>
+
+
+<div class="highlight"><pre><code>  <span class="p">@</span><span class="n">param</span> <span class="p">{</span><span class="n">Object</span><span class="p">}</span> <span class="n">module</span> <span class="o">-</span> <span class="n">the</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">module</span>
+
+  <span class="p">@</span><span class="k">return</span> <span class="p">{</span><span class="n">Object</span><span class="p">}</span> <span class="n">proxy</span> <span class="o">-</span> <span class="n">the</span> <span class="n">public</span> <span class="n">proxy</span> <span class="n">of</span> <span class="n">the</span> <span class="n">module</span>
+</code></pre></div>
+
+
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="nx">add</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">_interface</span> <span class="o">=</span> <span class="nx">makeInterface</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">),</span>
+            <span class="nx">proxy</span> <span class="o">=</span> <span class="nx">makeProxy</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">_interface</span><span class="p">)</span>
+
+        <span class="nx">extend</span><span class="p">(</span><span class="nx">module</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">emit</span><span class="o">:</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">emit</span>
+        <span class="p">})</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_modules</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">module</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_interfaces</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_interface</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">proxy</span>
+
+        <span class="k">return</span> <span class="nx">proxy</span>
+    <span class="p">},</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>initializes all modules, it does so by injecting dependencies and
+          then calling setup on all modules</p>
+  </div>
+  <div class="body"><p>@param {Function} [callback] - optional callback to be invoked when
+          all modules finish setup.</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">injectDependencies</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+        <span class="nx">setupModules</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">makeInterface</span><span class="p">(</span><span class="nx">core</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">_interface</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_interface</span> <span class="o">=</span> <span class="nx">proxyModule</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">_interface</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="p">}</span>
+    <span class="nx">bindAll</span><span class="p">(</span><span class="nx">module</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">module</span><span class="p">.</span><span class="nx">expose</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">module</span><span class="p">.</span><span class="nx">expose</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">addToInterface</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">extend</span><span class="p">(</span><span class="nx">_interface</span><span class="p">,</span> <span class="nx">module</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">_interface</span>
+
+    <span class="kd">function</span> <span class="nx">proxyModule</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">module</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">addToInterface</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_interface</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">module</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">makeProxy</span><span class="p">(</span><span class="nx">core</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">_interface</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">interfaces</span> <span class="o">=</span> <span class="nx">core</span><span class="p">.</span><span class="nx">_interfaces</span><span class="p">,</span>
+        <span class="nx">proxy</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">_interface</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">proxy</span> <span class="o">=</span> <span class="nx">bindAll</span><span class="p">(</span><span class="nx">proxyForFunction</span><span class="p">,</span> <span class="nx">EventEmitter</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">proxy</span> <span class="o">=</span> <span class="nx">bindAll</span><span class="p">({},</span> <span class="nx">EventEmitter</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">_interface</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">proxyProperty</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">proxy</span>
+
+    <span class="kd">function</span> <span class="nx">proxyForFunction</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">interfaces</span><span class="p">[</span><span class="nx">name</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">proxyProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">_interface</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">proxy</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">proxyFunction</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">proxyFunction</span><span class="p">(</span><span class="nx">functionName</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">proxy</span>
+
+        <span class="kd">function</span> <span class="nx">proxy</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">interfaces</span><span class="p">[</span><span class="nx">name</span><span class="p">][</span><span class="nx">functionName</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">injectDependencies</span><span class="p">(</span><span class="nx">core</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">modules</span> <span class="o">=</span> <span class="nx">core</span><span class="p">.</span><span class="nx">_modules</span><span class="p">,</span>
+        <span class="nx">coreDependencies</span> <span class="o">=</span> <span class="nx">core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">,</span>
+        <span class="nx">proxies</span> <span class="o">=</span> <span class="nx">core</span><span class="p">.</span><span class="nx">proxies</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">modules</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">injectDependencies</span><span class="p">)</span>
+
+    <span class="kd">function</span> <span class="nx">injectDependencies</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">modules</span><span class="p">[</span><span class="nx">name</span><span class="p">],</span>
+            <span class="nx">dependencies</span> <span class="o">=</span> <span class="nx">coreDependencies</span><span class="p">[</span><span class="nx">name</span><span class="p">],</span>
+            <span class="nx">deps</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">dependencies</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">dependencies</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">mapToProxy</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nx">extend</span><span class="p">(</span><span class="nx">module</span><span class="p">,</span> <span class="nx">deps</span><span class="p">)</span>
+
+        <span class="kd">function</span> <span class="nx">mapToProxy</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">dependency</span> <span class="o">=</span> <span class="nx">dependencies</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">dependency</span> <span class="o">===</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">deps</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">proxies</span><span class="p">[</span><span class="nx">dependency</span><span class="p">]</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">dependency</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nx">deps</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">dependency</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">returnProxy</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">dependency</span> <span class="o">===</span> <span class="s2">&quot;object&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">deps</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">dependency</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">setProxyFromDependency</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="kd">function</span> <span class="nx">setProxyFromDependency</span><span class="p">(</span><span class="nx">dependencyKey</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">deps</span><span class="p">[</span><span class="nx">key</span><span class="p">][</span><span class="nx">dependencyKey</span><span class="p">]</span> <span class="o">=</span> <span class="nx">proxies</span><span class="p">[</span><span class="nx">dependency</span><span class="p">[</span><span class="nx">dependencyKey</span><span class="p">]]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">returnProxy</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">proxies</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">setupModules</span><span class="p">(</span><span class="nx">core</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">modules</span> <span class="o">=</span> <span class="nx">core</span><span class="p">.</span><span class="nx">_modules</span><span class="p">,</span>
+        <span class="nx">counter</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">modules</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">setupModules</span><span class="p">)</span>
+    <span class="nx">next</span><span class="p">()</span>
+
+    <span class="kd">function</span> <span class="nx">setupModules</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">modules</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span><span class="p">.</span><span class="nx">setup</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">module</span><span class="p">.</span><span class="nx">setup</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">counter</span><span class="o">++</span>
+            <span class="p">}</span>
+            <span class="nx">module</span><span class="p">.</span><span class="nx">setup</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">next</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">--</span><span class="nx">counter</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="nx">callback</span><span class="p">()</span>
+            <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">modules</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">invokeInit</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">invokeInit</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">modules</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+        <span class="nx">module</span><span class="p">.</span><span class="nx">init</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

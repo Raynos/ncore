@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>dependencyMapper.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../', thisFile = 'test/dependencyMapper.js';
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>dependencyMapper.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">),</span>
+    <span class="nx">DependencyMapper</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../modules/dependencyMapper&quot;</span><span class="p">)</span>
+
+<span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;dependencyMapper&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;methods exist&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">DependencyMapper</span><span class="p">,</span> <span class="s2">&quot;dependency mapper does not exist&quot;</span><span class="p">)</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">DependencyMapper</span><span class="p">.</span><span class="nx">map</span><span class="p">,</span> <span class="s2">&quot;dependency mapper.map does not exist&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;maps dependencies correctly&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">DependencyMapper</span><span class="p">.</span><span class="nx">map</span><span class="p">({</span>
+            <span class="nx">jsonUri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;modules&quot;</span><span class="p">,</span> <span class="s2">&quot;dependency.json&quot;</span><span class="p">),</span>
+            <span class="nx">uri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;modules&quot;</span><span class="p">)</span>
+        <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;error is null&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;foo.js&quot;</span><span class="p">],</span> <span class="s2">&quot;no foo.js&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/bar.js&quot;</span><span class="p">],</span> <span class="s2">&quot;no bar/bar.js&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/foo.js&quot;</span><span class="p">],</span> <span class="s2">&quot;no bar/foo.js&quot;</span><span class="p">)</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;bar&quot;</span><span class="p">],</span> <span class="s2">&quot;bar/bar.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;foo.js bar is wrong&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;foo&quot;</span><span class="p">],</span> <span class="s2">&quot;bar/foo.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;foo.js foo is wrong&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;baz&quot;</span><span class="p">],</span> <span class="s2">&quot;baz.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;foo.js baz is wrong&quot;</span><span class="p">)</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/bar.js&quot;</span><span class="p">][</span><span class="s2">&quot;foo&quot;</span><span class="p">],</span> <span class="s2">&quot;foo.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bar/bar.js foo is wrong&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/bar.js&quot;</span><span class="p">][</span><span class="s2">&quot;bars&quot;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/bar.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/foo.js&quot;</span>
+            <span class="p">},</span> <span class="s2">&quot;bar/bar.js bars is wrong&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/bar.js&quot;</span><span class="p">][</span><span class="s2">&quot;foobar&quot;</span><span class="p">],</span> <span class="s2">&quot;bar/bar.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bar/bar.js foobar is wrong&quot;</span><span class="p">)</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;foo&quot;</span><span class="p">],</span> <span class="s2">&quot;foo.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bar/foo.js foo is wrong&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;bars&quot;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/bar.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/foo.js&quot;</span>
+            <span class="p">},</span> <span class="s2">&quot;bar/foo.js bars is wrong&quot;</span><span class="p">)</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;bar/foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;foobar&quot;</span><span class="p">],</span> <span class="s2">&quot;bar/foo.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bar/foo.js foobar is wrong&quot;</span><span class="p">)</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;deep/foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;shallow&quot;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;shallow/foo/bar.js&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;baz&quot;</span><span class="o">:</span> <span class="s2">&quot;shallow/foo/baz.js&quot;</span>
+            <span class="p">})</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;deep/foo.js&quot;</span><span class="p">][</span><span class="s2">&quot;tree&quot;</span><span class="p">],</span> <span class="p">{</span>
+                <span class="nx">foo</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="nx">bar</span><span class="o">:</span> <span class="s2">&quot;shallow/foo/bar.js&quot;</span><span class="p">,</span>
+                    <span class="nx">baz</span><span class="o">:</span> <span class="s2">&quot;shallow/foo/baz.js&quot;</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;shallow/foo/bar.js&quot;</span><span class="p">][</span><span class="s2">&quot;deep&quot;</span><span class="p">],</span> <span class="s2">&quot;deep/foo.js&quot;</span><span class="p">)</span>
+
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="s2">&quot;shallow/foo/baz.js&quot;</span><span class="p">][</span><span class="s2">&quot;deep&quot;</span><span class="p">],</span> <span class="s2">&quot;deep/foo.js&quot;</span><span class="p">)</span>
+
+            <span class="nx">done</span><span class="p">()</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

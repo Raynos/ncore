@@ -11,6 +11,15 @@ var CORE_DEFAULTS = {
 module.exports = core
 
 function core(options, callback) {
+    if (typeof options === "function") {
+        callback = options
+        options = null
+    }
+
+    if (process.env["NCORE"]) {
+        options = require(process.env["NCORE"])
+    }
+
     options = extend({}, CORE_DEFAULTS, options || {})
     if (!options.core) {
         options.core = extend({}, ncore).constructor()

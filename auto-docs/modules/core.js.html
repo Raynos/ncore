@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>core.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../', thisFile = 'modules/core.js';
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>core.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">moduleLoader</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./moduleLoader&quot;</span><span class="p">),</span>
+    <span class="nx">dependencyMapper</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./dependencyMapper&quot;</span><span class="p">),</span>
+    <span class="nx">extend</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">).</span><span class="nx">extend</span><span class="p">,</span>
+    <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">CORE_DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">moduleLoader</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="nx">dependencyMapper</span><span class="o">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">core</span>
+
+<span class="kd">function</span> <span class="nx">core</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">extend</span><span class="p">({},</span> <span class="nx">CORE_DEFAULTS</span><span class="p">,</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">core</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">core</span> <span class="o">=</span> <span class="nx">extend</span><span class="p">({},</span> <span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">core</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">core</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">core</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">dependencyMapper</span><span class="p">.</span><span class="nx">uri</span> <span class="o">&amp;&amp;</span> <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">dependencyMapper</span><span class="p">.</span><span class="nx">uri</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">uri</span> <span class="o">&amp;&amp;</span> <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">uri</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">uri</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">core</span><span class="p">,</span>
+        <span class="nx">count</span> <span class="o">=</span> <span class="mi">2</span>
+        
+    <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;ncore::moduleLoader&quot;</span><span class="p">,</span> <span class="nx">moduleLoader</span><span class="p">)</span>
+    <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;ncore::dependencyMapper&quot;</span><span class="p">,</span> <span class="nx">dependencyMapper</span><span class="p">)</span>
+    <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;ncore::core&quot;</span><span class="p">,</span> <span class="nx">core</span><span class="p">)</span>
+
+    <span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">moduleLoader</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span>
+    <span class="nx">dependencyMapper</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">dependencyMapper</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">Core</span>
+
+    <span class="kd">function</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">deps</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Error occurred in core.core&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">deps</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span> <span class="o">=</span> <span class="nx">deps</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">--</span><span class="nx">count</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span>    
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
