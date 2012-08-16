@@ -35,13 +35,13 @@ function core(options, callback) {
     }
 
     var Core = options.core,
-        count = 2
+        count = 1
         
     Core.add("ncore::moduleLoader", moduleLoader)
     Core.add("ncore::dependencyMapper", dependencyMapper)
     Core.add("ncore::core", core)
 
-    moduleLoader.load(options.moduleLoader, next)
+    moduleLoader.load(options, next)
     dependencyMapper.map(options.dependencyMapper, next)
 
     return Core
@@ -59,7 +59,7 @@ function core(options, callback) {
         }
 
         if (--count === 0) {
-            Core.init(callback)    
+            Core.init(callback)
         }
     }
 }
