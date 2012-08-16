@@ -29,7 +29,7 @@ module.exports = {
 
         for (var firstLevel in json) {
             if (firstLevel.indexOf('.js') !== -1) {
-                var filePath = path.join(__dirname, '../../../', firstLevel)
+                var filePath = path.join(process.cwd(), '../../../', firstLevel)
                 loadModule(filePath, callback)
             }
 
@@ -37,10 +37,10 @@ module.exports = {
                 var value = json[firstLevel][secondLevel]
 
                 if (typeof value !== 'object') {
-                    var filePath = path.join(__dirname, '../../../', value)
+                    var filePath = path.join(process.cwd(), '../../../', value)
                     loadModule(filePath, callback)
                 } else {
-                    var basePath = path.join(__dirname, '../../../', value[0])
+                    var basePath = path.join(process.cwd(), '../../../', value[0])
                     var files = fs.readdirSync(basePath)
 
                     for (var file in files) {
