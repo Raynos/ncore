@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>README.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = '', thisFile = 'README.md';
+  </script>
+  <script src="doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#ncore-">nCore </a>
+      </div>
+      <div class="heading h2">
+        <a href="#status--production-ready">Status: Production Ready</a>
+      </div>
+      <div class="heading h2">
+        <a href="#example">Example</a>
+      </div>
+      <div class="heading h3">
+        <a href="#-further-examples-"> Further examples </a>
+      </div>
+      <div class="heading h2">
+        <a href="#motivation">Motivation</a>
+      </div>
+      <div class="heading h2">
+        <a href="#documentation">Documentation</a>
+      </div>
+      <div class="heading h2">
+        <a href="#cli">CLI</a>
+      </div>
+      <div class="heading h2">
+        <a href="#module-format">Module format</a>
+      </div>
+      <div class="heading h3">
+        <a href="#module.setup">module.setup</a>
+      </div>
+      <div class="heading h3">
+        <a href="#module.expose">module.expose</a>
+      </div>
+      <div class="heading h3">
+        <a href="#module.init--">module.init()</a>
+      </div>
+      <div class="heading h3">
+        <a href="#module.destroy--">module.destroy()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#core">Core</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.interfaces">Core.interfaces</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.dependencies">Core.dependencies</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.constructor-deps---ee--">Core.constructor(deps, [ee])</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.use-name--module-">Core.use(name, module)</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.init--callback--">Core.init([callback])</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.remove-name-">Core.remove(name)</a>
+      </div>
+      <div class="heading h3">
+        <a href="#core.purge">Core.purge</a>
+      </div>
+      <div class="heading h2">
+        <a href="#modules">Modules</a>
+      </div>
+      <div class="heading h2">
+        <a href="#moduleloader">moduleLoader</a>
+      </div>
+      <div class="heading h3">
+        <a href="#moduleloader.load-options-">moduleLoader.load(options)</a>
+      </div>
+      <div class="heading h2">
+        <a href="#installation">Installation</a>
+      </div>
+      <div class="heading h2">
+        <a href="#test">Test</a>
+      </div>
+      <div class="heading h2">
+        <a href="#contributors">contributors</a>
+      </div>
+      <div class="heading h2">
+        <a href="#mit-licenced">MIT Licenced</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="docs markdown">
+<div class="pilwrap" id="ncore-">
+  <h1>
+    <a href="#ncore-" class="pilcrow">&#182;</a>
+    nCore <a href="http://travis-ci.org/Raynos/ncore"><img src="https://secure.travis-ci.org/Raynos/ncore.png" alt="Build Status" title="" /></a>
+  </h1>
+</div>
+
+
+<p>A transparent dependency injection library based on file based dependency config. Handles initialization, bootstrapping and dependency injection for you.</p>
+
+
+<div class="pilwrap" id="status--production-ready">
+  <h2>
+    <a href="#status--production-ready" class="pilcrow">&#182;</a>
+    Status: Production Ready
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore#example">example</a></li>
+<li><a href="https://github.com/Raynos/ncore#motivation">motivation</a></li>
+<li><a href="https://github.com/Raynos/ncore#docs">docs</a></li>
+<li><a href="https://github.com/Raynos/ncore#install">Installation</a></li>
+<li><a href="https://github.com/Raynos/ncore#test">test</a></li>
+<li><a href="https://github.com/Raynos/ncore#contributors">contributors</a></li>
+<li><a href="https://github.com/Raynos/ncore#licence">licence</a></li>
+</ul>
+
+<hr />
+
+
+<div class="pilwrap" id="example">
+  <h2>
+    <a href="#example" class="pilcrow">&#182;</a>
+    <a name="example" href="#example">Example</a>
+  </h2>
+</div>
+
+
+
+<div class="highlight"><pre><code><span class="n">var</span> <span class="n">Core</span> <span class="p">=</span> <span class="n">Object</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">require</span><span class="p">(</span>&quot;<span class="n">nCore</span>&quot;<span class="p">)).</span><span class="n">constructor</span><span class="p">({</span>
+        <span class="n">server</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">controller</span><span class="p">:</span> &quot;<span class="n">hello</span><span class="o">-</span><span class="n">world</span>&quot;
+        <span class="p">}</span>
+    <span class="p">}),</span>
+    <span class="n">http</span> <span class="p">=</span> <span class="n">require</span><span class="p">(</span>&quot;<span class="n">http</span>&quot;<span class="p">)</span>
+
+<span class="n">Core</span><span class="p">.</span><span class="n">use</span><span class="p">(</span>&quot;<span class="n">hello</span><span class="o">-</span><span class="n">world</span>&quot;<span class="p">,</span> <span class="p">{</span>
+    <span class="n">print</span><span class="p">:</span> <span class="k">function</span> <span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">res</span><span class="p">.</span><span class="k">end</span><span class="p">(</span>&quot;<span class="n">hello</span> <span class="n">world</span>&quot;<span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="n">Core</span><span class="p">.</span><span class="n">use</span><span class="p">(</span>&quot;<span class="n">server</span>&quot;<span class="p">,</span> <span class="p">{</span>
+    <span class="n">init</span><span class="p">:</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="n">http</span><span class="p">.</span><span class="n">createServer</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">handleRequest</span><span class="p">).</span><span class="n">listen</span><span class="p">(</span>8080<span class="p">)</span>
+    <span class="p">},</span>
+    <span class="n">handleRequest</span><span class="p">:</span> <span class="k">function</span> <span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">controller</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="n">Core</span><span class="p">.</span><span class="n">init</span><span class="p">()</span>
+</code></pre></div>
+
+
+
+<p>Or using the file based loader</p>
+
+
+<div class="highlight"><pre><code><span class="c1">// ./hello-world.js</span>
+<span class="k">module</span><span class="p">.</span><span class="n">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nl">print:</span> <span class="k">function</span> <span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">res</span><span class="p">.</span><span class="k">end</span><span class="p">(</span><span class="s">&quot;hello world&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// ./server.js</span>
+<span class="k">var</span> <span class="n">http</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="s">&quot;http&quot;</span><span class="p">)</span>
+
+<span class="k">module</span><span class="p">.</span><span class="n">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nl">init:</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="n">http</span><span class="p">.</span><span class="n">createServer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">handleRequest</span><span class="p">).</span><span class="n">listen</span><span class="p">(</span><span class="mh">8080</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="nl">handleRequest:</span> <span class="k">function</span> <span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">controller</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// dependency.json</span>
+<span class="p">{</span>
+    <span class="s">&quot;./server.js&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s">&quot;controller&quot;</span><span class="o">:</span> <span class="s">&quot;./hello-world.js&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="-further-examples-">
+  <h3>
+    <a href="#-further-examples-" class="pilcrow">&#182;</a>
+    <a name="further" href="#further"> Further examples </a>
+  </h3>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore/tree/master/examples/simple">simple</a></li>
+<li><a href="https://github.com/Raynos/ncore/tree/master/examples/files">files</a></li>
+<li><a href="https://github.com/Raynos/ncore/tree/master/examples/express">express</a></li>
+<li><a href="https://github.com/Raynos/fyp">fyp, entire app build with ncore</a></li>
+</ul>
+
+<hr />
+
+
+<div class="pilwrap" id="motivation">
+  <h2>
+    <a href="#motivation" class="pilcrow">&#182;</a>
+    <a name="motivation" href="#motivation">Motivation</a>
+  </h2>
+</div>
+
+
+<p>nCore is a dependency injection framework.</p>
+
+<ul>
+<li>It strictly defines what a unit is and makes it easy to mock out that unit's dependencies. This makes testing and TDD easy</li>
+<li>It injects dependencies into your modules and allows you to define the public interface of a module either using methods or using event emitters. This allows for loose coupling and encapsulation.</li>
+<li>It has support for hot reloading of modules. This basically means removing and adding modules on the fly whilst your core is still running</li>
+<li>It gives you tiered infrasture to define your objects, bootstrapping and application initialization</li>
+<li>It allows you to auto load all your modules from file and set up dependency mappings based on file based relations</li>
+<li>Works with node and the browser! (only 1.3KB min &amp; gzipped)</li>
+</ul>
+
+<hr />
+
+
+<div class="pilwrap" id="documentation">
+  <h2>
+    <a href="#documentation" class="pilcrow">&#182;</a>
+    <a name="docs" href="#docs">Documentation</a>
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore/tree/0.x">nCore 0.x documentation</a></li>
+<li><a href="https://github.com/Raynos/ncore#cli">CLI for browsers</a></li>
+<li><a href="https://github.com/Raynos/ncore#module">Module format</a>
+<ul><li><a href="https://github.com/Raynos/ncore#setup">setup</a></li>
+<li><a href="https://github.com/Raynos/ncore#expose">expose</a></li>
+<li><a href="https://github.com/Raynos/ncore#module.init">init</a></li>
+<li><a href="https://github.com/Raynos/ncore#destroy">destroy</a></li></ul></li>
+<li><a href="https://github.com/Raynos/ncore#core">Core</a>
+<ul><li><a href="https://github.com/Raynos/ncore#interfaces">Core.interfaces</a></li>
+<li><a href="https://github.com/Raynos/ncore#dependencies">Core.dependencies</a></li>
+<li><a href="https://github.com/Raynos/ncore#constructor">Core.constructor</a></li>
+<li><a href="https://github.com/Raynos/ncore#use">Core.use</a></li>
+<li><a href="https://github.com/Raynos/ncore#init">Core.init</a></li>
+<li><a href="https://github.com/Raynos/ncore#remove">Core.remove</a></li>
+<li><a href="https://github.com/Raynos/ncore#purge">Core.purge</a></li></ul></li>
+<li><a href="https://github.com/Raynos/ncore#modules">modules</a>
+<ul><li><a href="https://github.com/Raynos/ncore#moduleLoader">moduleLoader</a>
+<ul><li><a href="https://github.com/Raynos/ncore#load">moduleLoader.load</a></li></ul></li></ul></li>
+</ul>
+
+<hr />
+
+
+<div class="pilwrap" id="cli">
+  <h2>
+    <a href="#cli" class="pilcrow">&#182;</a>
+    <a name="cli" href="#cli">CLI</a>
+  </h2>
+</div>
+
+
+<p>nCore gives you a CLI to build a browser bundle using browserify with the same
+syntax as the <a href="https://github.com/Raynos/ncore#moduleLoader">moduleLoader</a></p>
+
+<p>This means you can set up your modules folder and you dependency.json file 
+directly inside your modules folder then just</p>
+
+<p><code>$ ncore ./modules/ -o /build/bundle.js</code></p>
+
+<p>And that's it. Everything just works. All the modules are loaded, bundled, 
+attached to the core, nCore is loaded, the core is initialized.</p>
+
+<p>See <a href="https://github.com/Raynos/ncore/tree/master/test/modules">test/modules</a> for an example</p>
+
+<hr />
+
+
+<div class="pilwrap" id="module-format">
+  <h2>
+    <a href="#module-format" class="pilcrow">&#182;</a>
+    <a name="module" href="#module">Module format</a>
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore#setup">setup</a></li>
+<li><a href="https://github.com/Raynos/ncore#expose">expose</a></li>
+<li><a href="https://github.com/Raynos/ncore#module.init">init</a></li>
+<li><a href="https://github.com/Raynos/ncore#destroy">destroy</a></li>
+</ul>
+
+<p>A module has a few public properties that are used by the Core.</p>
+
+<p>A module can define it's dependencies through <a href="https://github.com/Raynos/ncore#expose"><code>expose</code></a> and the dependencies are mixed into the module.</p>
+
+<p>A module also has an <a href="https://github.com/Raynos/ncore#module.init"><code>init</code></a> method which is invoked when the core is done initializing and a <a href="https://github.com/Raynos/ncore#inject"><code>setup</code></a> method which is invoked before init to do asynchronous setup logic for that module</p>
+
+<p>Modules are handled in four phases, </p>
+
+<ol>
+<li>First is the interface definition phase where every module that is used exposes it's public interface. The core extracts the exposed interface once the module is used.</li>
+<li>Second is the dependency injection phase where every module has it's dependencies injected into it. This phase is started when the someone invokes init on the core. </li>
+<li>Thirdy is the <a href="https://github.com/Raynos/ncore#setup"><code>setup</code></a> phase, where modules can do asynchronous setup up logic. This happens after all dependencies are injected into all modules</li>
+<li>Lastly is the <a href="https://github.com/Raynos/ncore#module.init"><code>init</code></a> phase, this happens after every module says it's done it's setup. This also happens after the callback on <a href="https://github.com/Raynos/ncore#init"><code>Core.init</code></a>. This phase is meant to start your application like starting your HTTP server.</li>
+</ol>
+
+
+<div class="pilwrap" id="module.setup">
+  <h3>
+    <a href="#module.setup" class="pilcrow">&#182;</a>
+    <a name="setup" href="#setup"><code>module.setup</code></a>
+  </h3>
+</div>
+
+
+<p>The optional setup method allows a module to setup logic</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;db&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">setup</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">db</span><span class="p">.</span><span class="nx">openConnection</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="module.expose">
+  <h3>
+    <a href="#module.expose" class="pilcrow">&#182;</a>
+    <a name="expose" href="#expose"><code>module.expose</code></a>
+  </h3>
+</div>
+
+
+<p>Instead of defining an interface you can say what parts of the module should be exposed. Expose should contain an array containing the propertyNames that should become part of the interface</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="kr">public</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="kr">private</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="kr">private</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// this is also an event emitter</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;somethingHappened&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;public&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">interfaces</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;somethingHappened&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="p">})</span>
+<span class="nx">Core</span><span class="p">.</span><span class="nx">interfaces</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="kr">public</span><span class="p">();</span>
+<span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">Core</span><span class="p">.</span><span class="nx">interfaces</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="kr">private</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+<p>``` javascript
+var Core = Object.create(require("ncore")).constructor(),
+    assert = require("assert")</p>
+
+<p>Core.use("name", {
+    public: function () {
+        this.private();
+    },
+    otherPublic: function () {
+        // this is also an event emitter
+        this.emit("somethingHappened");
+    }
+})</p>
+
+<p>Core.interfaces.name.on("somethingHappened", function () {
+    assert(true);
+})
+Core.interfaces.name.public();
+assert(Core.interfaces.name.otherPublic)
+```</p>
+
+
+<div class="pilwrap" id="module.init--">
+  <h3>
+    <a href="#module.init--" class="pilcrow">&#182;</a>
+    <a name="module.init" href="#module.init"><code>module.init()</code></a>
+  </h3>
+</div>
+
+
+<p>A module exposes an init method which is invoked when the core is done initializing.</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">setup</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;happens first&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;happens third&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;happens second&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="module.destroy--">
+  <h3>
+    <a href="#module.destroy--" class="pilcrow">&#182;</a>
+    <a name="destroy" href="#destroy"><code>module.destroy()</code></a>
+  </h3>
+</div>
+
+
+<p>The destroy method is invoked when the module is removed from the core. This is the cleanup method, here your supposed to clean up any coupling to other modules and destroy any state/objects that still exist</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">bigObject</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BigObject</span><span class="p">();</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// clean objects from memory</span>
+        <span class="nx">bigObject</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+<hr />
+
+
+<div class="pilwrap" id="core">
+  <h2>
+    <a href="#core" class="pilcrow">&#182;</a>
+    <a name="core" href="#core"><code>Core</code></a>
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore#interfaces">Core.interfaces</a></li>
+<li><a href="https://github.com/Raynos/ncore#dependencies">Core.dependencies</a></li>
+<li><a href="https://github.com/Raynos/ncore#constructor">Core.constructor</a></li>
+<li><a href="https://github.com/Raynos/ncore#use">Core.use</a></li>
+<li><a href="https://github.com/Raynos/ncore#init">Core.init</a></li>
+<li><a href="https://github.com/Raynos/ncore#remove">Core.remove</a></li>
+<li><a href="https://github.com/Raynos/ncore#purge">Core.purge</a></li>
+</ul>
+
+<p>The Core is an object you attach modules to. It keeps a record of the dependency mapping between modules and initializes multiple modules with their correct dependencies.</p>
+
+
+<div class="pilwrap" id="core.interfaces">
+  <h3>
+    <a href="#core.interfaces" class="pilcrow">&#182;</a>
+    <a name="interfaces" href="#interfaces"><code>Core.interfaces</code></a>
+  </h3>
+</div>
+
+
+<p>The Core has a public property named interfaces that contains all the public interfaces attached to the core.</p>
+
+<p>A public interface is a proxy of the internal interface (the one passed to define) which means it has all the same properties / methods, it just has a thin proxy that invokes them indirectly. This proxy exist for easy module hot reloading.</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="p">},</span>
+    <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">interfaces</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">method</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="core.dependencies">
+  <h3>
+    <a href="#core.dependencies" class="pilcrow">&#182;</a>
+    <a name="dependencies" href="#dependencies"><code>Core.dependencies</code></a>
+  </h3>
+</div>
+
+
+<p>The Core exposes it's dependency mapping as <code>Core.dependencies</code>. This can be manipulated after the constructor is invoked</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="nx">moduleA</span><span class="p">);</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="o">:</span> <span class="s2">&quot;a&quot;</span>
+<span class="p">};</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">foo</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">bars</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="nx">moduleA</span><span class="p">)</span>
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="nx">moduleB</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">bars</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">foo</span><span class="p">().</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="core.constructor-deps---ee--">
+  <h3>
+    <a href="#core.constructor-deps---ee--" class="pilcrow">&#182;</a>
+    <a name="constructor" href="#constructor"><code>Core.constructor(deps, [ee])</code></a>
+  </h3>
+</div>
+
+
+<p>Instantiate an instance of the core. You need to pass the dependency mapping to the core so it knows what to inject into what module. You can also optionally pass in EventEmitter prototype which will be mixed into every interface.</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">);</span>
+
+<span class="c1">// create an instance</span>
+<span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">();</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(...);</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">({</span>
+    <span class="c1">// The dependencies for foo are</span>
+    <span class="nx">foo</span><span class="o">:</span> <span class="p">{</span>
+        <span class="c1">// an object called bar that contains the interface baz</span>
+        <span class="nx">bar</span><span class="o">:</span> <span class="s2">&quot;baz&quot;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">bar</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;baz&quot;</span><span class="p">,</span> <span class="nx">bazObject</span><span class="p">);</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// For module foo the deps have been mixed in</span>
+        <span class="c1">// so this has a bar property</span>
+        <span class="c1">// that is the interface of bazObject</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bar</span><span class="p">,</span> <span class="nx">bar</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">);</span>
+
+<span class="c1">// constructor also accepts strings as arguments</span>
+<span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./dependency.json&quot;</span><span class="p">));</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">),</span>
+    <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;eventemitter2&quot;</span><span class="p">).</span><span class="nx">EventEmitter</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">EventEmitter</span><span class="p">);</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="p">{});</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+
+<span class="c1">// The bar interface is now an EventEmitter2 instance</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">interfaces</span><span class="p">.</span><span class="nx">bar</span><span class="p">.</span><span class="nx">many</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="core.use-name--module-">
+  <h3>
+    <a href="#core.use-name--module-" class="pilcrow">&#182;</a>
+    <a name="use" href="#use"><code>Core.use(name, module)</code></a>
+  </h3>
+</div>
+
+
+<p>Use a module to attach it to the Core. The core will ask the module to define it's
+public interface. </p>
+
+<p>Core.use returns the public interface</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">prop</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// this === module</span>
+        <span class="k">this</span><span class="p">.</span><span class="kr">private</span><span class="p">()</span>
+    <span class="p">},</span>
+    <span class="kr">private</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">},</span>
+    <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;prop&quot;</span><span class="p">,</span> <span class="s2">&quot;method&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="c1">// define the interface as an object</span>
+    <span class="nx">expose</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">interface_method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="kr">public</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">},</span>
+    <span class="kr">private</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+    <span class="p">},</span>
+    <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;public&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{});</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">interfaces</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="core.init--callback--">
+  <h3>
+    <a href="#core.init--callback--" class="pilcrow">&#182;</a>
+    <a name="init" href="#init"><code>Core.init([callback])</code></a>
+  </h3>
+</div>
+
+
+<p>init will inject dependencies into modules. It also invokes the init method on modules after they are done with dependency injection.</p>
+
+<p>The optional callback to init will be called after all modules are done with the
+setup.</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="nx">barObject</span><span class="p">);</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">setup</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bar</span><span class="p">);</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;happens first&quot;</span><span class="p">);</span>
+        <span class="nx">done</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;happens third&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">bar</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
+<span class="p">};</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;happens second&quot;</span><span class="p">);</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="core.remove-name-">
+  <h3>
+    <a href="#core.remove-name-" class="pilcrow">&#182;</a>
+    <a name="remove" href="#remove"><code>Core.remove(name)</code></a>
+  </h3>
+</div>
+
+
+<p>Remove the module by that name. This will invoke the destroy method on the module</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">(),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Core</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="core.purge">
+  <h3>
+    <a href="#core.purge" class="pilcrow">&#182;</a>
+    <a name="purge" href="#purge"><code>Core.purge</code></a>
+  </h3>
+</div>
+
+
+<p>removes all modules</p>
+
+
+<div class="highlight"><pre><code><span class="nx">Core</span><span class="p">.</span><span class="nx">purge</span><span class="p">();</span>
+<span class="c1">// Core is clean now</span>
+</code></pre></div>
+
+
+
+<hr />
+
+
+<div class="pilwrap" id="modules">
+  <h2>
+    <a href="#modules" class="pilcrow">&#182;</a>
+    <a name="modules" href="#modules">Modules</a>
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore#moduleLoader">moduleLoader</a>
+<ul><li><a href="https://github.com/Raynos/ncore#load">moduleLoader.load</a></li></ul></li>
+</ul>
+
+<p>nCore comes with a set of default modules implemented to do specific tasks</p>
+
+<hr />
+
+
+<div class="pilwrap" id="moduleloader">
+  <h2>
+    <a href="#moduleloader" class="pilcrow">&#182;</a>
+    <a name="moduleLoader" href="#moduleLoader">moduleLoader</a>
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos/ncore#load">moduleLoader.load</a></li>
+</ul>
+
+<p>The moduleLoader exposes an interface to autoLoad modules from a folder. It also
+exposes an API to write your dependency map based on files.</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">()</span>
+    <span class="nx">moduleLoader</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;moduleLoader&quot;</span><span class="p">,</span> 
+        <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore/modules/moduleLoader&quot;</span><span class="p">)),</span>
+    <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+
+<span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">({</span>
+  <span class="nx">uri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;./modules&quot;</span><span class="p">),</span>
+  <span class="nx">dependencies</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./dependencies.json&quot;</span><span class="p">),</span>
+  <span class="nx">core</span><span class="o">:</span> <span class="nx">Core</span><span class="p">,</span>
+  <span class="nx">callback</span><span class="o">:</span> <span class="nx">init</span>
+<span class="p">})</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="moduleloader.load-options-">
+  <h3>
+    <a href="#moduleloader.load-options-" class="pilcrow">&#182;</a>
+    <a name="load" href="#load"><code>moduleLoader.load(options)</code></a>
+  </h3>
+</div>
+
+
+<p>Call load on the moduleLoader to load all the modules in a folder, moduleLoader
+also takes a callback that's called when it's done loading and it also takes
+a file based dependencies object.</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore&quot;</span><span class="p">)).</span><span class="nx">constructor</span><span class="p">()</span>
+    <span class="nx">moduleLoader</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;moduleLoader&quot;</span><span class="p">,</span> 
+        <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ncore/modules/moduleLoader&quot;</span><span class="p">)),</span>
+    <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+
+<span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">({</span>
+  <span class="nx">uri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;./modules&quot;</span><span class="p">),</span>
+  <span class="nx">dependencies</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./dependencies.json&quot;</span><span class="p">),</span>
+  <span class="nx">core</span><span class="o">:</span> <span class="nx">Core</span><span class="p">,</span>
+  <span class="nx">callback</span><span class="o">:</span> <span class="nx">init</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">init</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;error loading&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+<div class="highlight"><pre><code><span class="c1">// dependencies.json format</span>
+<span class="p">{</span>
+    <span class="c1">// bar and foo will be injected into module located at foo.js</span>
+    <span class="s2">&quot;./foo.js&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="c1">// value of bar will be /bar/bar.js</span>
+        <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;./bar/bar.js&quot;</span><span class="p">,</span>
+        <span class="c1">// value of foo will be the module inside folder /bar/ that matches the same fileName as this module</span>
+        <span class="c1">// in this case that would be foo.js</span>
+        <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;./bar/&quot;</span>
+    <span class="p">},</span>
+    <span class="c1">// foo, bars and foobar will be injected into all modules located directly under folder bar</span>
+    <span class="s2">&quot;./bar/&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="c1">// value of foo will be fine /foo.js</span>
+        <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;./foo.js&quot;</span><span class="p">,</span>
+        <span class="c1">// value of bars will be an (unsorted) array containing all modules directly under folder bar</span>
+        <span class="s2">&quot;bars&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;./bar/&quot;</span><span class="p">],</span>
+        <span class="c1">// value of foobar will be the module matching the same fileName under bar as the current</span>
+        <span class="c1">// module fileName (i.e. itself, for each module under bar)</span>
+        <span class="s2">&quot;foobar&quot;</span><span class="o">:</span> <span class="s2">&quot;./bar/&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+<hr />
+
+
+<div class="pilwrap" id="installation">
+  <h2>
+    <a href="#installation" class="pilcrow">&#182;</a>
+    <a name="install" href="#install">Installation</a>
+  </h2>
+</div>
+
+
+<p><code>$ npm install ncore</code></p>
+
+<hr />
+
+
+<div class="pilwrap" id="test">
+  <h2>
+    <a href="#test" class="pilcrow">&#182;</a>
+    <a name="test" href="#test">Test</a>
+  </h2>
+</div>
+
+
+<p><code>$ make test</code></p>
+
+<hr />
+
+
+<div class="pilwrap" id="contributors">
+  <h2>
+    <a href="#contributors" class="pilcrow">&#182;</a>
+    <a name="contributors" href="#contributors">contributors</a>
+  </h2>
+</div>
+
+
+<ul>
+<li><a href="https://github.com/Raynos">Raynos</a></li>
+</ul>
+
+<hr />
+
+
+<div class="pilwrap" id="mit-licenced">
+  <h2>
+    <a href="#mit-licenced" class="pilcrow">&#182;</a>
+    <a name="licence" href="#licence">MIT Licenced</a>
+  </h2>
+</div>
+
+
+<hr /></div>
+  </div>
+</body>
+</html>

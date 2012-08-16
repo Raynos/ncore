@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>moduleLoader.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../', thisFile = 'test/moduleLoader.js';
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>moduleLoader.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">),</span>
+    <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">),</span>
+    <span class="nx">ModuleLoader</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../modules/moduleLoader&quot;</span><span class="p">)</span>
+
+<span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;moduleLoader&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">Core</span><span class="p">,</span>
+        <span class="nx">moduleLoader</span>
+
+    <span class="nx">setup</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">()</span>
+        <span class="nx">moduleLoader</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;moduleLoader&quot;</span><span class="p">,</span> <span class="nx">ModuleLoader</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;methods exist&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">moduleLoader</span><span class="p">,</span> <span class="s2">&quot;moduleLoader does not exist&quot;</span><span class="p">)</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">,</span> <span class="s2">&quot;moduleLoader.load does not exist&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;moduleLoader.load&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;loading folder loades all files recursively&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">loadModules</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+                <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;foo.js&quot;</span><span class="p">],</span> <span class="s2">&quot;module foo was not loaded&quot;</span><span class="p">)</span>
+                <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;bar/bar.js&quot;</span><span class="p">],</span> 
+                    <span class="s2">&quot;module bar.bar was not loaded&quot;</span><span class="p">)</span>
+                <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;bar/foo.js&quot;</span><span class="p">],</span> 
+                    <span class="s2">&quot;module bar.foo was not loaded&quot;</span><span class="p">)</span>
+                <span class="nx">done</span><span class="p">()</span>
+            <span class="p">})</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;dependency is handled properly&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">loadModules</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">foo</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;foo.js&quot;</span><span class="p">]</span>
+                <span class="kd">var</span> <span class="nx">bar</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;bar/bar.js&quot;</span><span class="p">]</span>
+                <span class="kd">var</span> <span class="nx">barfoo</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">[</span><span class="s2">&quot;bar/foo.js&quot;</span><span class="p">]</span>
+
+                <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">foo</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">),</span> <span class="nx">bar</span><span class="p">,</span>
+                    <span class="s2">&quot;bar depedency on foo did not work&quot;</span><span class="p">)</span>
+                <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">foo</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">),</span> <span class="nx">barfoo</span><span class="p">,</span>
+                    <span class="s2">&quot;foo dependency on foo did not work&quot;</span><span class="p">)</span>
+                <span class="nx">testBars</span><span class="p">(</span><span class="nx">bar</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+                <span class="nx">testBars</span><span class="p">(</span><span class="nx">barfoo</span><span class="p">,</span> <span class="s2">&quot;barfoo&quot;</span><span class="p">)</span>
+                <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">bar</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">),</span> <span class="nx">bar</span><span class="p">,</span>
+                    <span class="s2">&quot;foobar dependency on bar did not work&quot;</span><span class="p">)</span>
+                <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">barfoo</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">),</span> <span class="nx">barfoo</span><span class="p">,</span>
+                    <span class="s2">&quot;foobar dependency on barfoo did not work&quot;</span><span class="p">)</span>
+
+                <span class="nx">done</span><span class="p">()</span>
+
+                <span class="kd">function</span> <span class="nx">testBars</span><span class="p">(</span><span class="nx">_bar</span><span class="p">,</span> <span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">_bar</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">),</span> <span class="nx">foo</span><span class="p">,</span>
+                        <span class="s2">&quot;foo dependency on &quot;</span><span class="o">+</span><span class="nx">text</span><span class="o">+</span><span class="s2">&quot; did not work&quot;</span><span class="p">)</span>
+                    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">_bar</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;bars&quot;</span><span class="p">).</span><span class="nx">bar</span><span class="p">,</span> <span class="nx">bar</span><span class="p">,</span>
+                        <span class="s2">&quot;bars array does not contain bar on &quot;</span><span class="o">+</span><span class="nx">text</span><span class="p">)</span>
+                    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">_bar</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;bars&quot;</span><span class="p">).</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">barfoo</span><span class="p">,</span>
+                        <span class="s2">&quot;bars array does not contain barfoo on &quot;</span><span class="o">+</span><span class="nx">text</span><span class="p">)</span>
+                <span class="p">}</span>
+
+            <span class="p">})</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+
+    <span class="kd">function</span> <span class="nx">loadModules</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">moduleLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">({</span>
+            <span class="nx">uri</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;./modules&quot;</span><span class="p">),</span>
+            <span class="nx">core</span><span class="o">:</span> <span class="nx">Core</span>
+        <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;foo.js&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/bar.js&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/foo.js&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;baz&quot;</span><span class="o">:</span> <span class="s2">&quot;baz.js&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;bar/foo.js&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;foo.js&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;bars&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/foo.js&quot;</span><span class="p">,</span> 
+                        <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/bar.js&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;foobar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/foo.js&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;bar/bar.js&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;foo.js&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;bars&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/foo.js&quot;</span><span class="p">,</span> 
+                        <span class="s2">&quot;bar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/bar.js&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;foobar&quot;</span><span class="o">:</span> <span class="s2">&quot;bar/bar.js&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

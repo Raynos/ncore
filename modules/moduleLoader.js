@@ -8,8 +8,7 @@ var fs = require("fs"),
 var MODULE_LOADER_DEFAULTS = {
         uri: path.join(process.cwd(), "modules"),
         skip: /client/
-    },
-    isJsFile = /.js$/
+    }
 
 module.exports = {
     /*
@@ -24,17 +23,44 @@ module.exports = {
     */
     load: function (options, callback) {
         options = extend({}, MODULE_LOADER_DEFAULTS, options)
-        var modulesFolder = options.uri
+        var modulesFolder = options.moduleLoader.uri
 
-        iterateFiles(modulesFolder, loadModule, callback, isJsFile)
+        var json = require(options.dependencyMapper.jsonUri)
 
-        function loadModule(fileName) {
-            if (options.skip && options.skip.test(fileName)) {
+        for (var firstLevel in json) {
+            if (firstLevel.indexOf('.js') !== -1) {
+                var filePath = path.join(__dirname, '../../../', firstLevel)
+                loadModule(filePath, callback)
+            }
+
+            for (var secondLevel in json[firstLevel]) {
+                var value = json[firstLevel][secondLevel]
+
+                if (typeof value !== 'object') {
+                    var filePath = path.join(__dirname, '../../../', value)
+                    loadModule(filePath, callback)
+                } else {
+                    var basePath = path.join(__dirname, '../../../', value[0])
+                    var files = fs.readdirSync(basePath)
+
+                    for (var file in files) {
+                        var filePath = path.join(basePath, files[file])
+                        loadModule(filePath, callback)
+                    }
+                }
+            }
+        }
+
+        function loadModule(fileName, callback) {
+            if (options.moduleLoader.skip && options.moduleLoader.skip.test(fileName)) {
                 return
             }
+
             var module = require(fileName)
-            var name = path.relative(options.uri, fileName)
-            options.core.add(name, module)
+            var name = path.relative(options.moduleLoader.uri, fileName)
+            options.moduleLoader.core.add(name, module)
+
+            // callback(fileName)
         }
     }
 }

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>core.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../', thisFile = 'test/core.js';
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>core.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">ncore</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">)</span>
+
+<span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;Core&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">Core</span>
+
+    <span class="nx">setup</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">()</span>
+    <span class="p">})</span>
+
+    <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;methods exists&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">,</span> <span class="s2">&quot;Core does not exist&quot;</span><span class="p">)</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">constructor</span><span class="p">,</span> <span class="s2">&quot;constructor does not exist&quot;</span><span class="p">)</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">,</span> <span class="s2">&quot;Core.add does not exist&quot;</span><span class="p">)</span>
+        <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">,</span> <span class="s2">&quot;Core.init does not exist&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;Core.add&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;interface is stored on interfaces&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="s2">&quot;interfaces is not set&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;interface can emit events&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">assert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">,</span> <span class="s2">&quot;interface is not an eventemitter&quot;</span><span class="p">)</span>
+                <span class="p">},</span>
+                <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
+            <span class="p">}).</span><span class="nx">method</span><span class="p">()</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;interface without expose is public&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">assert</span><span class="p">(</span><span class="s2">&quot;like a boss&quot;</span><span class="p">,</span> <span class="s2">&quot;it doesnt work&quot;</span><span class="p">)</span>
+                    <span class="nx">done</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="p">}).</span><span class="nx">method</span><span class="p">()</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;public interface is an event emitter&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">on</span><span class="p">,</span> <span class="s2">&quot;interface is not an EE&quot;</span><span class="p">)</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>ee throws error if not initialized</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>            <span class="nx">name</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;this value is correct&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">expose</span>
+                <span class="p">},</span>
+                <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
+            <span class="p">})</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">method</span><span class="p">(),</span> <span class="s2">&quot;this is incorrect&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;interface only has what is exposed&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{},</span>
+                <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
+            <span class="p">})</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>console.log(Object.keys(Core.proxies.name))</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>1 + 9 from the eventemitter (on, removeListener, once,
+ emit, addListener, listeners, constructor,
+setMaxListeners, removeAllListeners,)</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>                <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;interface has too many keys&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;can add functions&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="mi">42</span>
+            <span class="p">})</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">n</span><span class="p">(),</span> <span class="mi">42</span><span class="p">,</span> <span class="s2">&quot;interface is not correct number&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;add returns the public interface&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span>
+                <span class="s2">&quot;name is not the public interface&quot;</span><span class="p">);</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+
+    <span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;Core.constructor&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;exposes interfaces&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">,</span> <span class="s2">&quot;interfaces is not exposed&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;can pass in dependencies&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">ncore</span><span class="p">).</span><span class="nx">constructor</span><span class="p">({</span>
+                <span class="nx">foo</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
+            <span class="p">})</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">foo</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dependency not loaded properly&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;exposes dependency&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">,</span> <span class="s2">&quot;dependencies are not exposed&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+
+    <span class="nx">suite</span><span class="p">(</span><span class="s2">&quot;Core.init&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;init works with normal modules&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="s2">&quot;module does not exist&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;init calls setup&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">setup</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">assert</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;was not called&quot;</span><span class="p">)</span>
+                    <span class="nx">done</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;init invokes callback&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">assert</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="s2">&quot;callback called&quot;</span><span class="p">);</span>
+                <span class="nx">done</span><span class="p">();</span>
+            <span class="p">})</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;init invokes callback after done&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,{</span>
+                <span class="nx">setup</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+                    <span class="nx">done</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">assert</span><span class="p">(</span><span class="nx">counter</span> <span class="o">===</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;counter is wrong&quot;</span><span class="p">);</span>
+                <span class="nx">done</span><span class="p">();</span>
+            <span class="p">})</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;init invokes init after callback&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">setup</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+                    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">counter</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;counter incorrect&quot;</span><span class="p">);</span>
+                    <span class="nx">done</span><span class="p">();</span>
+                <span class="p">},</span>
+                <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+                    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">counter</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;counter incorrect&quot;</span><span class="p">);</span>
+                    <span class="nx">done</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+                <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">counter</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;counter incorrect&quot;</span><span class="p">);</span>
+            <span class="p">})</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;dependencies are mixed in&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">foo</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">bar</span> <span class="p">},</span>
+                <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span>
+            <span class="p">});</span>
+
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">bar</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
+            <span class="p">};</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="p">{});</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+            <span class="nx">assert</span><span class="p">(</span><span class="nx">Core</span><span class="p">.</span><span class="nx">proxies</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">foo</span><span class="p">(),</span> <span class="s2">&quot;bar not mixed in&quot;</span><span class="p">);</span>
+        <span class="p">})</span>
+
+        <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;dependency format supports arrays&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">foo</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">bars</span> <span class="p">},</span>
+                <span class="nx">expose</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span>
+            <span class="p">});</span>
+
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">bars</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;baz&quot;</span><span class="p">]</span>
+            <span class="p">};</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;baz&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nx">Core</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+            <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">foo</span><span class="p">().</span><span class="nx">length</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;length is not correct&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
